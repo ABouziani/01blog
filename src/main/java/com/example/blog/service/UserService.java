@@ -34,8 +34,29 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<User> findByUsernameOrEmail(String identifier) {
+        Optional<User> user = findByUsername(identifier);
+        if (user.isEmpty()) {
+            user = findByEmail(identifier);
+        }
+        return user;
+    }
+
     // Optional: validate password
     public boolean checkPassword(User user, String rawPassword) {
         return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    // Login
+    public Optional<User> loginUser(String email, String rawPassword) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (passwordEncoder.matches(rawPassword, user.getPassword())) {
+                return Optional.of(user); // Login success
+            }
+        }
+        return Optional.empty(); // Login failed
     }
 }
