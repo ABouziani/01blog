@@ -1,21 +1,24 @@
 package com.example.blog.controller;
 
-import com.example.blog.model.RefreshToken;
-import com.example.blog.model.*;
-import com.example.blog.service.JwtUtil;
-import com.example.blog.service.RefreshTokenService;
-import com.example.blog.service.UserService;
-import com.example.blog.dto.LoginRequest;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.blog.dto.LoginRequest;
 import com.example.blog.dto.TokenRefreshRequest;
+import com.example.blog.model.JwtResponse;
+import com.example.blog.model.RefreshToken;
+import com.example.blog.model.User;
+import com.example.blog.service.JwtUtil;
+import com.example.blog.service.RefreshTokenService;
+import com.example.blog.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -48,7 +51,7 @@ public class AuthController {
         User user = userService.findByUsernameOrEmail(request.getIdentifier())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String jwt = jwtUtil.generateToken(user.getUsername());
+        String jwt = jwtUtil.generateToken(user.getUsername(), user.getRole());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken()));
@@ -63,7 +66,7 @@ public class AuthController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtil.generateToken(user.getUsername());
+                    String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
                     return ResponseEntity.ok(new JwtResponse(token, requestToken));
                 })
                 .orElseThrow(() -> new RuntimeException("Refresh token not found. Please login again."));

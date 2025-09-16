@@ -25,13 +25,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/api/auth/**", "/api/users/register").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeRequests()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // only ADMIN can access
+                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // USER or ADMIN
+                .anyRequest().authenticated() // all others must be authenticated
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -44,8 +45,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                   .userDetailsService(userDetailsService)
-                   .passwordEncoder(passwordEncoder())
-                   .and().build();
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder())
+                .and().build();
     }
 }
