@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dto.LoginRequest;
 import com.example.blog.dto.TokenRefreshRequest;
+import com.example.blog.exceptions.RefreshTokenNotFoundException;
 import com.example.blog.model.JwtResponse;
 import com.example.blog.model.RefreshToken;
 import com.example.blog.model.User;
@@ -31,8 +32,8 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     public AuthController(AuthenticationManager authenticationManager, UserService userService,
-                          PasswordEncoder passwordEncoder, JwtUtil jwtUtil,
-                          RefreshTokenService refreshTokenService) {
+            PasswordEncoder passwordEncoder, JwtUtil jwtUtil,
+            RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -59,16 +60,17 @@ public class AuthController {
 
     // ------------------- REFRESH TOKEN -------------------
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest request) {
-        String requestToken = request.getRefreshToken();
+    public ResponseEntity<JwtResponse> refreshToken(@RequestBody TokenRefreshRequest request) {
+        System.out.println(request);
+        String token = request.getRefreshToken();
 
-        return refreshTokenService.findByToken(requestToken)
+        return refreshTokenService.findByToken(token)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
-                    return ResponseEntity.ok(new JwtResponse(token, requestToken));
+                    String newJwt = jwtUtil.generateToken(user.getUsername(), user.getRole());
+                    return ResponseEntity.ok(new JwtResponse(newJwt, token));
                 })
-                .orElseThrow(() -> new RuntimeException("Refresh token not found. Please login again."));
+                .orElseThrow(() -> new RefreshTokenNotFoundException(token)); // ← triggers global handler
     }
 }

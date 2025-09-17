@@ -1,6 +1,7 @@
 package com.example.blog.model;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,7 +20,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // Primary key
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;  // Which user this token belongs to
 
@@ -27,12 +28,12 @@ public class RefreshToken {
     private String token;  // The actual refresh token string
 
     @Column(nullable = false)
-    private Instant expiryDate;  // When this refresh token expires
+    private OffsetDateTime expiryDate;  // When this refresh token expires
 
     // Constructors
     public RefreshToken() {}
 
-    public RefreshToken(User user, String token, Instant expiryDate) {
+    public RefreshToken(User user, String token, OffsetDateTime expiryDate) {
         this.user = user;
         this.token = token;
         this.expiryDate = expiryDate;
@@ -48,6 +49,6 @@ public class RefreshToken {
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
 
-    public Instant getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(Instant expiryDate) { this.expiryDate = expiryDate; }
+    public OffsetDateTime getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(OffsetDateTime expiryDate) { this.expiryDate = expiryDate; }
 }

@@ -1,12 +1,16 @@
 package com.example.blog.service;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.example.blog.exceptions.RefreshTokenExpiredException;
+import com.example.blog.exceptions.TokenManagementException;
 import com.example.blog.model.RefreshToken;
 import com.example.blog.model.User;
 import com.example.blog.repository.RefreshTokenRepository;
@@ -15,7 +19,7 @@ import com.example.blog.repository.RefreshTokenRepository;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final Long refreshTokenDurationMs;
+    private final long refreshTokenDurationMs;
 
     // single constructor
     public RefreshTokenService(RefreshTokenRepository refreshTokenRepository,
@@ -25,22 +29,27 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(User user) {
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setUser(user);
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
-        refreshToken.setToken(UUID.randomUUID().toString());
-        return refreshTokenRepository.save(refreshToken);
+        try {
+            refreshTokenRepository.deleteByExpiryDateBefore(OffsetDateTime.now());
+            RefreshToken refreshToken = new RefreshToken();
+            refreshToken.setUser(user);
+            refreshToken.setExpiryDate(OffsetDateTime.now().plusSeconds(refreshTokenDurationMs));
+            refreshToken.setToken(UUID.randomUUID().toString());
+            return refreshTokenRepository.save(refreshToken);
+        } catch (DataIntegrityViolationException e) {
+            System.out.println(e.getMessage());
+            throw new TokenManagementException("Failed to create refresh token for user: " + user.getId());
+        }
     }
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
-
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
-        if (token.getExpiryDate().isBefore(Instant.now())) {
+        if (token.getExpiryDate().isBefore(OffsetDateTime.now())) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException("Refresh token expired. Please login again.");
+            throw new RefreshTokenExpiredException(token.getToken());
         }
         return token;
     }
