@@ -1,0 +1,30 @@
+curl -X POST http://localhost:8080/api/users/register \
+-H "Content-Type: application/json" \
+-d '{
+  "username": "hamid",
+  "email": "hamid@example.com",
+  "password": "123456",
+  "bio": "Hello, I am Hamid",
+  "role": "USER",
+  "photo": "https://example.com/photo.jpg"
+}'
+
+
+
+
+curl -X POST http://localhost:8080/api/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "hamid@example.com",
+    "password": "123456"
+  }'
+
+
+
+
+curl -X POST http://localhost:8080/api/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{"refreshToken":"f14a9f7a-1a2b-4d33-bc1e-9ab9c55e9832"}'
+
+
+curl -H "Authorization: Bearer <JWT>" http://localhost:8080/api/admin/dashboard

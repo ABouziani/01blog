@@ -15,6 +15,8 @@ import com.example.blog.model.RefreshToken;
 import com.example.blog.model.User;
 import com.example.blog.repository.RefreshTokenRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class RefreshTokenService {
 
@@ -28,6 +30,7 @@ public class RefreshTokenService {
         this.refreshTokenDurationMs = refreshTokenDurationMs;
     }
 
+    @Transactional 
     public RefreshToken createRefreshToken(User user) {
         try {
             refreshTokenRepository.deleteByExpiryDateBefore(OffsetDateTime.now());

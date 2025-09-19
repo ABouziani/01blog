@@ -18,16 +18,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     // This is where Spring Security asks: "give me a user by username"
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+
         // identifier can be username OR email
         User user = userRepository.findByUsername(identifier)
                 .or(() -> userRepository.findByEmail(identifier))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+
         // Wrap your User in Spring Security's UserDetails
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword()) // hashed password
-                .roles(user.getRole())
-                .build();
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getRole()
+        );
     }
 }

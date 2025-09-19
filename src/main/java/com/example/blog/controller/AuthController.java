@@ -44,11 +44,17 @@ public class AuthController {
     // ------------------- LOGIN -------------------
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        // This will use your CustomUserDetailsService → returns UserDetailsImpl
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword())
         );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Save it in context — now it contains UserDetailsImpl
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("🔍 Principal type AFTER login: " + authentication.getPrincipal().getClass().getName());
+        System.out.println("🔍 Principal content: " + authentication.getPrincipal().toString());
+
+        // Fetch user for JWT (optional — you could get username from authentication)
         User user = userService.findByUsernameOrEmail(request.getIdentifier())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

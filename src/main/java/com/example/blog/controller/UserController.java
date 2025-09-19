@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.model.User;
 import com.example.blog.service.UserService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,7 +20,7 @@ public class UserController {
 
     // POST /api/users/register
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
         // System.out.println("Received password: " + user.getPassword());
         User savedUser = userService.registerUser(user);
         return ResponseEntity.ok(savedUser); // returns 200 + JSON of saved user
