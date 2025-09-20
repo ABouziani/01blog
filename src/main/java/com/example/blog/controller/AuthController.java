@@ -51,8 +51,6 @@ public class AuthController {
 
         // Save it in context — now it contains UserDetailsImpl
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("🔍 Principal type AFTER login: " + authentication.getPrincipal().getClass().getName());
-        System.out.println("🔍 Principal content: " + authentication.getPrincipal().toString());
 
         // Fetch user for JWT (optional — you could get username from authentication)
         User user = userService.findByUsernameOrEmail(request.getIdentifier())

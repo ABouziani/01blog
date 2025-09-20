@@ -41,6 +41,7 @@ public class User {
     @Column(length = 500)
     private String bio;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String role = "USER"; // default role
 
