@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.ErrorResponse;
 import com.example.blog.exceptions.RefreshTokenNotFoundException;
+import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.exceptions.TokenManagementException;
 
 import jakarta.validation.ConstraintViolationException;
@@ -99,5 +100,16 @@ public class GlobalExceptionHandler {
                 Instant.now()
         );
         return new ResponseEntity<>(error, ex.getStatusCode());
+    }
+    
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(ResourceNotFoundException ex) {
+        System.out.println(ex);
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(), // "Refresh token not found: ..."
+                Instant.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

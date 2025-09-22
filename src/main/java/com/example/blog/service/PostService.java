@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.NewPostRequest;
+import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostRepository;
@@ -81,5 +82,18 @@ public class PostService {
 
             throw e;
         }
+    }
+
+    public void deletePost(Long postId, Long requesterId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        if (!post.getCreator().getRole().equals("ADMIN")) {
+            if (!post.getCreator().getId().equals(requesterId)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own posts");
+            }
+        }
+
+        postRepository.deleteById(postId);
     }
 }
