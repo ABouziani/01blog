@@ -1,11 +1,15 @@
-// package com.example.blog.repository;
+package com.example.blog.repository;
 
-// import com.example.blog.model.User;
-// import org.springframework.data.jpa.repository.JpaRepository;
-// import java.util.Optional;
+import java.util.List;
+import java.util.Optional;
 
-// public interface UserRepository extends JpaRepository<User, Long> {
-//     Optional<User> findById(Long id);
-//     Optional<User> findByEmail(String email);
-//     Optional<User> findByUsername(String username);
-// }
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.blog.model.Reaction;
+
+public interface ReactionRepository extends JpaRepository<Reaction, Long> {
+    @Override
+    Optional<Reaction> findById(Long id);
+    Optional<List<Reaction>> findByPostId(Long postId);
+    Optional<List<Reaction>> findByUserId(Long postId);
+}
