@@ -15,6 +15,7 @@ import com.example.blog.repository.ReactionRepository;
 
 @Service
 public class ReactionService {
+
     @Autowired
     private ReactionRepository reactionRepository;
 
@@ -29,6 +30,8 @@ public class ReactionService {
     }
 
     public Optional<List<Reaction>> getReactionsByPostId(Long postId) {
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new RuntimeException("post not found"));
         return reactionRepository.findByPostId(postId);
     }
 
