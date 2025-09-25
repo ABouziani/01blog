@@ -28,8 +28,7 @@ public class ReactionsController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        System.out.println(reaction.getPostId());
-        Reaction savedReaction = reactionService.addReaction(reaction,loggedUserId);
+        Reaction savedReaction = reactionService.addorupdateReaction(reaction,loggedUserId);
         return ResponseEntity.ok(savedReaction); // returns 200 + JSON of saved user
     }
 
