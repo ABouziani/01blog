@@ -2,35 +2,21 @@ package com.example.blog.dto;
 
 import java.time.LocalDateTime;
 
-import com.example.blog.model.Post;
-import com.example.blog.model.User;
-
 
 public class NewReactionRequest {
 
     public NewReactionRequest() {
     }
-    private User user;
-    private Post post;
+    private long postId;
     private String type;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-
-
-    public User getUser() {
-        return user;
+    public long getPostId() {
+        return postId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPostId(long postId) {
+        this.postId = postId;
     }
 
     public String getType() {

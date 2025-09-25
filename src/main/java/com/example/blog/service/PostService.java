@@ -32,6 +32,10 @@ public class PostService {
         return postRepository.findByCreatorId(userId);
     }
 
+    public Optional<Post> getPostById(Long postId) {
+        return postRepository.findById(postId);
+    }
+
     public Post createPost(NewPostRequest newPostRequest, Long creatorId) {
         // 1. Map newPostRequest to Entity
         Post post = new Post();

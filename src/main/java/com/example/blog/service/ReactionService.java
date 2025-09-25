@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -47,22 +48,40 @@ public class ReactionService {
     }
 
     public Reaction addReaction(NewReactionRequest newReactionRequest, Long creatorId) {
-        // 1. Map newPostRequest to Entity
-        // 2. Set creator — fetched by ID (from security context usually)
+
         User reactor = userService.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Post post = postService.findById(newReactionRequest.getPostId())
+        Post post = postService.getPostById(newReactionRequest.getPostId())
                 .orElseThrow(() -> new RuntimeException("post not found"));
 
-        Reaction reaction = new Reaction();
-        reaction.setUser(reactor);
-        reaction.setPost(post);
-        reaction.setType(newReactionRequest.getType());
-        reaction.setCreatedAt(LocalDateTime.now());
+        String newType = newReactionRequest.getType().toLowerCase();
+        // Check if reaction already exists
+        Optional<Reaction> existingReactionOpt = reactionRepository.findByUserIdAndPostId(creatorId, newReactionRequest.getPostId());
 
-        // 3. Save and return
-        return reactionRepository.save(reaction);
+        if (existingReactionOpt.isPresent()) {
+            Reaction existing = existingReactionOpt.get();
+            String existingType = existing.getType().toLowerCase();
+
+            if (existingType.equals(newType)) {
+                // Same reaction: remove it (toggle off)
+                reactionRepository.delete(existing);
+                return null; // or throw exception, or return a "deleted" response
+            } else {
+                // Different reaction: update type
+                existing.setType(newType);
+                existing.setCreatedAt(LocalDateTime.now()); // optional: update timestamp
+                return reactionRepository.save(existing);
+            }
+        } else {
+            // No existing reaction: create new one
+            Reaction newReaction = new Reaction();
+            newReaction.setUser(reactor);
+            newReaction.setPost(post);
+            newReaction.setType(newType);
+            newReaction.setCreatedAt(LocalDateTime.now());
+            return reactionRepository.save(newReaction);
+        }
     }
 
     public Post updatePost(Long postId, NewPostRequest updateRequest, Long requesterId) {

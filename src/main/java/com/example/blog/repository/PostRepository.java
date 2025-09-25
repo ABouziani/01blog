@@ -14,6 +14,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // You can add custom query methods here if needed, for example:
     // Example: Find posts by creator ID
     Optional<List<Post>> findByCreatorId(Long userId);
+    
+    @Override
+    Optional<Post> findById(Long Id);
 
     // Example: Find posts by title containing a keyword
     // List<Post> findByTitleContainingIgnoreCase(String keyword);

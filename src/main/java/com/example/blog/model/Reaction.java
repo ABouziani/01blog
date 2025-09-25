@@ -10,10 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
-@Table(name = "reactions")
+@Table(name = "reactions", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_id", "post_id"})
+})
 public class Reaction {
 
     public Reaction() {
