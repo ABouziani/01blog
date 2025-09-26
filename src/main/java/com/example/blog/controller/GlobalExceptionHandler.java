@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.ErrorResponse;
+import com.example.blog.exceptions.DuplicateReportException;
 import com.example.blog.exceptions.RefreshTokenNotFoundException;
 import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.exceptions.TokenManagementException;
@@ -101,7 +102,7 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, ex.getStatusCode());
     }
-    
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(ResourceNotFoundException ex) {
         System.out.println(ex);
@@ -111,5 +112,12 @@ public class GlobalExceptionHandler {
                 Instant.now()
         );
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateReportException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateReport(DuplicateReportException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("Error", ex.getMessage()); // "you already reported this user"
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

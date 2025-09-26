@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.blog.dto.NewCommentRequest;
-import com.example.blog.dto.NewReactionRequest;
 import com.example.blog.model.Comment;
 import com.example.blog.model.Post;
-import com.example.blog.model.Reaction;
 import com.example.blog.model.User;
 import com.example.blog.repository.CommentRepository;
 
