@@ -1,5 +1,8 @@
 package com.example.blog.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +25,8 @@ import com.example.blog.model.User;
 import com.example.blog.service.JwtUtil;
 import com.example.blog.service.RefreshTokenService;
 import com.example.blog.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -67,22 +72,21 @@ public class AuthController {
 
     //Check login
     @GetMapping("/islogged")
-    public ResponseEntity<?> isLogged() {
-        System.out.println("+++++++++++++++++++++++++++++++++++");
-        return ResponseEntity.ok("Token is valid");
-        // String authHeader = request.getHeader("Authorization");
-        // System.out.println("+++++++++++++++++++++++++++++++++++" + authHeader);
-        // if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        //     return ResponseEntity.status(401).body("Missing or invalid Authorization header");
-        // }
+    public ResponseEntity<?> isLogged(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
+        }
 
-        // String token = authHeader.substring(7);
+        String token = authHeader.substring(7);
 
-        // if (jwtUtil.validateToken(token)) {
-        //     return ResponseEntity.ok("Token is valid");
-        // } else {
-        //     return ResponseEntity.status(401).body("Invalid or expired token");
-        // }
+        if (jwtUtil.validateToken(token)) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Token is valid");
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(401).body("Invalid or expired token");
+        }
     }
 
     // ------------------- REFRESH TOKEN -------------------

@@ -26,49 +26,55 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
 
-    // 👇 Constructor injection + @Lazy
     @Autowired
-    public JwtFilter(
-            @Lazy JwtUtil jwtUtil,
-            @Lazy CustomUserDetailsService userDetailsService) {
+    public JwtFilter(@Lazy JwtUtil jwtUtil, @Lazy CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // --- SKIP JWT VERIFICATION FOR PUBLIC ENDPOINTS ---
+        if (path.startsWith("/api/posts/")) {
+            filterChain.doFilter(request, response);
+            return; // skip JWT entirely
+        }
+
+        // --- NORMAL JWT VERIFICATION FOR OTHER ENDPOINTS ---
         final String authHeader = request.getHeader("Authorization");
-
         String username = null;
         String token = null;
         String role = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtUtil.extractUsername(token);
-            role = jwtUtil.extractClaims(token).get("role", String.class);
+
+            try {
+                username = jwtUtil.extractUsername(token);
+                role = jwtUtil.extractClaims(token).get("role", String.class);
+            } catch (Exception e) {
+                // ignore expired or invalid token
+                username = null;
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            // Validate token
             if (jwtUtil.isTokenValid(token, username)) {
 
-                // Create authority from JWT role
                 List<GrantedAuthority> authorities = Collections.singletonList(
                         new SimpleGrantedAuthority("ROLE_" + role)
                 );
 
-                // Set authentication in SecurityContext
-                // Load full user details
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                // Set authentication in SecurityContext
-                UsernamePasswordAuthenticationToken authToken
-                        = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
