@@ -56,6 +56,16 @@ public class JwtUtil {
         return (username.equals(extractedUsername) && !isTokenExpired(token));
     }
 
+    // Validate token without needing username
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = extractClaims(token);
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }

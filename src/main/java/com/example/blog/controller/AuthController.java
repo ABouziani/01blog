@@ -6,6 +6,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import com.example.blog.service.JwtUtil;
 import com.example.blog.service.RefreshTokenService;
 import com.example.blog.service.UserService;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -60,6 +63,26 @@ public class AuthController {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken()));
+    }
+
+    //Check login
+    @GetMapping("/islogged")
+    public ResponseEntity<?> isLogged() {
+        System.out.println("+++++++++++++++++++++++++++++++++++");
+        return ResponseEntity.ok("Token is valid");
+        // String authHeader = request.getHeader("Authorization");
+        // System.out.println("+++++++++++++++++++++++++++++++++++" + authHeader);
+        // if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        //     return ResponseEntity.status(401).body("Missing or invalid Authorization header");
+        // }
+
+        // String token = authHeader.substring(7);
+
+        // if (jwtUtil.validateToken(token)) {
+        //     return ResponseEntity.ok("Token is valid");
+        // } else {
+        //     return ResponseEntity.status(401).body("Invalid or expired token");
+        // }
     }
 
     // ------------------- REFRESH TOKEN -------------------
