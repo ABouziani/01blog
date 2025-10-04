@@ -33,6 +33,11 @@ public class PostsController {
         return postService.getPostsByUserId(userid).orElse(List.of());
     }
 
+    @GetMapping("/getallposts")
+    public List<Post> getallPosts() {
+        return postService.getAllPosts();
+    }
+
     @GetMapping("/getpost/{postid}")
     public Post getPost(@PathVariable Long postid) {
         return postService.getPostById(postid).orElse(null);
@@ -40,17 +45,15 @@ public class PostsController {
 
     @PostMapping("/create")
     public ResponseEntity<Post> createPosts(@Valid @RequestBody NewPostRequest newPostRequest) {
-        System.out.println("*************************");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        System.out.println(userDetails);
         Long loggedUserId = userDetails.getId();
         Post savedPost = postService.createPost(newPostRequest, loggedUserId);
         return ResponseEntity.ok(savedPost); // returns 200 + JSON of saved user
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id,@Valid @RequestBody NewPostRequest updateRequest,Authentication authentication) {
+    public ResponseEntity<Post> updatePost(@PathVariable Long id, @Valid @RequestBody NewPostRequest updateRequest, Authentication authentication) {
 
         // Get current user ID
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

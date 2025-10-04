@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -53,6 +54,7 @@ public class User {
 
     private String photo; // can store file path or URL
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
