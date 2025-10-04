@@ -1,14 +1,18 @@
 package com.example.blog.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -48,6 +52,21 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private String photo; // can store file path or URL
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    // Helper method to add a post
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setCreator(this);
+    }
+
+    // Helper method to remove a post
+    public void removePost(Post post) {
+        posts.remove(post);
+        post.setCreator(null);
+    }
 
     // --- Getters & Setters ---
     public Long getId() {
@@ -112,5 +131,13 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }
