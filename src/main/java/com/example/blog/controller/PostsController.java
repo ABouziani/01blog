@@ -28,15 +28,22 @@ public class PostsController {
     @Autowired
     private PostService postService;
 
-    @GetMapping("/{userid}")
+    @GetMapping("/getuserposts/{userid}")
     public List<Post> getPosts(@PathVariable Long userid) {
         return postService.getPostsByUserId(userid).orElse(List.of());
     }
 
+    @GetMapping("/getpost/{postid}")
+    public Post getPost(@PathVariable Long postid) {
+        return postService.getPostById(postid).orElse(null);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Post> createPosts(@Valid @RequestBody NewPostRequest newPostRequest) {
+        System.out.println("*************************");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        System.out.println(userDetails);
         Long loggedUserId = userDetails.getId();
         Post savedPost = postService.createPost(newPostRequest, loggedUserId);
         return ResponseEntity.ok(savedPost); // returns 200 + JSON of saved user

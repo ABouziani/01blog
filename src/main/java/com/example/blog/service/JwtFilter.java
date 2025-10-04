@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // --- SKIP JWT VERIFICATION FOR PUBLIC ENDPOINTS ---
-        if (path.startsWith("/api/posts/")) {
+        if (path.equals("/api/posts/")) {
             filterChain.doFilter(request, response);
             return; // skip JWT entirely
         }
