@@ -28,12 +28,12 @@ public class PostService {
     @Autowired
     private UserService userService;
 
-    public Optional<List<Post>> getPostsByUserId(Long userId) {
-        return postRepository.findByCreatorId(userId);
+    public List<Post> getPostsByUserId(Long userId) {
+        return postRepository.findByCreatorIdWithReactions(userId);
     }
 
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        return postRepository.findAllWithReactions();
     }
 
     public Optional<Post> getPostById(Long postId) {
