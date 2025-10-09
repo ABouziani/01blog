@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dto.NewPostRequest;
+import com.example.blog.dto.PostsWithReactionsCountDto;
 import com.example.blog.model.Post;
 import com.example.blog.service.PostService;
 import com.example.blog.service.UserDetailsImpl;
@@ -30,11 +31,11 @@ public class PostsController {
 
     @GetMapping("/getuserposts/{userid}")
     public List<Post> getPosts(@PathVariable Long userid) {
-        return postService.getPostsByUserId(userid).orElse(List.of());
+        return postService.getPostsByUserId(userid);
     }
 
     @GetMapping("/getallposts")
-    public List<Post> getallPosts() {
+    public List<PostsWithReactionsCountDto> getallPosts() {
         return postService.getAllPosts();
     }
 
@@ -77,4 +78,5 @@ public class PostsController {
 
         return ResponseEntity.ok("Post deleted successfullly!");
     }
+
 }

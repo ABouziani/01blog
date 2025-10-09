@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.NewPostRequest;
+import com.example.blog.dto.PostsWithReactionsCountDto;
 import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
@@ -32,8 +33,8 @@ public class PostService {
         return postRepository.findByCreatorIdWithReactions(userId);
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAllWithReactions();
+    public List<PostsWithReactionsCountDto> getAllPosts() {
+        return postRepository.findAllPostsWithReactionsCount();
     }
 
     public Optional<Post> getPostById(Long postId) {

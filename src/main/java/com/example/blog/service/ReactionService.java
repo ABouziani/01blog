@@ -29,6 +29,10 @@ public class ReactionService {
         return reactionRepository.findByUserId(userId);
     }
 
+     public List<Reaction> getAll() {
+        return reactionRepository.findAll();
+    }
+
     public Optional<List<Reaction>> getReactionsByPostId(Long postId) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("post not found"));

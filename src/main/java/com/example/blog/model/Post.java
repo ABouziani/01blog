@@ -1,10 +1,9 @@
 package com.example.blog.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,7 +23,7 @@ import jakarta.validation.constraints.Size;
 public class Post {
 
     public Post() {
-        this.reactions = new ArrayList<>();
+        // this.reactions = new ArrayList<>();
     }
 
     @Id
@@ -49,7 +48,7 @@ public class Post {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User creator;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions;
 
