@@ -1,9 +1,9 @@
 package com.example.blog.dtoresponses;
 
+import java.util.stream.Collectors;
+
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class EntityDtoMapper {
 
