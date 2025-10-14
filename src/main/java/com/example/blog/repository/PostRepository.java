@@ -9,12 +9,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.blog.dto.PostsWithReactionsCountDto;
+import com.example.blog.dto.ReactionCount;
 import com.example.blog.model.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-@Query(value = """
+    @Query(value = """
     SELECT 
         p.id,
         p.title,
@@ -30,8 +31,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     JOIN users u ON u.id = p.user_id
     GROUP BY p.id, p.title, p.description, p.media, p.created_at, p.user_id, u.username
     """, nativeQuery = true)
-List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount();
-
+    List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount();
 
     // Fetch posts by creator ID with reactions
     @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.creator.id = :userId")
@@ -48,4 +48,14 @@ List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount();
 
     @Override
     void deleteById(Long id);
+
+    @Query("""
+    SELECT new com.example.blog.dto.ReactionCount(
+        COALESCE(SUM(CASE WHEN r.type = 'like' THEN 1 ELSE 0 END), 0),
+        COALESCE(SUM(CASE WHEN r.type = 'dislike' THEN 1 ELSE 0 END), 0)
+    )
+    FROM Reaction r
+    WHERE r.post.id = :postId
+    """)
+    ReactionCount findReactionCountsByPostId(@Param("postId") Long postId);
 }

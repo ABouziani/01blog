@@ -2,6 +2,8 @@ package com.example.blog.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +30,7 @@ public class Comment {
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 

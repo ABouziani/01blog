@@ -1,8 +1,10 @@
 package com.example.blog.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.blog.dto.NewPostRequest;
 import com.example.blog.dto.PostsWithReactionsCountDto;
@@ -21,6 +25,8 @@ import com.example.blog.service.PostService;
 import com.example.blog.service.UserDetailsImpl;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -40,17 +46,28 @@ public class PostsController {
     }
 
     @GetMapping("/getpost/{postid}")
-    public Post getPost(@PathVariable Long postid) {
-        return postService.getPostById(postid).orElse(null);
+    public Post getPost(@PathVariable Long postid, Authentication authentication) {
+        Post post = postService.getPostById(postid).orElse(null);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        if (Objects.equals(post.getCreator().getId(), loggedUserId)) {
+            post.setIsOwner(true);
+        }
+        return post;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Post> createPosts(@Valid @RequestBody NewPostRequest newPostRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Post> createPost(
+            @RequestParam("title") @NotBlank @Size(min = 3, max = 100) String title,
+            @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
+            @RequestParam(value = "media", required = false) MultipartFile media,
+            Authentication authentication
+    ) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        Post savedPost = postService.createPost(newPostRequest, loggedUserId);
-        return ResponseEntity.ok(savedPost); // returns 200 + JSON of saved user
+
+        Post savedPost = postService.createPost(title, description, media, loggedUserId); // update service to accept MultipartFile
+        return ResponseEntity.ok(savedPost);
     }
 
     @PutMapping("/edit/{id}")

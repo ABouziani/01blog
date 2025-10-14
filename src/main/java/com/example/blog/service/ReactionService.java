@@ -58,7 +58,7 @@ public class ReactionService {
             if (existingType.equals(newType)) {
                 // Same reaction: remove it (toggle off)
                 reactionRepository.delete(existing);
-                return null; // or throw exception, or return a "deleted" response
+                return existing; // or throw exception, or return a "deleted" response
             } else {
                 // Different reaction: update type
                 existing.setType(newType);
