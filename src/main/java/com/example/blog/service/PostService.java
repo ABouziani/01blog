@@ -1,5 +1,9 @@
 package com.example.blog.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -56,8 +60,6 @@ public class PostService {
         post.setDescription(description);
         post.setMedia(mediaUrl);
 
-        
-
         // 2. Set creator — fetched by ID (from security context usually)
         User creator = userService.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -111,6 +113,18 @@ public class PostService {
             if (!post.getCreator().getId().equals(requesterId)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own posts");
             }
+        }
+
+        
+
+        String uploadDir = System.getProperty("user.dir") + "/uploads/";
+        Path filePath;
+        filePath = Paths.get(uploadDir, post.getMedia().replace("/api/files/", ""));
+
+        try {
+            boolean deleted = Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         postRepository.deleteById(postId);
