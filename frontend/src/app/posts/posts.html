@@ -1,0 +1,65 @@
+<div class="posts-container">
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="posts-grid" *ngIf="!loading">
+    <article class="post-card" *ngFor="let post of displayedPosts">
+      <!-- Media Section -->
+      <div class="post-media" *ngIf="post.media">
+
+        <!-- Image -->
+        <img *ngIf="isImage(post.media.toString())" class="media-image-video"
+          [src]="'http://localhost:8080' + post.media" alt="Post image" />
+
+        <!-- Video thumbnail -->
+        <img *ngIf="isVideo(post.media.toString()) && post.thumbnail; else thumbLoading" [src]="post.thumbnail"
+          alt="Video thumbnail" class="video-thumb" />
+
+        <ng-template #thumbLoading>
+          <span>Generating thumbnail...</span>
+        </ng-template>
+      </div>
+
+
+      <!-- Content Section -->
+      <div class="post-content">
+        <header class="post-header">
+          <h2 class="post-title" [routerLink]="['/posts', post.id]">{{ post.title }}</h2>
+          <div class="post-meta">
+            <span class="post-author" [routerLink]="['/users', post.creatorId]">@{{ post.creatorUsername }}</span>
+            <time class="post-date" [attr.datetime]="post.createdAt">
+              {{ post.createdAt | date:'mediumDate' }}
+            </time>
+          </div>
+        </header>
+
+        <!-- Preview description -->
+        <p class="post-description">
+          {{ getPreview(post.description) }}
+        </p>
+
+        <!-- Read More button -->
+        <button class="read-more-btn" [routerLink]="['/posts', post.id]">
+          Read More
+        </button>
+
+        <div class="post-reactions">
+          <button class="reaction-btn like" (click)="addReaction(post.id, 'LIKE')"
+            [disabled]="postsService.loadingReaction[post.id] === 'LIKE'">
+            👍 {{ post.likes || 0 }}
+          </button>
+
+          <button class="reaction-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
+            [disabled]="postsService.loadingReaction[post.id] === 'DISLIKE'">
+            👎 {{ post.dislikes || 0 }}
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <div class="empty-state" *ngIf="displayedPosts.length === 0">
+      <p>No posts available</p>
+    </div>
+  </div>
+</div>

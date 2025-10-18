@@ -1,0 +1,68 @@
+<!-- Error Message -->
+<div *ngIf="error" class="alert alert-error">
+  <i class="icon-error"></i>
+  {{ error }}
+</div>
+
+<!-- User Card -->
+<div *ngIf="user as u" class="user-card">
+
+  <!-- Centered User Info -->
+  <div class="user-header-centered">
+    <img [src]="u.photo" alt="User Photo" class="user-photo" />
+    <h2>{{ u.username }}</h2>
+    <p class="user-email">{{ u.email }}</p>
+  </div>
+
+  <!-- User Details -->
+  <div class="user-details">
+    <p><strong>Role:</strong> {{ u.role }}</p>
+    <p><strong>Bio:</strong> {{ u.bio }}</p>
+    <p><strong>Joined:</strong> {{ u.createdAt | date: 'medium' }}</p>
+  </div>
+
+  <div class="user-buttons">
+    <button class="subscribe" (click)="subscribe(u.id)" *ngIf="!u.followed">
+      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
+      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
+      2H20l-2-2z" />
+      </svg>
+      Subscribe
+    </button>
+    <button class="subscribe" disabled *ngIf="u.followed">
+      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
+      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
+      2H20l-2-2z" />
+      </svg>
+      Subscribed
+    </button>
+
+    <button class="report" (click)="reportUser()" *ngIf="!u.alreadyReported">
+      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
+      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
+      </svg>
+      Report
+    </button>
+
+    <button class="report" (click)="reportUser()" disabled *ngIf="u.alreadyReported">
+      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
+      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
+      </svg>
+      You already reported this user!
+    </button>
+  </div>
+  <!-- Posts Section -->
+  <div class="user-posts">
+    <h3>User's Posts</h3>
+    <ng-container *ngIf="u.posts.length > 0; else noPosts">
+      <app-posts [posts]="u.posts"></app-posts>
+    </ng-container>
+    <ng-template #noPosts>
+      <p class="no-posts">This user has not written any posts yet.</p>
+    </ng-template>
+  </div>
+</div>

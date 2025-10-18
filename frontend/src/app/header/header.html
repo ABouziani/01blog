@@ -1,0 +1,49 @@
+<header class="app-header">
+  <div class="logo">My 01Blog</div>
+  <nav class="menu">
+    <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="link-icon material-symbols-rounded">home</span>
+      <span class="link-title">Home</span>
+    </a>
+
+    <a class="link" routerLink="/about" routerLinkActive="active">
+      <span class="link-icon material-symbols-rounded">info</span>
+      <span class="link-title">About</span>
+    </a>
+
+    <a class="link" routerLink="/contact" routerLinkActive="active">
+      <span class="link-icon material-symbols-rounded">mail</span>
+      <span class="link-title">Contact</span>
+    </a>
+
+    <!-- Non connecté -->
+    <ng-container *ngIf="!authService.isLoggedIn()">
+      <a class="link" routerLink="/signin" routerLinkActive="active">
+        <span class="link-icon material-symbols-rounded">login</span>
+        <span class="link-title">Signin</span>
+      </a>
+      <a class="link" routerLink="/register" routerLinkActive="active">
+        <span class="link-icon material-symbols-rounded">person_add</span>
+        <span class="link-title">Register</span>
+      </a>
+    </ng-container>
+
+    <!-- Connecté -->
+    <ng-container *ngIf="authService.isLoggedIn()">
+      <a class="link" routerLink="/profile" routerLinkActive="active">
+        <span class="link-icon material-symbols-rounded">account_circle</span>
+        <span class="link-title">Profile</span>
+      </a>
+
+      <a class="link" routerLink="/posts/create" routerLinkActive="active">
+        <span class="link-icon material-symbols-rounded">edit_note</span>
+        <span class="link-title">Create</span>
+      </a>
+
+      <button class="link logout-btn" (click)="authService.logout()">
+        <span class="link-icon material-symbols-rounded">logout</span>
+        <span class="link-title">Logout</span>
+      </button>
+    </ng-container>
+  </nav>
+</header>

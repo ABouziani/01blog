@@ -1,0 +1,250 @@
+/* --- Container --- */
+.post-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Post Actions --- */
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.post-actions button {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.delete-post {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-post:hover {
+  background-color: #c0392b;
+}
+
+.edit-post {
+  background-color: #3498db;
+  color: white;
+}
+
+.edit-post:hover {
+  background-color: #2c80b4;
+}
+
+/* --- Post Card --- */
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.post-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.8rem;
+}
+
+.post-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  width: 100%;
+  resize: none;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.post-meta .creator {
+  color: #3498db;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.post-meta .creator:hover {
+  text-decoration: underline;
+}
+
+/* --- Post Content --- */
+.post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.post-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  width: 100%;
+  resize: vertical;
+  padding: 0.5rem;
+  border: none;
+  background: #fafafa;
+  border-radius: 8px;
+  outline: none;
+}
+
+.post-description:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px #3498db30;
+}
+
+/* --- File Input --- */
+.file-input {
+  padding: 0.5rem;
+  background: #f5f5f5;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* --- Media Preview --- */
+.media-preview,
+.media-image-video,
+.post-media img,
+.post-media video {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.media-preview {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.remove-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background: #c0392b;
+}
+
+/* --- Form Actions --- */
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.submit-btn, .cancel-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.submit-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.submit-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #27ae60;
+}
+
+.cancel-btn {
+  background-color: #bdc3c7;
+}
+
+.cancel-btn:hover {
+  background-color: #95a5a6;
+}
+
+/* --- Error --- */
+.error-card {
+  text-align: center;
+  padding: 2rem;
+  background: #fff3f3;
+  border: 1px solid #f5c2c2;
+  border-radius: 12px;
+}
+
+.error-card h2 {
+  color: #e74c3c;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Loading Skeleton --- */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.skeleton-card {
+  width: 100%;
+  max-width: 800px;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite linear;
+  border-radius: 6px;
+}
+
+.skeleton-title { height: 24px; width: 70%; margin-bottom: 1rem; }
+.skeleton-meta { height: 14px; width: 40%; margin-bottom: 1rem; }
+.skeleton-description { height: 60px; width: 100%; margin-bottom: 1rem; }
+.skeleton-media { height: 200px; width: 100%; }
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .post-container {
+    padding: 1rem;
+  }
+
+  .post-title {
+    font-size: 1.4rem;
+  }
+
+  .post-actions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}

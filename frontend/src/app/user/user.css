@@ -1,0 +1,172 @@
+/* Card Base */
+.user-card,
+.alert {
+  /* background: #fff; */
+  border-radius: 8px;
+  padding: 2rem;
+  /* max-width: 700px; */
+  margin: 2rem auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Error Message */
+.alert-error {
+  background-color: #ffe5e5;
+  color: #a00;
+  border: 1px solid #f5c2c2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+/* Centered User Info */
+.user-header-centered {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .user-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #eee;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin: 0.5rem 0 0.2rem;
+    font-size: 1.6rem;
+    color: #c2bdbd;
+  }
+
+  .user-email {
+    color: #b6a9a9;
+    font-size: 0.95rem;
+  }
+}
+
+/* Details */
+.user-details {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #cababa;
+  margin-bottom: 2rem;
+
+  p {
+    margin: 0.3rem 0;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+/* Posts Section */
+.user-posts {
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.4rem;
+    color: #333;
+  }
+
+  .no-posts {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+    margin-top: 1rem;
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .user-card {
+    padding: 1.5rem;
+  }
+
+  .user-photo {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.user-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Base Button Styling */
+.user-buttons button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s;
+  min-width: 130px;
+  text-align: center;
+  outline: none;
+  color: #fff;
+
+  svg.btn-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+}
+
+/* Subscribe */
+.subscribe {
+  background-color: #4caf50;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #43a047;
+  }
+
+  &:active {
+    background-color: #388e3c;
+  }
+
+    &:disabled {
+    background-color: #a5d6a7;
+    color: #e8f5e9;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    opacity: 0.7;
+    cursor: default !important;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4);
+  }
+}
+
+/* Report */
+.report {
+  background-color: #e53935;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+
+  &:active {
+    background-color: #c62828;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.4);
+  }
+}

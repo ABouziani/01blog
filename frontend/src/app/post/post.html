@@ -1,0 +1,104 @@
+<div class="post-container" *ngIf="!loading; else loadingTemplate">
+  <!-- Edit/Delete buttons -->
+  <div *ngIf="post && post.owner" class="post-actions">
+    <button class="delete-post" *ngIf="!isEditing" (click)="delete(post.id)">Delete</button>
+    <button class="edit-post" (click)="isEditing = !isEditing">
+      {{ isEditing ? 'Cancel Editing' : 'Edit' }}
+    </button>
+  </div>
+
+  <div class="post-card" *ngIf="post; else notFoundTemplate">
+    <div class="post-header">
+      <!-- Title -->
+      <h1 class="post-title" *ngIf="!isEditing">{{ post.title }}</h1>
+      <div *ngIf="isEditing" [formGroup]="postForm">
+        <textarea class="post-title" formControlName="title"></textarea>
+      </div>
+
+      <div class="post-meta">
+        <span class="creator" [routerLink]="['/users', post.creator.id]">by {{ post.creator.username }}</span>
+        <span class="date">{{ post.createdAt | date:'medium' }}</span>
+      </div>
+    </div>
+
+    <div class="post-reactions">
+      <button class="reaction-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
+        👍 {{ post.likes || 0 }}
+      </button>
+
+      <button class="reaction-btn dislike" (click)="addReaction(post.id, 'DISLIKE')" [disabled]="postService.waiting">
+        👎 {{ post.dislikes || 0 }}
+      </button>
+    </div>
+
+    <!-- Post Content -->
+    <div class="post-content" [formGroup]="postForm">
+      <!-- Description -->
+      <p class="post-description" *ngIf="!isEditing">{{ post.description }}</p>
+      <textarea class="post-description" *ngIf="isEditing" formControlName="description"></textarea>
+
+      <!-- File Input -->
+      <input *ngIf="isEditing" type="file" (change)="onFileSelected($event)" accept="image/*,video/*"
+        class="file-input">
+
+      <!-- Preview -->
+      <div *ngIf="previewUrl">
+        <img *ngIf="isImage(previewUrl)" [src]="previewUrl" class="media-preview">
+        <video *ngIf="isVideo(previewUrl)" [src]="previewUrl" controls class="media-preview"></video>
+        <button type="button" (click)="selectedFile=null; previewUrl=null" class="remove-btn">Remove</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions" *ngIf="isEditing">
+        <button type="button" class="submit-btn" (click)="onSubmit()" [disabled]="isSubmitting || postForm.invalid">
+          <span *ngIf="!isSubmitting">Save Changes</span>
+          <span *ngIf="isSubmitting">Submitting...</span>
+        </button>
+        <button type="button" class="cancel-btn" (click)="cancelEditing()">Cancel</button>
+      </div>
+
+      <!-- Display media when not editing -->
+      <div class="post-media" *ngIf="post.media">
+        <img *ngIf="isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
+          class="media-image-video">
+        <video *ngIf="isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media" controls muted
+          preload="metadata"></video>
+      </div>
+
+      <!-- Comments -->
+      <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
+    </div>
+  </div>
+
+  <!-- Comments Section -->
+  <div class="comments-section" *ngIf="post && post.comments?.length">
+    <h3>Comments ({{ post.comments.length }})</h3>
+    <div class="comment" *ngFor="let comment of post.comments">
+      <div class="comment-author">{{ comment.user.username }}</div>
+      <div class="comment-date">{{ comment.createdAt.toString() | date:'short' }}</div>
+      <div class="comment-content">{{ comment.content }}</div>
+    </div>
+  </div>
+
+  <div class="no-comments" *ngIf="post && post.comments?.length === 0">
+    No comments yet.
+  </div>
+
+  <ng-template #notFoundTemplate>
+    <div class="error-card">
+      <h2>Post Not Found</h2>
+      <p>The requested post could not be located.</p>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-meta"></div>
+      <div class="skeleton skeleton-description"></div>
+      <div class="skeleton skeleton-media"></div>
+    </div>
+  </div>
+</ng-template>

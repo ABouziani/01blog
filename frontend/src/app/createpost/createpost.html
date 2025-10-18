@@ -1,0 +1,82 @@
+<!-- create-post/create-post.component.html -->
+<div class="create-post-container">
+  <div class="card">
+    <h2>Create New Post</h2>
+
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Title Field -->
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input type="text" id="title" formControlName="title" [class.error]="title?.invalid && title?.touched"
+          placeholder="Enter post title" >
+
+        <div class="error-message" *ngIf="title?.invalid && title?.touched">
+          <span *ngIf="title?.errors?.['required']">Title is required</span>
+          <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
+          <span *ngIf="title?.errors?.['maxlength']">Title cannot exceed 100 characters</span>
+        </div>
+      </div>
+
+      <!-- Description Field -->
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea id="description" formControlName="description"
+          [class.error]="description?.invalid && description?.touched" placeholder="Enter post description"
+          rows="6"></textarea>
+
+        <div class="error-message" *ngIf="description?.invalid && description?.touched">
+          <span *ngIf="description?.errors?.['required']">Description is required</span>
+          <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+          <span *ngIf="description?.errors?.['maxlength']">Description cannot exceed 1000 characters</span>
+        </div>
+      </div>
+
+      <!-- Media Upload Field -->
+      <div class="form-group">
+        <label for="media">Upload Media (optional)</label>
+
+        <input type="file" id="media" (change)="onFileSelected($event)" accept="image/*,video/*" class="file-input">
+
+        <!-- Preview -->
+        <div *ngIf="previewUrl">
+          <div *ngIf="isImage">
+            <img [src]="previewUrl" alt="Preview" class="media-preview">
+          </div>
+          <div *ngIf="isVideo">
+            <video [src]="previewUrl" controls class="media-preview"></video>
+          </div>
+          <button type="button" (click)="selectedFile = null; previewUrl = null;" class="remove-btn">
+            Remove
+          </button>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage && !postForm.invalid">
+          {{ errorMessage }}
+        </div>
+        <small class="hint">Supported: JPG, PNG, GIF, MP4, WebM, Ogg (max 10MB)</small>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages">
+        <div class="success-message" *ngIf="successMessage">
+          {{ successMessage }}
+        </div>
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" [disabled]="isSubmitting || postForm.invalid" class="submit-btn">
+          <span *ngIf="!isSubmitting">Create Post</span>
+          <span *ngIf="isSubmitting">Creating...</span>
+        </button>
+
+        <button type="button" (click)="router.navigate(['/posts'])" class="cancel-btn">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

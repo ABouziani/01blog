@@ -1,0 +1,15 @@
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="add-comment-form">
+      <textarea
+        formControlName="content"
+        placeholder="Write your comment..."
+        rows="3"
+        class="comment-input"
+      ></textarea>
+      <button
+        type="submit"
+        [disabled]="commentForm.invalid || isLoading"
+        class="submit-btn"
+      >
+        {{ isLoading ? 'Posting...' : 'Post Comment' }}
+      </button>
+    </form>
