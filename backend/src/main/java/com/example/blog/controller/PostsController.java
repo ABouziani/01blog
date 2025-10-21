@@ -25,6 +25,7 @@ import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
 import com.example.blog.service.PostService;
 import com.example.blog.service.UserDetailsImpl;
+import com.example.blog.service.UserService;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -35,6 +36,9 @@ public class PostsController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -73,7 +77,14 @@ public class PostsController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
 
-        Post savedPost = postService.createPost(title, description, media, loggedUserId); // update service to accept MultipartFile
+        User creator = userService.findById(loggedUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Post savedPost = postService.createPost(title, description, media, creator); // update service to accept MultipartFile
+
+        //Notify Followers
+        postService.notifyFollowersAsync(creator);
+
         return ResponseEntity.ok(savedPost);
     }
 

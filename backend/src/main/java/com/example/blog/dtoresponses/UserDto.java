@@ -14,6 +14,7 @@ public class UserDto {
     private String role;
     private List<PostDto> posts; // Include posts
     private boolean isAlreadyReported;
+    private boolean isAlreadyFollowed;
 
     // Constructors
     public UserDto() {
@@ -25,6 +26,14 @@ public class UserDto {
 
     public void setIsAlreadyReported(boolean isAlreadyReported) {
         this.isAlreadyReported = isAlreadyReported;
+    }
+
+    public boolean isAlreadyFollowed() {
+        return isAlreadyFollowed;
+    }
+
+    public void setIsAlreadyFollowed(boolean isAlreadyFollowed) {
+        this.isAlreadyFollowed = isAlreadyFollowed;
     }
 
     // Getters and Setters

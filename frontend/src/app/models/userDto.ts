@@ -9,6 +9,6 @@ export interface UserDto {
   createdAt: string; // or Date
   role: string;
   posts: PostDto[];
-  followed:boolean;
   alreadyReported:boolean;
+  alreadyFollowed:boolean;
 }

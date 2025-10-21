@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,7 +53,7 @@ public class PostService {
         return postRepository.findById(postId);
     }
 
-    public Post createPost(String title, String description, MultipartFile media, Long creatorId) {
+    public Post createPost(String title, String description, MultipartFile media, User creator) {
         String mediaUrl = null;
         if (media != null && !media.isEmpty()) {
             mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
@@ -62,16 +63,20 @@ public class PostService {
         post.setTitle(title);
         post.setDescription(description);
         post.setMedia(mediaUrl);
-
-        // 2. Set creator — fetched by ID (from security context usually)
-        User creator = userService.findById(creatorId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         post.setCreator(creator);
         post.setCreatedAt(LocalDateTime.now());
+        Post savedPost = postRepository.save(post);
 
-        // 3. Save and return
-        return postRepository.save(post);
+        return savedPost;
+    }
+
+    @Async
+    public void notifyFollowersAsync(User creator) {
+    List<User> followers = creator.getFollowers();
+    for (User f : followers) {
+        f.addUnreadNotification(creator.getId(), LocalDateTime.now());
+    }
+    userRepository.saveAll(followers);
     }
 
     public Post updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId) {

@@ -22,7 +22,7 @@
   </div>
 
   <div class="user-buttons">
-    <button class="subscribe" (click)="subscribe(u.id)" *ngIf="!u.followed">
+    <button class="subscribe" (click)="follow()" *ngIf="!u.alreadyFollowed">
       <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
       1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
@@ -30,7 +30,7 @@
       </svg>
       Subscribe
     </button>
-    <button class="subscribe" disabled *ngIf="u.followed">
+    <button class="subscribe" (click)="unfollow()" *ngIf="u.alreadyFollowed">
       <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
       1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 

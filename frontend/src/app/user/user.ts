@@ -26,6 +26,7 @@ export class UserComponent {
     this.http.get<UserDto>(`http://localhost:8080/api/users/${id}`)
       .subscribe({
         next: (data) => {
+          console.log(data);
           data.posts.forEach(post => {
             post.creatorId = data.id.toString();
             post.creatorUsername = data.username;
@@ -39,26 +40,48 @@ export class UserComponent {
       });
   }
 
-  subscribe(userId: number) {
+  follow() {
     const token = localStorage.getItem('access_token'); // or however you store your JWT
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
 
-    const body = {
-      userId: userId,
-    };
-    this.http.post<{ message: string }>(`http://localhost:8080/api/users/${userId}/follow`, body, { headers })
+    this.http.post<{ message: string }>(`http://localhost:8080/api/follow/${this.user?.id}`, { headers })
       .subscribe({
         next: (data) => {
           console.log(data);
           alert(data.message)
-          if (this.user) this.user.followed = true;
+          if (this.user) this.user.alreadyFollowed = true;
         },
         error: (err) => {
           console.error('Error following user:', err);
           this.error = 'Failed to follow this user!';
+          setTimeout(() => {
+            this.error = '';
+          }, 1500);
+        }
+      });
+  }
+
+
+  unfollow() {
+    const token = localStorage.getItem('access_token'); // or however you store your JWT
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    this.http.delete<{ message: string }>(`http://localhost:8080/api/follow/${this.user?.id}`, { headers })
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          alert(data.message)
+          if (this.user) this.user.alreadyFollowed = false;
+        },
+        error: (err) => {
+          console.error('Error unfollowing user:', err);
+          this.error = 'Failed to unfollow this user!';
           setTimeout(() => {
             this.error = '';
           }, 1500);
