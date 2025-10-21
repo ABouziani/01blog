@@ -71,6 +71,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserNotification> notifications = new ArrayList<>();
+
     // --- FOLLOWERS / FOLLOWING ---
     @JsonIgnore
     @ManyToMany
