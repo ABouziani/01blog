@@ -1,3 +1,11 @@
+package com.example.blog.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "notifications")
 public class Notification {
@@ -6,16 +14,14 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "author_id")
-    private Long authorId;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author; // the post creator
 
-    @Column(name = "post_created_at")
-    private LocalDateTime postCreatedAt;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-    // if you have other info about the notif, you can add here too.
-
-    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserNotification> userNotifications = new ArrayList<>();
-
-    // getters and setters
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 }

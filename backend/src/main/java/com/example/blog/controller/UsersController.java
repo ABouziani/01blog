@@ -67,8 +67,8 @@ public class UsersController {
         Hibernate.initialize(user.getPosts());
 
         //Mark notifs from this user as read
-        loggedUser.markAuthorNotificationsAsRead(user.getId());
-        userRepository.save(loggedUser);
+        // loggedUser.markAuthorNotificationsAsRead(user.getId());
+        // userRepository.save(loggedUser);
 
         return ResponseEntity.ok(EntityDtoMapper.toUserDto(user));
     }
@@ -92,28 +92,16 @@ public class UsersController {
     //     }
     //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials\n");
     // }
+    // @GetMapping("/notifs")
+    // public ResponseEntity<?> getNotifs(Authentication authentication) {
+    //     // Get current user ID
+    //     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    //     Long loggedUserId = userDetails.getId();
 
-     @GetMapping("/notifs")
-    public ResponseEntity<?> getNotifs(Authentication authentication) {
-        // Get current user ID
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Long loggedUserId = userDetails.getId();
+    //     User loggedUser = userService.findById(loggedUserId)
+    //             .orElseThrow(() -> new RuntimeException("Bad request!"));
 
-        User loggedUser = userService.findById(loggedUserId)
-                .orElseThrow(() -> new RuntimeException("Bad request!"));
+    //     return ResponseEntity.ok(loggedUser.getUnReadNotifs());
+    // }
 
-        return ResponseEntity.ok(loggedUser.getUnReadNotifs());
-    }
-
-    @GetMapping("/readnotifs")
-    public ResponseEntity<?> getreadNotifs(Authentication authentication) {
-        // Get current user ID
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Long loggedUserId = userDetails.getId();
-
-        User loggedUser = userService.findById(loggedUserId)
-                .orElseThrow(() -> new RuntimeException("Bad request!"));
-
-        return ResponseEntity.ok(loggedUser.getReadNotifs());
-    }
 }

@@ -2,17 +2,13 @@ package com.example.blog.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -60,6 +55,7 @@ public class User {
     private String role = "USER"; // default role
 
     private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime lastnotifcheck;
 
     private String photo; // can store file path or URL
 
@@ -70,9 +66,6 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserNotification> notifications = new ArrayList<>();
 
     // --- FOLLOWERS / FOLLOWING ---
     @JsonIgnore
@@ -94,52 +87,12 @@ public class User {
     @Transient
     private boolean isAlreadyFollowed;
 
-    @ElementCollection
-    @MapKeyColumn(name = "author_id")          // key column
-    @Column(name = "post_created_at")          // value column
-    @CollectionTable(
-            name = "user_unread_notifs",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
-    private Map<Long, LocalDateTime> unreadNotifs = new HashMap<>();
-
-    @ElementCollection
-    @MapKeyColumn(name = "author_id")
-    @Column(name = "post_created_at")
-    @CollectionTable(
-            name = "user_read_notifs",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
-    private final Map<Long, LocalDateTime> readNotifs = new HashMap<>();
-
     // --- Helper Methods for Following ---
     public void follow(User userToFollow) {
         if (!following.contains(userToFollow)) {
             following.add(userToFollow);
             userToFollow.getFollowers().add(this);
         }
-    }
-
-    //notifs helper methods
-    public void addUnreadNotification(Long authorId, LocalDateTime postTime) {
-        // Only add if newer than existing (optional but safe)
-        LocalDateTime existing = unreadNotifs.get(authorId);
-        if (existing == null || postTime.isAfter(existing)) {
-            unreadNotifs.put(authorId, postTime);
-        }
-    }
-
-    public void markAuthorNotificationsAsRead(Long authorId) {
-        LocalDateTime time = unreadNotifs.remove(authorId);
-        if (time != null) {
-            readNotifs.put(authorId, time);
-        }
-    }
-
-// Optional: mark all as read
-    public void markAllNotificationsAsRead() {
-        readNotifs.putAll(unreadNotifs);
-        unreadNotifs.clear();
     }
 
     public void unfollow(User userToUnfollow) {
@@ -227,6 +180,14 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public LocalDateTime getLastNotifCheck() {
+        return lastnotifcheck;
+    }
+
+    public void setLastNotifCheck(LocalDateTime lastnotifcheck) {
+        this.lastnotifcheck = lastnotifcheck;
+    }
+
     public String getPhoto() {
         return photo;
     }
@@ -281,13 +242,5 @@ public class User {
 
     public void setIsAlreadyFollowed(boolean isAlreadyFollowed) {
         this.isAlreadyFollowed = isAlreadyFollowed;
-    }
-
-    public Map<Long, LocalDateTime> getReadNotifs() {
-        return readNotifs;
-    }
-
-    public Map<Long, LocalDateTime> getUnReadNotifs() {
-        return unreadNotifs;
     }
 }

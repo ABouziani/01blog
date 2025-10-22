@@ -23,6 +23,7 @@ import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
+import com.example.blog.service.NotificationService;
 import com.example.blog.service.PostService;
 import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
@@ -36,6 +37,9 @@ public class PostsController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private UserService userService;
@@ -83,7 +87,7 @@ public class PostsController {
         Post savedPost = postService.createPost(title, description, media, creator); // update service to accept MultipartFile
 
         //Notify Followers
-        postService.notifyFollowersAsync(creator);
+        notificationService.createNotificationForNewPost(savedPost);
 
         return ResponseEntity.ok(savedPost);
     }

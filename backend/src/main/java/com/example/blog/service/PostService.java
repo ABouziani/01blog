@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,8 +21,12 @@ import com.example.blog.dto.PostsWithReactionsCountDto;
 import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
+import com.example.blog.model.Notification;
+import com.example.blog.repository.NotifRepository;
 import com.example.blog.repository.PostRepository;
 import com.example.blog.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PostService {
@@ -34,6 +38,10 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotifRepository notificationRepository;
+
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -70,14 +78,6 @@ public class PostService {
         return savedPost;
     }
 
-    @Async
-    public void notifyFollowersAsync(User creator) {
-    List<User> followers = creator.getFollowers();
-    for (User f : followers) {
-        f.addUnreadNotification(creator.getId(), LocalDateTime.now());
-    }
-    userRepository.saveAll(followers);
-    }
 
     public Post updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId) {
         String mediaUrl = null;
@@ -137,14 +137,16 @@ public class PostService {
             }
         }
 
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
-        Path filePath;
-        filePath = Paths.get(uploadDir, post.getMedia().replace("/api/files/", ""));
+        if (post.getMedia() != null) {
 
-        try {
-            boolean deleted = Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            Path filePath;
+            filePath = Paths.get(uploadDir, post.getMedia().replace("/api/files/", ""));
+            try {
+                boolean deleted = Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         postRepository.deleteById(postId);
