@@ -1,12 +1,17 @@
 package com.example.blog.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dtoresponses.NotificationResponseDto;
 import com.example.blog.model.User;
@@ -62,9 +67,9 @@ public class NotificationsController {
 
     // --- 4. Mark all notifications as read ---
     @PostMapping("/mark-all-read")
-    public ResponseEntity<Void> markAllAsRead() {
+    public ResponseEntity<?> markAllAsRead() {
         User user = getCurrentUser();
         notificationService.markAllNotificationsAsRead(user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("success","true"));
     }
 }

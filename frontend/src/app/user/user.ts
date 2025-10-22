@@ -18,7 +18,8 @@ export class UserComponent {
   constructor(private http: HttpClient, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const userId = this.route.snapshot.paramMap.get('id'); // TODO: Replace with dynamic route param if needed
+    let userId = this.route.snapshot.paramMap.get('id');
+    if (userId == null) userId = "0";
     this.fetchUser(userId);
   }
 

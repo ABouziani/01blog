@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth';
+import { NotificationItem } from '../models/notification';
+import { catchError, interval, of, startWith, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
+import { NotificationService } from '../services/notification';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +12,150 @@ import { AuthService } from '../services/auth';
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
-export class HeaderComponent {
-  constructor(public authService: AuthService) { }
+export class HeaderComponent implements OnInit, OnDestroy {
+
+  notifications: NotificationItem[] = [];
+  unreadCount = 0;
+  dropdownOpen = false;
+  defaultAvatar = '/assets/default-avatar.png'; // change as needed
+
+  private destroy$ = new Subject<void>();
+  private pollingSub?: Subscription;
+
+  constructor(
+    public authService: AuthService,
+    private notificationService: NotificationService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    // Start polling only if user is logged in
+    if (this.authService.isLoggedIn()) {
+      this.startPolling();
+    }
+
+    // If your AuthService provides an auth state Observable, subscribe to it to start/stop polling on login/logout.
+    // Example (uncomment if available):
+    // this.authService.authState$.pipe(takeUntil(this.destroy$)).subscribe(isLoggedIn => {
+    //   if (isLoggedIn) this.startPolling();
+    //   else this.stopPolling();
+    // });
+  }
+
+  startPolling(): void {
+    // ensure previous subscription stopped
+    this.stopPolling();
+
+    // Start immediately, then every 30s
+    this.pollingSub = interval(30000).pipe(
+      startWith(0),
+      takeUntil(this.destroy$),
+      switchMap(() => {
+        if (!this.authService.isLoggedIn()) return of([] as NotificationItem[]);
+        return this.notificationService.getNotifications()
+          .pipe(catchError(err => {
+            console.error('Polling error', err);
+            return of([] as NotificationItem[]);
+          }));
+      })
+    ).subscribe(notifs => {
+      this.applyNotifications(notifs);
+    });
+  }
+
+  stopPolling(): void {
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+      this.pollingSub = undefined;
+    }
+  }
+
+  applyNotifications(notifs: NotificationItem[]): void {
+    // Sort by newest first (optional)
+    this.notifications = (notifs || []).sort((a, b) => {
+      return new Date(b.postCreatedAt).getTime() - new Date(a.postCreatedAt).getTime();
+    });
+
+    this.unreadCount = this.notifications.filter(n => n.unread).length;
+  }
+
+  toggleDropdown(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.dropdownOpen = !this.dropdownOpen;
+
+    // if (this.dropdownOpen) {
+    //   // user opened dropdown -> mark unread as read automatically
+    //   this.autoMarkOpenItemsRead();
+    // }
+  }
+
+  closeDropdown(): void {
+    this.dropdownOpen = false;
+  }
+
+  autoMarkOpenItemsRead(): void {
+    const unreadIds = this.notifications.filter(n => n.unread).map(n => n.id);
+    if (unreadIds.length === 0) return;
+
+    // Optimistic update: mark local items as read immediately
+    this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
+    this.unreadCount = 0;
+
+    this.notificationService.markAsRead(unreadIds).subscribe(result => {
+      if (!result || !result.success) {
+        // Re-fetch to sync server state (or revert)
+        this.notificationService.getNotifications().subscribe(n => this.applyNotifications(n));
+      }
+    });
+  }
+
+  markAllRead(event?: Event): void {
+    if (event) event.stopPropagation();
+    
+    this.notificationService.markAllAsRead().subscribe(res => {
+      if (!res || !res.success) {
+        alert("Cannot mark all notifications as read, try again later!");
+        return;
+      }
+      this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
+      this.unreadCount = 0;
+    });
+
+    // const unreadIds = this.notifications.filter(n => n.unread).map(n => n.id);
+    // if (unreadIds.length === 0) return;
+
+    // // Optimistic update
+    // this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
+    // this.unreadCount = 0;
+
+    // this.notificationService.markAsRead(unreadIds).subscribe(res => {
+    //   if (!res || !res.success) {
+    //     this.notificationService.getNotifications().subscribe(n => this.applyNotifications(n));
+    //   }
+    // });
+  }
+
+  openNotification(n: NotificationItem): void {
+    // Example: navigate to the post
+    this.dropdownOpen = false;
+    this.router.navigate(['/posts', n.postId]);
+
+    // mark this single notification read locally + server
+    if (n.unread) {
+      n.unread = false;
+      this.unreadCount = Math.max(0, this.unreadCount - 1);
+      this.notificationService.markAsRead([n.id]).subscribe(res => {
+        if (!res || !res.success) {
+          // on failure re-sync
+          this.notificationService.getNotifications().subscribe(list => this.applyNotifications(list));
+        }
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.stopPolling();
+  }
 }

@@ -1,5 +1,6 @@
 package com.example.blog.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,10 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id, Authentication authentication) {
+        if (id == 0) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            id = userDetails.getId();
+        }
         User user = userService.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         // Ensure posts are fetched (avoid LazyInitializationException)
@@ -69,7 +74,6 @@ public class UsersController {
         //Mark notifs from this user as read
         // loggedUser.markAuthorNotificationsAsRead(user.getId());
         // userRepository.save(loggedUser);
-
         return ResponseEntity.ok(EntityDtoMapper.toUserDto(user));
     }
 
@@ -97,11 +101,8 @@ public class UsersController {
     //     // Get current user ID
     //     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
     //     Long loggedUserId = userDetails.getId();
-
     //     User loggedUser = userService.findById(loggedUserId)
     //             .orElseThrow(() -> new RuntimeException("Bad request!"));
-
     //     return ResponseEntity.ok(loggedUser.getUnReadNotifs());
     // }
-
 }

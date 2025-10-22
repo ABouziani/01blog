@@ -11,9 +11,10 @@ import { UserComponent } from './user/user';
 export const routes: Routes = [
     { path: '', component: HomeComponent},
     { path: 'signin', component: SigninComponent, canActivate:[unAuthGuard] }, 
-    { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
+    // { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
     { path: 'posts/create', component: CreatePostComponent, canActivate: [authGuard] },
     { path: 'posts/:id', component: PostComponent },
-    { path: 'users/:id', component: UserComponent }
+    { path: 'users/:id', component: UserComponent },
+    { path: 'profile', component: UserComponent }
 ];
 

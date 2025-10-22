@@ -45,5 +45,43 @@
         <span class="link-title">Logout</span>
       </button>
     </ng-container>
+  <!-- Notifications (only when logged in) -->
+    <ng-container *ngIf="authService.isLoggedIn()">
+      <div class="notif-wrapper" (clickOutside)="closeDropdown()" #notifRoot>
+        <button class="link notif-btn" (click)="toggleDropdown($event)" aria-haspopup="true" aria-expanded="{{dropdownOpen}}">
+          <span class="link-icon material-symbols-rounded">notifications</span>
+          <span class="link-title">Notifications</span>
+          <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+        </button>
+
+        <!-- Dropdown -->
+        <div class="notif-dropdown" *ngIf="dropdownOpen" role="menu" aria-label="Notifications">
+          <div class="notif-header">
+            <span>Notifications</span>
+            <button class="mark-all" (click)="markAllRead($event)" [disabled]="unreadCount === 0">Mark all read</button>
+          </div>
+
+          <div class="notif-list" *ngIf="notifications && notifications.length > 0; else noNotif">
+            <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.unread" (click)="openNotification(n)">
+              <img class="avatar" [src]="n.authorPhoto || defaultAvatar" alt="{{n.authorUsername}} avatar" />
+              <div class="notif-body">
+                <!-- <div class="notif-title">{{ n.postTitle }}</div> -->
+                <div class="notif-title">{{ n.authorUsername }} created new post.</div>
+                <div class="notif-meta">
+                  <!-- <span class="author">{{ n.authorUsername }}</span> -->
+                  •
+                  <span class="time">{{ n.postCreatedAt | date:'short' }}</span>
+                </div>
+              </div>
+              <span class="dot" *ngIf="n.unread" title="Unread"></span>
+            </div>
+          </div>
+
+          <ng-template #noNotif>
+            <div class="notif-empty">No notifications</div>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
   </nav>
 </header>
