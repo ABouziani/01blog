@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import com.example.blog.dtoresponses.NotificationResponseDto;
 import com.example.blog.model.User;
 import com.example.blog.service.NotificationService;
-import com.example.blog.service.NotificationService.NotificationWithUnreadStatus;
 import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
 
