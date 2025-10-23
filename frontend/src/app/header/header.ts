@@ -82,6 +82,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toggleDropdown(event?: Event): void {
     if (event) event.stopPropagation();
     this.dropdownOpen = !this.dropdownOpen;
+    if (this.dropdownOpen) {
+      this.notificationService.markAllAsReadFromDropDown().subscribe(res => {
+        if (!res || !res.success) {
+          alert("Cannot mark all notifications as read, try again later!");
+          return;
+        }
+        this.unreadCount = 0;
+      });
+    }
 
     // if (this.dropdownOpen) {
     //   // user opened dropdown -> mark unread as read automatically
@@ -93,25 +102,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.dropdownOpen = false;
   }
 
-  autoMarkOpenItemsRead(): void {
-    const unreadIds = this.notifications.filter(n => n.unread).map(n => n.id);
-    if (unreadIds.length === 0) return;
+  // autoMarkOpenItemsRead(): void {
+  //   const unreadIds = this.notifications.filter(n => n.unread).map(n => n.id);
+  //   if (unreadIds.length === 0) return;
 
-    // Optimistic update: mark local items as read immediately
-    this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
-    this.unreadCount = 0;
+  //   // Optimistic update: mark local items as read immediately
+  //   this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
+  //   this.unreadCount = 0;
 
-    this.notificationService.markAsRead(unreadIds).subscribe(result => {
-      if (!result || !result.success) {
-        // Re-fetch to sync server state (or revert)
-        this.notificationService.getNotifications().subscribe(n => this.applyNotifications(n));
-      }
-    });
-  }
+  //   this.notificationService.markAsRead(unreadIds).subscribe(result => {
+  //     if (!result || !result.success) {
+  //       // Re-fetch to sync server state (or revert)
+  //       this.notificationService.getNotifications().subscribe(n => this.applyNotifications(n));
+  //     }
+  //   });
+  // }
 
   markAllRead(event?: Event): void {
     if (event) event.stopPropagation();
-    
+
     this.notificationService.markAllAsRead().subscribe(res => {
       if (!res || !res.success) {
         alert("Cannot mark all notifications as read, try again later!");
@@ -144,7 +153,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (n.unread) {
       n.unread = false;
       this.unreadCount = Math.max(0, this.unreadCount - 1);
-      this.notificationService.markAsRead([n.id]).subscribe(res => {
+      this.notificationService.markAsRead(n.id).subscribe(res => {
         if (!res || !res.success) {
           // on failure re-sync
           this.notificationService.getNotifications().subscribe(list => this.applyNotifications(list));
@@ -157,5 +166,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.stopPolling();
+  }
+
+  markRead(id: number): void {
+
+    this.notificationService.markAsRead(id).subscribe(res => {
+      if (!res || !res.success) {
+        alert("Cannot mark notification as read, try again later!");
+        return;
+      }
+      this.notifications.forEach(n => {
+        if (n.id == id) n.unread = false;
+      });
+      this.unreadCount = this.unreadCount - 1;
+      alert("success");
+    });
+  }
+
+  markUnRead(id: number): void {
+
+    this.notificationService.markAsUnRead(id).subscribe(res => {
+      if (!res || !res.success) {
+        alert("Cannot mark notification as unread, try again later!");
+        return;
+      }
+      this.notifications.forEach(n => {
+        if (n.id == id) n.unread = true;
+      });
+      this.unreadCount = this.unreadCount + 1;
+      alert("success");
+    });
   }
 }

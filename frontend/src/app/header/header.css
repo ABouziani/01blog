@@ -144,3 +144,13 @@
     }
   }
 }
+
+
+.mark {
+  margin-left: 50px;
+}
+
+.mark:hover {
+  color: #1976d2;
+  font-weight: bold;
+}

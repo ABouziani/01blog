@@ -1,5 +1,5 @@
 // src/app/services/auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 interface LoginResponse {
   accessToken: string;
   refreshToken: string;
+  admin: boolean;
 }
 
 @Injectable({
@@ -18,6 +19,7 @@ export class AuthService {
   private readonly REFRESH_KEY = 'refresh_token';
 
   private loggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
+  private isadmin = signal<boolean>(false);
 
   constructor(private http: HttpClient,public router: Router) {
     // On app start: check if we have a token AND if it's valid on backend
@@ -50,9 +52,11 @@ export class AuthService {
   login(identifier: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('http://localhost:8080/api/auth/login', { identifier, password }).pipe(
       tap(response => {
+        console.log(response);
         localStorage.setItem(this.TOKEN_KEY, response.accessToken);
         localStorage.setItem(this.REFRESH_KEY, response.refreshToken);
         this.loggedIn.next(true);
+        this.isadmin.set(response.admin);
       })
     );
   }
@@ -61,11 +65,16 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_KEY);
     this.loggedIn.next(false);
+    this.isadmin.set(false);
     this.router.navigate(['/'])
   }
 
   isLoggedIn(): boolean {
     return this.loggedIn.value;
+  }
+
+  isAdmin(): boolean {
+    return this.isadmin();
   }
 
   private hasValidToken(): boolean {

@@ -6,7 +6,7 @@
       <span class="link-title">Home</span>
     </a>
 
-    <a class="link" routerLink="/about" routerLinkActive="active">
+    <!-- <a class="link" routerLink="/about" routerLinkActive="active">
       <span class="link-icon material-symbols-rounded">info</span>
       <span class="link-title">About</span>
     </a>
@@ -14,6 +14,11 @@
     <a class="link" routerLink="/contact" routerLinkActive="active">
       <span class="link-icon material-symbols-rounded">mail</span>
       <span class="link-title">Contact</span>
+    </a> -->
+
+    <a class="link" routerLink="/adminpanel" *ngIf="authService.isAdmin()" routerLinkActive="active">
+      <span class="link-icon material-symbols-rounded">dashboard</span>
+      <span class="link-title">Admin Panel</span>
     </a>
 
     <!-- Non connecté -->
@@ -62,15 +67,17 @@
           </div>
 
           <div class="notif-list" *ngIf="notifications && notifications.length > 0; else noNotif">
-            <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.unread" (click)="openNotification(n)">
+            <div *ngFor="let n of notifications" class="notif-item" [class.unread]="n.unread">
               <img class="avatar" [src]="n.authorPhoto || defaultAvatar" alt="{{n.authorUsername}} avatar" />
               <div class="notif-body">
                 <!-- <div class="notif-title">{{ n.postTitle }}</div> -->
-                <div class="notif-title">{{ n.authorUsername }} created new post.</div>
+                <div class="notif-title" (click)="openNotification(n)">{{ n.authorUsername }} created new post.</div>
                 <div class="notif-meta">
                   <!-- <span class="author">{{ n.authorUsername }}</span> -->
                   •
                   <span class="time">{{ n.postCreatedAt | date:'short' }}</span>
+                  <span class="mark" *ngIf="n.unread" (click)="markRead(n.id)">mark as read</span>
+                  <span class="mark" *ngIf="!n.unread" (click)="markUnRead(n.id)">mark as unread</span>
                 </div>
               </div>
               <span class="dot" *ngIf="n.unread" title="Unread"></span>

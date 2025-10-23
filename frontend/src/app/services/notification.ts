@@ -33,11 +33,11 @@ export class NotificationService {
   }
 
   // Mark provided notification ids as read on server
-  markAsRead(ids: number[]): Observable<{ success: boolean } | any> {
-    if (!ids || ids.length === 0) {
+  markAsRead(id: number): Observable<{ success: boolean } | any> {
+    if (!id) {
       return of({ success: true });
     }
-    return this.http.post(`${this.base}/${ids[0]}/mark-read`, this.authHeaders())
+    return this.http.post(`${this.base}/${id}/mark-read`, this.authHeaders())
       .pipe(
         map(() => ({ success: true })),
         catchError(err => {
@@ -47,8 +47,32 @@ export class NotificationService {
       );
   }
 
+  markAsUnRead(id: number): Observable<{ success: boolean } | any> {
+    if (!id) {
+      return of({ success: true });
+    }
+    return this.http.post(`${this.base}/${id}/mark-unread`, this.authHeaders())
+      .pipe(
+        map(() => ({ success: true })),
+        catchError(err => {
+          console.error('Failed to mark notifications as unread', err);
+          return of({ success: false, error: err });
+        })
+      );
+  }
+
   // Mark provided notification ids as read on server
   markAllAsRead(): Observable<{ success: boolean } | any> {
+    return this.http.post(`${this.base}/mark-all-read`, this.authHeaders())
+      .pipe(
+        map(() => ({ success: true })),
+        catchError(err => {
+          console.error('Failed to mark notifications as read', err);
+          return of({ success: false, error: err });
+        })
+      );
+  }
+  markAllAsReadFromDropDown(): Observable<{ success: boolean } | any> {
     return this.http.post(`${this.base}/mark-all-read`, this.authHeaders())
       .pipe(
         map(() => ({ success: true })),

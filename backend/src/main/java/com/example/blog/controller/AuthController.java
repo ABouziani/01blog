@@ -67,7 +67,7 @@ public class AuthController {
         String jwt = jwtUtil.generateToken(user.getUsername(), user.getRole());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken()));
+        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), user.getRole().equals("ADMIN")));
     }
 
     //Check login
@@ -100,7 +100,7 @@ public class AuthController {
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String newJwt = jwtUtil.generateToken(user.getUsername(), user.getRole());
-                    return ResponseEntity.ok(new JwtResponse(newJwt, token));
+                    return ResponseEntity.ok(new JwtResponse(newJwt, token, user.getRole().equals("ADMIN")));
                 })
                 .orElseThrow(() -> new RefreshTokenNotFoundException(token)); // ← triggers global handler
     }
