@@ -43,6 +43,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column
+    private boolean isBanned = false;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     @NotBlank(message = "Password cannot be blank")
@@ -252,5 +255,13 @@ public class User {
 
     public void setIsAlreadyFollowed(boolean isAlreadyFollowed) {
         this.isAlreadyFollowed = isAlreadyFollowed;
+    }
+
+    public boolean isBanned() {
+        return this.isBanned;
+    }
+
+    public void setBanned(boolean isBanned) {
+        this.isBanned = isBanned;
     }
 }

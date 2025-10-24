@@ -52,6 +52,9 @@ public class Post {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User creator;
 
+    @Column
+    private boolean isHidden;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions;
@@ -162,5 +165,13 @@ public class Post {
 
     public Notification getNotification() {
         return notification;
+    }
+
+    public boolean isHidden() {
+        return this.isHidden;
+    }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 }

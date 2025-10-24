@@ -1,0 +1,32 @@
+<mat-sidenav-container class="admin-container">
+      <mat-sidenav mode="side" opened>
+        <mat-nav-list>
+          <a mat-list-item (click)="selectTab('users')" [class.active]="activeTab() === 'users'">
+            <span matListItemTitle>Users</span>
+          </a>
+          <a mat-list-item (click)="selectTab('posts')" [class.active]="activeTab() === 'posts'">
+            <span matListItemTitle>Posts</span>
+          </a>
+          <a mat-list-item (click)="selectTab('reports')" [class.active]="activeTab() === 'reports'">
+            <span matListItemTitle>Reports</span>
+          </a>
+        </mat-nav-list>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <mat-toolbar color="primary">Admin Panel</mat-toolbar>
+        <div class="admin-content">
+          @switch (activeTab()) {
+            @case ('users') {
+              <app-admin-users></app-admin-users>
+            }
+            @case ('posts') {
+              <app-admin-posts></app-admin-posts>
+            }
+            @case ('reports') {
+              <app-admin-reports></app-admin-reports>
+            }
+          }
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>

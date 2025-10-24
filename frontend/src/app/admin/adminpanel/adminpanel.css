@@ -1,0 +1,11 @@
+  .admin-container {
+      width: 100vw;
+      height: 100vh;
+    }
+    .admin-content {
+      padding: 20px;
+    }
+    .mat-mdc-list-item.active {
+      background: rgba(0, 0, 0, 0.04);
+      font-weight: 500;
+    }

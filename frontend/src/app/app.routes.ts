@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home';
 import { CreatePostComponent } from './createpost/createpost';
 import { PostComponent } from './post/post';
 import { UserComponent } from './user/user';
+import { AdminPanel } from './admin/adminpanel/adminpanel';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
@@ -15,6 +16,8 @@ export const routes: Routes = [
     { path: 'posts/create', component: CreatePostComponent, canActivate: [authGuard] },
     { path: 'posts/:id', component: PostComponent },
     { path: 'users/:id', component: UserComponent },
-    { path: 'profile', component: UserComponent }
+    { path: 'profile', component: UserComponent },
+    { path: 'adminpanel', component: AdminPanel },
+    
 ];
 
