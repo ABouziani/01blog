@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth';
 import { NotificationItem } from '../models/notification';
-import { catchError, interval, of, startWith, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
+import { catchError, interval, of, startWith, Subject, Subscription, switchMap, takeUntil, timer } from 'rxjs';
 import { NotificationService } from '../services/notification';
 
 @Component({
@@ -33,6 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.authService.isLoggedIn()) {
       this.startPolling();
     }
+    console.log("*********************", this.authService.isAdmin());
 
     // If your AuthService provides an auth state Observable, subscribe to it to start/stop polling on login/logout.
     // Example (uncomment if available):
@@ -47,8 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.stopPolling();
 
     // Start immediately, then every 30s
-    this.pollingSub = interval(30000).pipe(
-      startWith(0),
+    this.pollingSub = timer(0, 10000).pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
         if (!this.authService.isLoggedIn()) return of([] as NotificationItem[]);
@@ -79,8 +79,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.unreadCount = this.notifications.filter(n => n.unread).length;
   }
 
-  toggleDropdown(event?: Event): void {
-    if (event) event.stopPropagation();
+  toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
     if (this.dropdownOpen) {
       this.notificationService.markAllAsReadFromDropDown().subscribe(res => {
@@ -118,9 +117,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //   });
   // }
 
-  markAllRead(event?: Event): void {
-    if (event) event.stopPropagation();
-
+  // markAllRead(event?: Event): void {
+  //   if (event) event.stopPropagation();
+  markAllRead(): void {
     this.notificationService.markAllAsRead().subscribe(res => {
       if (!res || !res.success) {
         alert("Cannot mark all notifications as read, try again later!");

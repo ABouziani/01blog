@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.PostsWithReactionsCountDto;
 import com.example.blog.exceptions.ResourceNotFoundException;
+import com.example.blog.model.Notification;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
-import com.example.blog.model.Notification;
+import com.example.blog.repository.CustomUnreadNotifRepository;
 import com.example.blog.repository.NotifRepository;
 import com.example.blog.repository.PostRepository;
 import com.example.blog.repository.UserRepository;
@@ -40,8 +40,7 @@ public class PostService {
     private UserRepository userRepository;
 
     @Autowired
-    private NotifRepository notificationRepository;
-
+    private CustomUnreadNotifRepository customNotificationRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -77,7 +76,6 @@ public class PostService {
 
         return savedPost;
     }
-
 
     public Post updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId) {
         String mediaUrl = null;
@@ -124,6 +122,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public void deletePost(Long postId, Long requesterId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
@@ -149,6 +148,9 @@ public class PostService {
             }
         }
 
-        postRepository.deleteById(postId);
+        Notification n = post.getNotification();
+        customNotificationRepository.deleteByNotificationId(n.getId());
+
+        postRepository.delete(post);
     }
 }

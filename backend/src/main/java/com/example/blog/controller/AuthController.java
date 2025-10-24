@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.blog.service.UserDetailsImpl;
 
 import com.example.blog.dto.LoginRequest;
 import com.example.blog.dto.TokenRefreshRequest;
@@ -72,7 +73,7 @@ public class AuthController {
 
     //Check login
     @GetMapping("/islogged")
-    public ResponseEntity<?> isLogged(HttpServletRequest request) {
+    public ResponseEntity<?> isLogged(HttpServletRequest request, Authentication authentication) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(401).body("Missing or invalid Authorization header");
@@ -83,6 +84,11 @@ public class AuthController {
         if (jwtUtil.validateToken(token)) {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Token is valid");
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            Long loggedUserId = userDetails.getId();
+            User loggedUser = userService.findById(loggedUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+            response.put("admin", loggedUser.getRole().equals("ADMIN") ? "ADMIN":"USER");
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(401).body("Invalid or expired token");

@@ -23,7 +23,7 @@ export class AuthService {
 
   constructor(private http: HttpClient,public router: Router) {
     // On app start: check if we have a token AND if it's valid on backend
-    // this.checkAuthStatus();
+    this.checkAuthStatus();
   }
 
   private checkAuthStatus(): void {
@@ -35,9 +35,14 @@ export class AuthService {
     // Send token to backend to verify
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.get<{ message: string }>('http://localhost:8080/api/auth/islogged', { headers })
+    this.http.get<{ message: string,admin: string }>('http://localhost:8080/api/auth/islogged', { headers })
       .pipe(
-        map(response => response.message == "Token is valid"), // 200 → valid
+        map(response => {
+          console.log("oninit : ",response)
+          if (response.message != "Token is valid") return false;
+          this.isadmin.set(response.admin == "ADMIN");
+          return true;  
+        }), // 200 → valid
         catchError((err) => {
           console.log(err);
           this.clearTokens(); // 401 or error → invalid

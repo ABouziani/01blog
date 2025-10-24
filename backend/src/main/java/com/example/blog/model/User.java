@@ -2,7 +2,9 @@ package com.example.blog.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -80,6 +82,14 @@ public class User {
     @JsonIgnore
     @ManyToMany(mappedBy = "followers")
     private List<User> following = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CustomUnreadNotif> unreadNotifications = new HashSet<>();
 
     @Transient
     private boolean isAlreadyReported;

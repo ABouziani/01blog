@@ -53,7 +53,7 @@
   <!-- Notifications (only when logged in) -->
     <ng-container *ngIf="authService.isLoggedIn()">
       <div class="notif-wrapper" (clickOutside)="closeDropdown()" #notifRoot>
-        <button class="link notif-btn" (click)="toggleDropdown($event)" aria-haspopup="true" aria-expanded="{{dropdownOpen}}">
+        <button class="link notif-btn" (click)="toggleDropdown()" aria-haspopup="true" aria-expanded="{{dropdownOpen}}">
           <span class="link-icon material-symbols-rounded">notifications</span>
           <span class="link-title">Notifications</span>
           <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
@@ -63,7 +63,7 @@
         <div class="notif-dropdown" *ngIf="dropdownOpen" role="menu" aria-label="Notifications">
           <div class="notif-header">
             <span>Notifications</span>
-            <button class="mark-all" (click)="markAllRead($event)" [disabled]="unreadCount === 0">Mark all read</button>
+            <button class="mark-all" (click)="markAllRead()" >Mark all read</button>
           </div>
 
           <div class="notif-list" *ngIf="notifications && notifications.length > 0; else noNotif">

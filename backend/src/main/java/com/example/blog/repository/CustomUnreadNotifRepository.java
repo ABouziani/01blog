@@ -2,11 +2,14 @@ package com.example.blog.repository;
 
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import com.example.blog.model.CustomUnreadNotif;
+import com.example.blog.model.Notification;
 
 public interface CustomUnreadNotifRepository extends JpaRepository<CustomUnreadNotif, Long> {
 
@@ -25,4 +28,9 @@ public interface CustomUnreadNotifRepository extends JpaRepository<CustomUnreadN
     // Optional: Delete all custom unread notifs for a user (e.g., on "mark all as read")
     @Modifying
     void deleteByUserId(Long userId);
+
+    // Delete entry when user reads it again
+    @Modifying
+    @Query("DELETE FROM CustomUnreadNotif c WHERE c.notification.id = :notificationId")
+    void deleteByNotificationId(@Param("notificationId") Long notificationId);
 }
