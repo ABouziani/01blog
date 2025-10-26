@@ -7,11 +7,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, CommonModule, MatDialogModule],
+  imports: [MatTableModule, MatButtonModule, CommonModule, MatDialogModule, RouterLink],
   templateUrl: './users.html',
   styleUrl: './users.css'
 })
@@ -20,10 +21,11 @@ export class AdminUsersComponent {
   private dialog = inject(MatDialog);
 
   users: User[] = [];
-  displayedColumns = ['username', 'email', 'status', 'actions'];
+  displayedColumns = ['username', 'email', 'since', 'status', 'actions'];
 
   ngOnInit() {
     this.userAdminService.getUsers().subscribe(users => {
+      console.log(users)
       this.users = users;
     });
   }

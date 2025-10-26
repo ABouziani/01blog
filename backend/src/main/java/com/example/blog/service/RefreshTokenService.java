@@ -34,6 +34,10 @@ public class RefreshTokenService {
     public RefreshToken createRefreshToken(User user) {
         try {
             refreshTokenRepository.deleteByExpiryDateBefore(OffsetDateTime.now());
+            Optional<RefreshToken> existRT = refreshTokenRepository.findByUserId(user.getId());
+            if (existRT.isPresent()) {
+                return existRT.get();
+            }
             RefreshToken refreshToken = new RefreshToken();
             refreshToken.setUser(user);
             refreshToken.setExpiryDate(OffsetDateTime.now().plusSeconds(refreshTokenDurationMs));

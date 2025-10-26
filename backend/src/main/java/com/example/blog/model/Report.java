@@ -2,6 +2,9 @@ package com.example.blog.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,10 +32,12 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "reporter_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User reporter;
 
     @ManyToOne
     @JoinColumn(name = "reported_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User reported;
 
     @Size(min = 10, max = 300, message = "Report reason must be between 10 and 300 characters long")

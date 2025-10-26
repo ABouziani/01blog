@@ -45,6 +45,7 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id, Authentication authentication) {
+        System.out.println(authentication);
         if (id == 0) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             id = userDetails.getId();

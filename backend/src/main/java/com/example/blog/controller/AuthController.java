@@ -58,6 +58,8 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword())
         );
 
+        System.out.println(authentication);
+
         // Save it in context — now it contains UserDetailsImpl
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

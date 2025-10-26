@@ -35,7 +35,7 @@ public class AdminService {
     // === USERS ===
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
-            .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned()))
+            .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt()))
             .collect(Collectors.toList());
     }
 

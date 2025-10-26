@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.stopPolling();
 
     // Start immediately, then every 30s
-    this.pollingSub = timer(0, 10000).pipe(
+    this.pollingSub = timer(0, 100000000).pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
         if (!this.authService.isLoggedIn()) return of([] as NotificationItem[]);

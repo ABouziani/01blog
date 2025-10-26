@@ -1,6 +1,5 @@
 package com.example.blog.model;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
@@ -9,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,9 +19,9 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // Primary key
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;  // Which user this token belongs to
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false, unique = true)
     private String token;  // The actual refresh token string
@@ -31,7 +30,8 @@ public class RefreshToken {
     private OffsetDateTime expiryDate;  // When this refresh token expires
 
     // Constructors
-    public RefreshToken() {}
+    public RefreshToken() {
+    }
 
     public RefreshToken(User user, String token, OffsetDateTime expiryDate) {
         this.user = user;
@@ -40,15 +40,35 @@ public class RefreshToken {
     }
 
     // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    public User getUser() {
+        return user;
+    }
 
-    public OffsetDateTime getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(OffsetDateTime expiryDate) { this.expiryDate = expiryDate; }
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public OffsetDateTime getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(OffsetDateTime expiryDate) {
+        this.expiryDate = expiryDate;
+    }
 }
