@@ -8,7 +8,7 @@
       <ng-container matColumnDef="preview">
         <th mat-header-cell *matHeaderCellDef>Content Preview</th>
         <td mat-cell *matCellDef="let post">
-          {{ post.content.length > 60 ? (post.content.substring(0, 57) + '...') : post.content }}
+          {{ post.description && post.description.length > 50 ? (post.description.substring(0, 47) + '...') : post.description }}
         </td>
       </ng-container>
 
@@ -23,7 +23,7 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let post">
           @if (post.isHidden) {
-            <button mat-button disabled>Hide</button>
+            <button mat-button (click)="openConfirmDialog('unhide', post.id, post.authorName)">Unhide</button>
           } @else {
             <button mat-button color="warn" (click)="openConfirmDialog('hide', post.id, post.authorName)">
               Hide

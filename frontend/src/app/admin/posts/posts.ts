@@ -34,10 +34,10 @@ export class AdminPostsComponent {
     });
   }
 
-  openConfirmDialog(action: 'hide' | 'delete', postId: string, authorName: string) {
+  openConfirmDialog(action: 'hide' | 'unhide' | 'delete', postId: string, authorName: string) {
     const message = action === 'hide'
       ? `Hide post by "${authorName}"? It will no longer appear publicly.`
-      : `Permanently delete this post by "${authorName}"? This cannot be undone.`;
+      : action === 'unhide' ? `Unhide this post ? It will appear publicly again.` :`Permanently delete this post by "${authorName}"? This cannot be undone.`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
        data: { message, action, postId, authorName }
@@ -49,6 +49,11 @@ export class AdminPostsComponent {
           this.postAdminService.hidePost(postId).subscribe(() => {
             const post = this.posts.find(p => p.id === postId);
             if (post) post.isHidden = true;
+          });
+        } else if (action === 'unhide') {
+          this.postAdminService.unhidePost(postId).subscribe(() => {
+            const post = this.posts.find(p => p.id === postId);
+            if (post) post.isHidden = false;
           });
         } else if (action === 'delete') {
           this.postAdminService.deletePost(postId).subscribe(() => {

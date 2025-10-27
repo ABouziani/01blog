@@ -29,22 +29,22 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     FROM posts p
     LEFT JOIN reactions r ON r.post_id = p.id
     JOIN users u ON u.id = p.user_id
+    WHERE p.is_hidden = false
     GROUP BY p.id, p.title, p.description, p.media, p.created_at, p.user_id, u.username
     """, nativeQuery = true)
     List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount();
 
     // Fetch posts by creator ID with reactions
-    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.creator.id = :userId")
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.creator.id = :userId AND p.isHidden = false")
     List<Post> findByCreatorIdWithReactions(@Param("userId") Long userId);
 
     // // Fetch single post by ID with reactions
     // @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.id = :id")
     // Optional<Post> findByIdWithReactions(@Param("id") Long id);
     // Your existing methods (keep these)
-    Optional<List<Post>> findByCreatorId(Long userId);
+    Optional<List<Post>> findByCreatorIdAndIsHiddenFalse(Long userId);
 
-    @Override
-    Optional<Post> findById(Long id);
+    Optional<Post> findByIdAndIsHiddenFalse(Long id);
 
     @Override
     void deleteById(Long id);

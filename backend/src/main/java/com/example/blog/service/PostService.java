@@ -57,7 +57,7 @@ public class PostService {
     }
 
     public Optional<Post> getPostById(Long postId) {
-        return postRepository.findById(postId);
+        return postRepository.findByIdAndIsHiddenFalse(postId);
     }
 
     public Post createPost(String title, String description, MultipartFile media, User creator) {
@@ -83,11 +83,13 @@ public class PostService {
             mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
         }
         // 1. Find post
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdAndIsHiddenFalse(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
-        // 2. Check ownership
-
-        if (!post.getCreator().getId().equals(requesterId)) {
+        User loggedUser = userRepository.findById(requesterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
+        String requesterRole = loggedUser.getRole();
+        
+        if (!post.getCreator().getId().equals(requesterId) && !requesterRole.equals("ADMIN")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only modify your own posts");
         }
 
@@ -124,7 +126,7 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long postId, Long requesterId) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdAndIsHiddenFalse(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
 
         User user = userRepository.findById(requesterId)

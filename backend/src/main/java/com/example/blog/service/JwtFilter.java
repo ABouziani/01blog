@@ -3,6 +3,7 @@ package com.example.blog.service;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -15,6 +16,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.blog.model.User;
+import com.example.blog.repository.UserRepository;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +29,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public JwtFilter(@Lazy JwtUtil jwtUtil, @Lazy CustomUserDetailsService userDetailsService) {
+    public JwtFilter(@Lazy JwtUtil jwtUtil, @Lazy CustomUserDetailsService userDetailsService, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -62,11 +68,23 @@ public class JwtFilter extends OncePerRequestFilter {
                 username = null;
             }
         }
-        System.out.println("*******************************************************");
-        System.out.println(username);
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtUtil.isTokenValid(token, username)) {
+
+                // Fetch FRESH user entity to check ban status
+                Optional<User> userOpt = userRepository.findByUsername(username);
+                if (userOpt.isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid credentials");
+                    return;
+                }
+
+                User user = userOpt.get();
+                if (user.isBanned()) {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account banned");
+                    return;
+                }
 
                 List<GrantedAuthority> authorities = Collections.singletonList(
                         new SimpleGrantedAuthority("ROLE_" + role)

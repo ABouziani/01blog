@@ -34,6 +34,7 @@ export class PostsComponent implements OnInit {
 
     this.postsService.getPosts().subscribe({
       next: (data) => {
+        console.log(data)
         this.internalPosts = data;
         this.generateThumbnails(this.internalPosts);
         this.loading = false;

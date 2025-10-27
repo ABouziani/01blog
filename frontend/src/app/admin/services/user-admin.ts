@@ -14,7 +14,11 @@ export class UserAdminService {
   }
 
   banUser(id: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/ban`, {});
+    return this.http.put<void>(`${this.apiUrl}/${id}/ban`, {});
+  }
+
+  activateUser(id: string): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/activate`, {});
   }
 
   deleteUser(id: string): Observable<void> {

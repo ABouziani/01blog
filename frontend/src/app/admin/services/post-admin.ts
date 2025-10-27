@@ -17,6 +17,10 @@ export class PostAdminService {
     return this.http.post<void>(`${this.apiUrl}/${id}/hide`, {});
   }
 
+  unhidePost(id: string): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/unhide`, {});
+  }
+
   deletePost(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

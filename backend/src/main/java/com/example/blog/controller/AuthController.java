@@ -3,6 +3,7 @@ package com.example.blog.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.blog.service.UserDetailsImpl;
 
 import com.example.blog.dto.LoginRequest;
 import com.example.blog.dto.TokenRefreshRequest;
@@ -25,6 +25,7 @@ import com.example.blog.model.RefreshToken;
 import com.example.blog.model.User;
 import com.example.blog.service.JwtUtil;
 import com.example.blog.service.RefreshTokenService;
+import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +59,6 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword())
         );
 
-        System.out.println(authentication);
 
         // Save it in context — now it contains UserDetailsImpl
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -66,6 +66,10 @@ public class AuthController {
         // Fetch user for JWT (optional — you could get username from authentication)
         User user = userService.findByUsernameOrEmail(request.getIdentifier())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.isBanned()) {
+            return new ResponseEntity<>("You are banned!", HttpStatus.FORBIDDEN);
+        }
 
         String jwt = jwtUtil.generateToken(user.getUsername(), user.getRole());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);

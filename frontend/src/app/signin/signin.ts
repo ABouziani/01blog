@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signin',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './signin.html',
   styleUrls: ['./signin.css']
 })
@@ -33,7 +33,11 @@ export class SigninComponent {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          this.error = 'Invalid username or password';
+          if (err.status == 403) {
+            this.error = 'You are banned!';
+          } else {
+            this.error = 'Invalid username or password';
+          }
           this.loading = false;
         }
       });

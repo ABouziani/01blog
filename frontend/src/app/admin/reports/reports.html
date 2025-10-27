@@ -2,14 +2,16 @@
 <table mat-table [dataSource]="reports" class="mat-elevation-z8">
     <ng-container matColumnDef="reporter">
         <th mat-header-cell *matHeaderCellDef>Reporter</th>
-        <td mat-cell *matCellDef="let report">User {{ report.reporterId }}</td>
+        <td mat-cell *matCellDef="let report" >
+            <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
+        </td>
     </ng-container>
 
-    <ng-container matColumnDef="target">
-        <th mat-header-cell *matHeaderCellDef>Reported Item</th>
+    <ng-container matColumnDef="reported">
+        <th mat-header-cell *matHeaderCellDef>Reported User</th>
         <td mat-cell *matCellDef="let report">
             @if (report.reportedUserId) {
-            <span>User {{ report.reportedUserId }}</span>
+            <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername }}</span>
             } @else if (report.reportedPostId) {
             <span>Post {{ report.reportedPostId }}</span>
             } @else {

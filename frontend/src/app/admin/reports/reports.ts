@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { MatDialogModule } from '@angular/material/dialog';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-reports',
@@ -17,7 +18,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatButtonModule,
     CommonModule,
     MatDialogModule,
-    // ConfirmDialogComponent
+    RouterLink,
   ],
   templateUrl: './reports.html',
   styleUrl: './reports.css'
@@ -27,7 +28,7 @@ export class AdminReportsComponent {
   private dialog = inject(MatDialog);
 
   reports: Report[] = [];
-  displayedColumns = ['reporter', 'target', 'reason', 'status', 'actions'];
+  displayedColumns = ['reporter', 'reported', 'reason', 'status', 'actions'];
 
   ngOnInit() {
     this.reportAdminService.getReports().subscribe(reports => {

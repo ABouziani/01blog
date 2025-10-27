@@ -2,7 +2,7 @@ export interface Post {
   id: string;
   authorId: string;
   authorName: string;
-  content: string;
+  description: string;
   createdAt: string;
   isHidden: boolean;
 }

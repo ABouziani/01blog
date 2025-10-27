@@ -1,10 +1,10 @@
 package com.example.blog.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.blog.dtoresponses.adminDtos.PostDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
@@ -12,21 +12,21 @@ import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
 import com.example.blog.model.Report;
 import com.example.blog.model.User;
-import com.example.blog.repository.UserRepository;
-import com.example.blog.repository.PostRepository;
+import com.example.blog.repository.PostAdminRepo;
 import com.example.blog.repository.ReportRepository;
+import com.example.blog.repository.UserRepository;
 
 @Service
 @Transactional
 public class AdminService {
 
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
+    private final PostAdminRepo postRepository;
     private final ReportRepository reportRepository;
 
     public AdminService(UserRepository userRepository,
-                        PostRepository postRepository,
-                        ReportRepository reportRepository) {
+            PostAdminRepo postRepository,
+            ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.reportRepository = reportRepository;
@@ -35,14 +35,21 @@ public class AdminService {
     // === USERS ===
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
-            .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt()))
-            .collect(Collectors.toList());
+                .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt()))
+                .collect(Collectors.toList());
     }
 
     public void banUser(Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         user.setBanned(true);
+        userRepository.save(user);
+    }
+
+    public void activateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setBanned(false);
         userRepository.save(user);
     }
 
@@ -53,21 +60,28 @@ public class AdminService {
     // === POSTS ===
     public List<PostDto> getAllPosts() {
         return postRepository.findAll().stream()
-            .map(p -> new PostDto(
+                .map(p -> new PostDto(
                 p.getId(),
                 p.getTitle(),
                 p.getDescription(),
                 p.getCreator().getUsername(),
                 p.getCreatedAt(),
                 p.isHidden()
-            ))
-            .collect(Collectors.toList());
+        ))
+                .collect(Collectors.toList());
     }
 
     public void hidePost(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
         post.setHidden(true);
+        postRepository.save(post);
+    }
+
+    public void unhidePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setHidden(false);
         postRepository.save(post);
     }
 
@@ -78,27 +92,29 @@ public class AdminService {
     // === REPORTS ===
     public List<ReportDto> getPendingReports() {
         return reportRepository.findAll().stream()
-            .map(r -> new ReportDto(
+                .map(r -> new ReportDto(
                 r.getId(),
                 r.getReporter().getId(),
+                r.getReporter().getUsername(),
                 r.getReported().getId(),
+                r.getReported().getUsername(),
                 null, // no post reports yet
                 r.getReason(),
                 r.getCreatedAt()
-            ))
-            .collect(Collectors.toList());
+        ))
+                .collect(Collectors.toList());
     }
 
     public void resolveReport(Long reportId, String action) {
         Report report = reportRepository.findById(reportId)
-            .orElseThrow(() -> new RuntimeException("Report not found"));
+                .orElseThrow(() -> new RuntimeException("Report not found"));
 
         Long reportedUserId = report.getReported().getId();
 
         switch (action) {
             case "ban_user" -> {
                 User user = userRepository.findById(reportedUserId)
-                    .orElseThrow(() -> new RuntimeException("Reported user not found"));
+                        .orElseThrow(() -> new RuntimeException("Reported user not found"));
                 user.setBanned(true);
                 userRepository.save(user);
             }
@@ -110,7 +126,8 @@ public class AdminService {
             case "dismiss" -> {
                 // No action needed beyond deleting report
             }
-            default -> throw new IllegalArgumentException("Invalid action: " + action);
+            default ->
+                throw new IllegalArgumentException("Invalid action: " + action);
         }
 
         // ✅ Delete the report after handling (as you requested)

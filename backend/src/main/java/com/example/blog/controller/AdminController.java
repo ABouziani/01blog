@@ -1,12 +1,22 @@
 package com.example.blog.controller;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 
-import com.example.blog.dtoresponses.adminDtos.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.blog.dtoresponses.adminDtos.PostDto;
+import com.example.blog.dtoresponses.adminDtos.ReportDto;
+import com.example.blog.dtoresponses.adminDtos.ResolveReportRequest;
+import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.service.AdminService;
 
 @RestController
@@ -26,9 +36,15 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllUsers());
     }
 
-    @PostMapping("/users/{id}/ban")
+    @PutMapping("/users/{id}/ban")
     public ResponseEntity<Void> banUser(@PathVariable Long id) {
         adminService.banUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/users/{id}/activate")
+    public ResponseEntity<Void> activateUser(@PathVariable Long id) {
+        adminService.activateUser(id);
         return ResponseEntity.ok().build();
     }
 
@@ -47,6 +63,12 @@ public class AdminController {
     @PostMapping("/posts/{id}/hide")
     public ResponseEntity<Void> hidePost(@PathVariable Long id) {
         adminService.hidePost(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/posts/{id}/unhide")
+    public ResponseEntity<Void> unhidePost(@PathVariable Long id) {
+        adminService.unhidePost(id);
         return ResponseEntity.ok().build();
     }
 

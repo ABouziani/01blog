@@ -30,10 +30,10 @@ export class AdminUsersComponent {
     });
   }
 
-  openConfirmDialog(action: 'ban' | 'delete', userId: string, username: string) {
+  openConfirmDialog(action: 'ban' | 'activate' | 'delete', userId: string, username: string) {
     const message = action === 'ban'
       ? `Ban user "${username}"? They will lose access.`
-      : `Permanently delete user "${username}"? This cannot be undone.`;
+      : action === 'activate' ? `Activate user "${username}"? They will gain access again.` :`Permanently delete user "${username}"? This cannot be undone.`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message, action, userId, username }
@@ -45,6 +45,11 @@ export class AdminUsersComponent {
           this.userAdminService.banUser(userId).subscribe(() => {
             const user = this.users.find(u => u.id === userId);
             if (user) user.isBanned = true;
+          });
+        } else if (action === 'activate') {
+          this.userAdminService.activateUser(userId).subscribe(() => {
+            const user = this.users.find(u => u.id === userId);
+            if (user) user.isBanned = false;
           });
         } else if (action === 'delete') {
           this.userAdminService.deleteUser(userId).subscribe(() => {

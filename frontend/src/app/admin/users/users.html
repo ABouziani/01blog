@@ -27,7 +27,7 @@
     <th mat-header-cell *matHeaderCellDef>Actions</th>
     <td mat-cell *matCellDef="let user">
       @if (user.isBanned) {
-      <button mat-button disabled>Ban</button>
+      <button mat-button (click)="openConfirmDialog('activate', user.id, user.username)">Activate</button>
       } @else {
       <button mat-button color="warn" (click)="openConfirmDialog('ban', user.id, user.username)">
         Ban
