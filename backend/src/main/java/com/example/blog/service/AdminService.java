@@ -1,6 +1,7 @@
 package com.example.blog.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class AdminService {
     // === USERS ===
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt()))
+                .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt(), u.getRole().equals("ADMIN")))
                 .collect(Collectors.toList());
     }
 
@@ -51,6 +52,25 @@ public class AdminService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setBanned(false);
         userRepository.save(user);
+    }
+
+    public void makeAdmin(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setRole("ADMIN");
+        userRepository.save(user);
+    }
+
+    public Optional<String> removeAdmin(Long userId) {
+        Long count = userRepository.countByRole("ADMIN");
+        if (count == 1) {
+            return Optional.of("one admin left");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setRole("USER");
+        userRepository.save(user);
+        return Optional.empty();
     }
 
     public void deleteUser(Long userId) {
@@ -90,7 +110,7 @@ public class AdminService {
     }
 
     // === REPORTS ===
-    public List<ReportDto> getPendingReports() {
+    public List<ReportDto> getAllReports() {
         return reportRepository.findAll().stream()
                 .map(r -> new ReportDto(
                 r.getId(),
@@ -100,7 +120,8 @@ public class AdminService {
                 r.getReported().getUsername(),
                 null, // no post reports yet
                 r.getReason(),
-                r.getCreatedAt()
+                r.getCreatedAt(),
+                r.getStatus()
         ))
                 .collect(Collectors.toList());
     }
@@ -118,11 +139,10 @@ public class AdminService {
                 user.setBanned(true);
                 userRepository.save(user);
             }
-            // case "delete_post" -> {
-            //     // ❗ You don't have post reports, so this is not applicable.
-            //     // Optionally: throw new IllegalArgumentException("Post reports not supported");
-            //     // Or ignore.
-            // }
+            case "delete" -> {
+                reportRepository.deleteById(reportId);
+                return ;
+            }
             case "dismiss" -> {
                 // No action needed beyond deleting report
             }
@@ -131,6 +151,8 @@ public class AdminService {
         }
 
         // ✅ Delete the report after handling (as you requested)
-        reportRepository.deleteById(reportId);
+        // reportRepository.deleteById(reportId);
+        report.setStatus("resolved");
+        reportRepository.save(report);
     }
 }

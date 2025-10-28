@@ -1,7 +1,9 @@
 package com.example.blog.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +23,7 @@ import com.example.blog.service.AdminService;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
     private final AdminService adminService;
@@ -45,6 +47,21 @@ public class AdminController {
     @PutMapping("/users/{id}/activate")
     public ResponseEntity<Void> activateUser(@PathVariable Long id) {
         adminService.activateUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/users/{id}/make-admin")
+    public ResponseEntity<Void> makeAdminUser(@PathVariable Long id) {
+        adminService.makeAdmin(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/users/{id}/remove-admin")
+    public ResponseEntity<?> removeAdmin(@PathVariable Long id) {
+        Optional<String> opt = adminService.removeAdmin(id);
+        if (opt.isPresent()) {
+            return new ResponseEntity<>(opt.get(), HttpStatus.FORBIDDEN);
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -80,8 +97,8 @@ public class AdminController {
 
     // === REPORTS ===
     @GetMapping("/reports")
-    public ResponseEntity<List<ReportDto>> getPendingReports() {
-        return ResponseEntity.ok(adminService.getPendingReports());
+    public ResponseEntity<List<ReportDto>> getAllReports() {
+        return ResponseEntity.ok(adminService.getAllReports());
     }
 
     @PostMapping("/reports/{id}/resolve")

@@ -95,6 +95,7 @@ public class AuthController {
             User loggedUser = userService.findById(loggedUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
             response.put("admin", loggedUser.getRole().equals("ADMIN") ? "ADMIN":"USER");
+            response.put("adminUsername", loggedUser.getUsername());
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(401).body("Invalid or expired token");

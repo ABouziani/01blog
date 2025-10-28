@@ -2,7 +2,7 @@ import {
   Platform,
   coerceElement,
   coerceNumberProperty
-} from "./chunk-SD5YPTYM.js";
+} from "./chunk-XTSJNE3Q.js";
 import {
   BidiModule
 } from "./chunk-BRGVXSCV.js";
@@ -3171,9 +3171,9 @@ export {
   InteractivityChecker,
   FocusTrapFactory,
   A11yModule,
-  _IdGenerator,
   hasModifierKey,
+  _IdGenerator,
   FocusKeyManager,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-BX5X5G6K.js.map
+//# sourceMappingURL=chunk-KCUQZDOL.js.map

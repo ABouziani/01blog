@@ -1,40 +1,50 @@
 <h2>Posts</h2>
-    <table mat-table [dataSource]="posts" class="mat-elevation-z8">
-      <ng-container matColumnDef="author">
-        <th mat-header-cell *matHeaderCellDef>Author</th>
-        <td mat-cell *matCellDef="let post">{{ post.authorName }}</td>
-      </ng-container>
+<table mat-table [dataSource]="posts" class="mat-elevation-z8">
+  <ng-container matColumnDef="author">
+    <th mat-header-cell *matHeaderCellDef>Author</th>
+    <td mat-cell *matCellDef="let post">{{ post.authorName }}</td>
+  </ng-container>
 
-      <ng-container matColumnDef="preview">
-        <th mat-header-cell *matHeaderCellDef>Content Preview</th>
-        <td mat-cell *matCellDef="let post">
-          {{ post.description && post.description.length > 50 ? (post.description.substring(0, 47) + '...') : post.description }}
-        </td>
-      </ng-container>
+  <ng-container matColumnDef="preview">
+    <th mat-header-cell *matHeaderCellDef>Content Preview</th>
+    <td mat-cell *matCellDef="let post">
+      {{ post.description && post.description.length > 50 ? (post.description.substring(0, 47) + '...') :
+      post.description }}
+    </td>
+  </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let post">
-          <span [class.hidden]="post.isHidden">{{ post.isHidden ? 'Hidden' : 'Visible' }}</span>
-        </td>
-      </ng-container>
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let post">
+      <span [class.hidden]="post.isHidden">{{ post.isHidden ? 'Hidden' : 'Visible' }}</span>
+    </td>
+  </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let post">
-          @if (post.isHidden) {
-            <button mat-button (click)="openConfirmDialog('unhide', post.id, post.authorName)">Unhide</button>
-          } @else {
-            <button mat-button color="warn" (click)="openConfirmDialog('hide', post.id, post.authorName)">
-              Hide
-            </button>
-          }
-          <button mat-button color="primary" (click)="openConfirmDialog('delete', post.id, post.authorName)">
-            Delete
-          </button>
-        </td>
-      </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let post">
+      @if (post.isHidden) {
+      <button mat-button (click)="openConfirmDialog('unhide', post.id, post.authorName)">Unhide</button>
+      } @else {
+      <button mat-button color="warn" (click)="openConfirmDialog('hide', post.id, post.authorName)">
+        Hide
+      </button>
+      }
+      <button mat-button color="primary" (click)="openConfirmDialog('delete', post.id, post.authorName)">
+        Delete
+      </button>
+    </td>
+  </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<br/>
+&nbsp;
+&nbsp;
+&nbsp;
+<span>
+  @if (posts && posts.length == 0) {
+  No posts to show!
+  }
+</span>

@@ -4,4 +4,5 @@ export interface User {
   email: string;
   isBanned: boolean;
   createdAt: string;
+  isAdmin: boolean;
 }

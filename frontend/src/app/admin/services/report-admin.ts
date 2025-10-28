@@ -13,7 +13,7 @@ export class ReportAdminService {
     return this.http.get<Report[]>(this.apiUrl);
   }
 
-  resolveReport(id: string, action: 'ban_user' | 'delete_post' | 'dismiss'): Observable<void> {
+  resolveReport(id: string, action: 'ban_user' | 'delete' | 'dismiss'): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${id}/resolve`, { action });
   }
 }

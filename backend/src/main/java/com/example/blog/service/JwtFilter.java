@@ -62,7 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             try {
                 username = jwtUtil.extractUsername(token);
-                role = jwtUtil.extractClaims(token).get("role", String.class);
+                // role = jwtUtil.extractClaims(token).get("role", String.class);
             } catch (Exception e) {
                 // ignore expired or invalid token
                 username = null;
@@ -87,7 +87,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
 
                 List<GrantedAuthority> authorities = Collections.singletonList(
-                        new SimpleGrantedAuthority("ROLE_" + role)
+                        new SimpleGrantedAuthority("ROLE_" + user.getRole())
                 );
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

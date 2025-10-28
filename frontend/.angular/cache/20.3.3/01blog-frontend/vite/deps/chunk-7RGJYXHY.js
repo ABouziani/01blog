@@ -1,6 +1,6 @@
 import {
   MediaMatcher
-} from "./chunk-BX5X5G6K.js";
+} from "./chunk-KCUQZDOL.js";
 import {
   ANIMATION_MODULE_TYPE,
   InjectionToken,
@@ -45,4 +45,4 @@ function _animationsDisabled() {
 export {
   _animationsDisabled
 };
-//# sourceMappingURL=chunk-OC4DYSZC.js.map
+//# sourceMappingURL=chunk-7RGJYXHY.js.map

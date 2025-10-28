@@ -1,19 +1,20 @@
 <mat-sidenav-container class="admin-container">
       <mat-sidenav mode="side" opened>
         <mat-nav-list>
-          <a mat-list-item (click)="selectTab('users')" [class.active]="activeTab() === 'users'">
+          <a mat-list-item (click)="selectTab('users')" routerLink="users" routerLinkActive="active" [class.active]="activeTab() === 'users'">
             <span matListItemTitle>Users</span>
           </a>
-          <a mat-list-item (click)="selectTab('posts')" [class.active]="activeTab() === 'posts'">
+          <a mat-list-item (click)="selectTab('posts')" routerLink="posts" routerLinkActive="active" [class.active]="activeTab() === 'posts'">
             <span matListItemTitle>Posts</span>
           </a>
-          <a mat-list-item (click)="selectTab('reports')" [class.active]="activeTab() === 'reports'">
+          <a mat-list-item (click)="selectTab('reports')" routerLink="reports" routerLinkActive="active" [class.active]="activeTab() === 'reports'">
             <span matListItemTitle>Reports</span>
           </a>
         </mat-nav-list>
       </mat-sidenav>
 
       <mat-sidenav-content>
+        <mat-toolbar color="primary">Welcome&nbsp;<span class="admin-username">{{ adminUsername }},</span></mat-toolbar>
         <mat-toolbar color="primary">Admin Panel</mat-toolbar>
         <div class="admin-content">
           @switch (activeTab()) {

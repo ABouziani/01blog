@@ -9,3 +9,7 @@
       background: rgba(0, 0, 0, 0.04);
       font-weight: 500;
     }
+
+    .admin-username {
+      font-weight: bold;
+    }

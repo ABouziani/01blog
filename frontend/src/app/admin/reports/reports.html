@@ -2,7 +2,7 @@
 <table mat-table [dataSource]="reports" class="mat-elevation-z8">
     <ng-container matColumnDef="reporter">
         <th mat-header-cell *matHeaderCellDef>Reporter</th>
-        <td mat-cell *matCellDef="let report" >
+        <td mat-cell *matCellDef="let report">
             <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
         </td>
     </ng-container>
@@ -11,7 +11,8 @@
         <th mat-header-cell *matHeaderCellDef>Reported User</th>
         <td mat-cell *matCellDef="let report">
             @if (report.reportedUserId) {
-            <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername }}</span>
+            <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername
+                }}</span>
             } @else if (report.reportedPostId) {
             <span>Post {{ report.reportedPostId }}</span>
             } @else {
@@ -50,7 +51,9 @@
                 Dismiss
             </button>
             } @else {
-            <em>Resolved</em>
+            <em><button mat-button (click)="resolveWithAction(report, 'delete')">
+                    Delete
+                </button></em>
             }
         </td>
     </ng-container>
@@ -58,3 +61,12 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<br/>
+&nbsp;
+&nbsp;
+&nbsp;
+<span>
+    @if (reports && reports.length == 0) {
+        No reports to show!
+    }
+</span>

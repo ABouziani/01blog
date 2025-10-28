@@ -36,22 +36,31 @@ export class AdminReportsComponent {
     });
   }
 
-  resolveWithAction(report: Report, action: 'ban_user' | 'dismiss') {
+  resolveWithAction(report: Report, action: 'ban_user' | 'dismiss' | 'delete') {
     const message = action === 'ban_user'
-    ? `Ban the reported user "${report.reportedUserId}"?`
-    : `Dismiss this report without action?`;
+      ? `Ban the reported user "${report.reportedUserId}"?`
+      : action === 'delete' ? `Are you sure you want to delete this report ?` : `Dismiss this report without action?`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-       data: { message, action, reportId: report.id }
+      data: { message, action, reportId: report.id }
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.reportAdminService.resolveReport(report.id, action).subscribe(() => {
-          // Optimistic UI update
-          const existing = this.reports.find(r => r.id === report.id);
-          if (existing) {
-            existing.status = 'resolved';
+          if (action === 'delete') {
+            this.reports = this.reports.filter(r => r.id !== report.id);
+          } else if (action === 'ban_user') {
+            const existing = this.reports.find(r => r.id === report.id);
+            if (existing) {
+              existing.status = 'resolved';
+            }
+            alert("User banned successfully");
+          } else {
+            const existing = this.reports.find(r => r.id === report.id);
+            if (existing) {
+              existing.status = 'resolved';
+            }
           }
         });
       }

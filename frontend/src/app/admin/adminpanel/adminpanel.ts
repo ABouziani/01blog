@@ -5,11 +5,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ActiveTabService } from '../services/active-tab';
 import { AdminUsersComponent } from '../users/users';
 import { AdminPostsComponent } from '../posts/posts';
 import { AdminReportsComponent } from '../reports/reports';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-panel',
@@ -29,8 +30,23 @@ import { AdminReportsComponent } from '../reports/reports';
   styleUrl: './adminpanel.css'
 })
 export class AdminPanel {
+
+  private apiUrl = 'http://localhost:8080/api/auth/islogged';
+  adminUsername = '';
+
   activeTab = inject(ActiveTabService).activeTab;
   selectTab(tab: 'users' | 'posts' | 'reports') {
     this.activeTab.set(tab);
+  }
+  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.http.get<{ adminUsername: string }>(`${this.apiUrl}`).subscribe((resp) => {
+      this.adminUsername = resp.adminUsername.toUpperCase();
+    });
+    this.route.firstChild?.url.subscribe(urlSegments => {
+      const tab = urlSegments[0]?.path as 'users' | 'posts' | 'reports';
+      if (tab) this.activeTab.set(tab);
+    });
   }
 }

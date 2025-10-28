@@ -7,7 +7,8 @@ public record ReportDto(
     String reporterUsername,
     Long reportedUserId,
     String reportedUserUsername,
-    Long reportedPostId, // not used in your model, but Angular expects it — we'll keep null
+    Long reportedPostId, // keep null (not used for now)
     String reason,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    String status
 ) {}

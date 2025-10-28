@@ -7,5 +7,6 @@ public record UserDto(
     String username,
     String email,
     boolean isBanned,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    boolean isAdmin
 ) {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { User } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
@@ -23,5 +23,21 @@ export class UserAdminService {
 
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  makeAdmin(id: string): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/make-admin`, {});
+  }
+
+  removeAdmin(id: string): Observable<void> {
+     return this.http.put<void>(`${this.apiUrl}/${id}/remove-admin`, {})
+    .pipe(
+      catchError(error => {
+        if (error.error == "one admin left") {
+          alert("Platefrome cannot run without admin, move your admin privilage to someone else!");
+        }
+        return throwError(() => error); // rethrow so subscribers can handle it
+      })
+    );
   }
 }

@@ -34,7 +34,7 @@
     <!-- Post Content -->
     <div class="post-content" [formGroup]="postForm">
       <!-- Description -->
-      <p class="post-description" *ngIf="!isEditing">{{ post.description }}</p>
+      <p class="post-description" *ngIf="!isEditing" [innerText]="post.description"></p>
       <textarea class="post-description" *ngIf="isEditing" formControlName="description"></textarea>
 
       <!-- File Input -->

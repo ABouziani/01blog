@@ -30,10 +30,17 @@ export class AdminUsersComponent {
     });
   }
 
-  openConfirmDialog(action: 'ban' | 'activate' | 'delete', userId: string, username: string) {
-    const message = action === 'ban'
-      ? `Ban user "${username}"? They will lose access.`
-      : action === 'activate' ? `Activate user "${username}"? They will gain access again.` :`Permanently delete user "${username}"? This cannot be undone.`;
+  openConfirmDialog(action: 'ban' | 'activate' | 'delete' | 'make-admin' | 'remove-admin', userId: string, username: string) {
+    const messages = {
+      'ban': `Ban user "${username}"? They will lose access.`,
+      'activate': `Activate user "${username}"? They will gain access again.`,
+      'make-admin': `Make user "${username}" an Admin? They will gain full admin privileges.`,
+      'delete': `Permanently delete user "${username}"? This cannot be undone.`,
+      'remove-admin': `Remove admin privilages from "${username}"? They will lose admin privileges.`
+    };
+
+    const message = messages[action] || `Unknown action for user "${username}".`;
+
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message, action, userId, username }
@@ -54,6 +61,16 @@ export class AdminUsersComponent {
         } else if (action === 'delete') {
           this.userAdminService.deleteUser(userId).subscribe(() => {
             this.users = this.users.filter(u => u.id !== userId);
+          });
+        } else if (action === 'make-admin') {
+          this.userAdminService.makeAdmin(userId).subscribe(() => {
+            const user = this.users.find(u => u.id === userId);
+            if (user) user.isAdmin = true;
+          });
+        } else if (action === 'remove-admin') {
+          this.userAdminService.removeAdmin(userId).subscribe(() => {
+            const user = this.users.find(u => u.id === userId);
+            if (user) user.isAdmin = false;
           });
         }
       }
