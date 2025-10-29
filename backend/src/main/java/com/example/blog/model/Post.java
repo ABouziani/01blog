@@ -1,7 +1,6 @@
 package com.example.blog.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,8 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
@@ -36,16 +35,17 @@ public class Post {
 
     @Column(nullable = false)
     @NotBlank(message = "Title cannot be blank")
-    @Size(min = 6, message = "Title must be at least 6 characters long")
+    @Size(min = 6, max = 100, message = "Title must be at least 6 characters long")
     private String title;
 
     @Column(nullable = false)
     @NotBlank(message = "description cannot be blank")
-    @Size(min = 20, message = "description must be at least 20 characters long")
+    @Size(min = 20, max = 1000, message = "description must be at least 20 characters long")
     private String description;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(nullable = false)
     private String media; // can store file path or URL
 
     @ManyToOne
