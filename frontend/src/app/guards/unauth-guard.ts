@@ -8,8 +8,9 @@ export const unAuthGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (!authService.isLoggedIn()) {
+    authService.setLoggedIn(false);
     return true;
   } else {
-    return router.createUrlTree(['/']); // redirect to signin
+    return router.createUrlTree(['/home']);
   }
 };

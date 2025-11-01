@@ -17,12 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.PostsWithReactionsCountDto;
+import com.example.blog.dtoresponses.HomePostDto;
 import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Notification;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
 import com.example.blog.repository.CustomUnreadNotifRepository;
-import com.example.blog.repository.NotifRepository;
 import com.example.blog.repository.PostRepository;
 import com.example.blog.repository.UserRepository;
 
@@ -155,4 +155,13 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    public List<HomePostDto> getRecentPostsForHome(Long userId,int number) {
+        return postRepository.getRecentPostsForHome(userId,number);
+    }
+
+    public List<HomePostDto> getTopPostsForHome(int number) {
+        return postRepository.getTopPostsForHome(number);
+    }
+    
 }

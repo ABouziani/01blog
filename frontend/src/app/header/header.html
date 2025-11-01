@@ -1,22 +1,22 @@
 <header class="app-header">
-  <div class="logo">My 01Blog</div>
+  <div class="logocontainer">
+    <a class="navbar-brand d-flex align-items-center text-dark" routerLink="/">
+      <div class="me-2" style="width: 1.5rem; height: 1.5rem; color: var(--primary);">
+        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+        </svg>
+      </div>
+      <strong class="logo">01Blog</strong>
+    </a>
+  </div>
   <nav class="menu">
     <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <span class="link-icon material-symbols-rounded">home</span>
       <span class="link-title">Home</span>
     </a>
 
-    <!-- <a class="link" routerLink="/about" routerLinkActive="active">
-      <span class="link-icon material-symbols-rounded">info</span>
-      <span class="link-title">About</span>
-    </a>
-
-    <a class="link" routerLink="/contact" routerLinkActive="active">
-      <span class="link-icon material-symbols-rounded">mail</span>
-      <span class="link-title">Contact</span>
-    </a> -->
-
-    <a class="link" routerLink="/adminpanel" *ngIf="authService.isAdmin()" routerLinkActive="active">
+    <a class="link" routerLink="/adminpanel" *ngIf="authService.isAdmin() && authService.isLoggedIn()"
+      routerLinkActive="active">
       <span class="link-icon material-symbols-rounded">dashboard</span>
       <span class="link-title">Admin Panel</span>
     </a>
@@ -50,7 +50,7 @@
         <span class="link-title">Logout</span>
       </button>
     </ng-container>
-  <!-- Notifications (only when logged in) -->
+    <!-- Notifications (only when logged in) -->
     <ng-container *ngIf="authService.isLoggedIn()">
       <div class="notif-wrapper" (clickOutside)="closeDropdown()" #notifRoot>
         <button class="link notif-btn" (click)="toggleDropdown()" aria-haspopup="true" aria-expanded="{{dropdownOpen}}">
@@ -63,7 +63,7 @@
         <div class="notif-dropdown" *ngIf="dropdownOpen" role="menu" aria-label="Notifications">
           <div class="notif-header">
             <span>Notifications</span>
-            <button class="mark-all" (click)="markAllRead()" >Mark all read</button>
+            <button class="mark-all" (click)="markAllRead()">Mark all read</button>
           </div>
 
           <div class="notif-list" *ngIf="notifications && notifications.length > 0; else noNotif">
@@ -90,5 +90,9 @@
         </div>
       </div>
     </ng-container>
+    <button class="btn btn-outline-primary-custom" (click)="toggleDarkMode()">
+    <i class="bi" [ngClass]="darkMode ? 'bi-moon-fill' : 'bi-sun-fill'"></i>
+    {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
+  </button>
   </nav>
 </header>

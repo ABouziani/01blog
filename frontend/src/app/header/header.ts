@@ -21,7 +21,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private pollingSub?: Subscription;
-
+  darkMode = false;
+  
   constructor(
     public authService: AuthService,
     private notificationService: NotificationService,
@@ -30,9 +31,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Start polling only if user is logged in
-    if (this.authService.isLoggedIn()) {
+    // if (this.authService.isLoggedIn()) {
       this.startPolling();
-    }
+    // }
     console.log("*********************", this.authService.isAdmin());
 
     // If your AuthService provides an auth state Observable, subscribe to it to start/stop polling on login/logout.
@@ -41,14 +42,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     //   if (isLoggedIn) this.startPolling();
     //   else this.stopPolling();
     // });
+    const saved = localStorage.getItem('darkMode') === 'true';
+    this.darkMode = saved;
+    document.body.classList.toggle('dark-theme', this.darkMode);
   }
+
+
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    document.body.classList.toggle('dark-theme', this.darkMode);
+    localStorage.setItem('darkMode', String(this.darkMode));
+  }
+
 
   startPolling(): void {
     // ensure previous subscription stopped
     this.stopPolling();
 
     // Start immediately, then every 30s
-    this.pollingSub = timer(0, 100000000).pipe(
+    this.pollingSub = timer(0, 1000000000).pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
         if (!this.authService.isLoggedIn()) return of([] as NotificationItem[]);

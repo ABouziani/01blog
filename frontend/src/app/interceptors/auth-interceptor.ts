@@ -13,3 +13,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req);
 };
+
+
+// return next(req).pipe(
+  //   catchError((error) => {
+  //     // Handle 401 (Unauthorized)      
+  //     if ((error.status === 403 || error.status === 401) && !req.url.endsWith('/login') ) {
+  //       localStorage.removeItem('access_token');
+  //       authService.loggedIn.next(false);
+  //       router.navigate(['']);
+  //     }
+
+  //     return throwError(() => error);
+  //   })
+  // );

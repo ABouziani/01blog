@@ -108,6 +108,9 @@ public class User {
     private boolean isAlreadyReported;
 
     @Transient
+    private boolean owner;
+
+    @Transient
     private boolean isAlreadyFollowed;
 
     // --- Helper Methods for Following ---
@@ -273,5 +276,13 @@ public class User {
 
     public void setBanned(boolean isBanned) {
         this.isBanned = isBanned;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
+    public boolean getOwner() {
+        return this.owner;
     }
 }

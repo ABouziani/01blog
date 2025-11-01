@@ -41,8 +41,8 @@ export class AdminPanel {
   constructor(private http: HttpClient, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.http.get<{ adminUsername: string }>(`${this.apiUrl}`).subscribe((resp) => {
-      this.adminUsername = resp.adminUsername.toUpperCase();
+    this.http.get<{ username: string }>(`${this.apiUrl}`).subscribe((resp) => {
+      this.adminUsername = resp.username.toUpperCase();
     });
     this.route.firstChild?.url.subscribe(urlSegments => {
       const tab = urlSegments[0]?.path as 'users' | 'posts' | 'reports';

@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background: #fff;
+  /* background: #fff; */
   border-bottom: 1px solid #e6e6e6;
 
   .menu {
@@ -62,8 +62,8 @@
         width: 320px;
         max-height: 420px;
         overflow: auto;
-        background: #fff;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        background: var(--notifDropdown);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
         border-radius: 8px;
         z-index: 40;
         border: 1px solid #eee;
@@ -113,6 +113,7 @@
 
             .notif-body {
               flex: 1;
+
               .notif-title {
                 font-size: 14px;
                 font-weight: 600;
@@ -120,6 +121,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
               }
+
               .notif-meta {
                 font-size: 12px;
                 color: #666;
@@ -153,4 +155,8 @@
 .mark:hover {
   color: #1976d2;
   font-weight: bold;
+}
+
+.logo {
+  color: var(--primary)
 }

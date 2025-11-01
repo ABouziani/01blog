@@ -1,68 +1,68 @@
-<!-- Error Message -->
-<div *ngIf="error" class="alert alert-error">
-  <i class="icon-error"></i>
-  {{ error }}
-</div>
 
-<!-- User Card -->
-<div *ngIf="user as u" class="user-card">
 
-  <!-- Centered User Info -->
-  <div class="user-header-centered">
-    <img [src]="u.photo" alt="User Photo" class="user-photo" />
-    <h2>{{ u.username }}</h2>
-    <p class="user-email">{{ u.email }}</p>
+<main class="container py-4" *ngIf="user">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <!-- Profile Card -->
+      <div class="card-bg rounded-3 p-4 mb-5">
+        <div class="row g-4">
+          <div class="col-12 col-md-4 d-flex justify-content-center">
+            <div class="avatar" [style.background-image]="'url(' + user.photo + ')'"></div>
+          </div>
+          <div class="col-12 col-md-8">
+            <h1 class="h2 fw-bold">{{ user.username }}</h1>
+            <p class="text-muted mb-4">{{ user.bio }}</p>
+
+            <div class="row g-2 mb-4">
+              <div class="col-12 col-sm-6 d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined">badge</span>
+                <small class="text-muted">ID: {{ user.id }}</small>
+              </div>
+              <div class="col-12 col-sm-6 d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined">email</span>
+                <small class="text-muted">{{ user.email }}</small>
+              </div>
+              <div class="col-12 col-sm-6 d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined">calendar_today</span>
+                <small class="text-muted">Joined: {{ user.createdAt | date :"short" }}</small>
+              </div>
+              <div class="col-12 col-sm-6 d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined">school</span>
+                <small class="text-muted">Role: {{ user.role }}</small>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 flex-column flex-md-row">
+              <button class="btn btn-primary-custom flex-grow-1">Subscribe</button>
+              <button class="btn btn-outline-custom flex-grow-1">Report</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts Section -->
+      <h2 class="h3 fw-bold mb-4">Posts</h2>
+      <div class="row g-4" >
+        <div class="col-12 col-sm-6 col-lg-4"  *ngFor="let post of user?.posts">
+          <div class="card-bg rounded-3 overflow-hidden h-100">
+            <div class="post-img" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'"></div>
+            <div class="p-4 d-flex flex-column flex-grow-1">
+              <h3 class="h5 fw-bold mb-2 text-dark dark:text-white">{{ post.title }}</h3>
+              <p class="text-muted flex-grow-1">{{ post.description }}</p>
+              <!-- <div class="d-flex gap-3 mt-2 text-muted">
+                <div class="d-flex align-items-center gap-1">
+                  <span class="material-symbols-outlined text-success">thumb_up</span>
+                  <small>{{ post.likes }}</small>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                  <span class="material-symbols-outlined text-danger">thumb_down</span>
+                  <small>{{ post.dislikes }}</small>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- User Details -->
-  <div class="user-details">
-    <p><strong>Role:</strong> {{ u.role }}</p>
-    <p><strong>Bio:</strong> {{ u.bio }}</p>
-    <p><strong>Joined:</strong> {{ u.createdAt | date: 'medium' }}</p>
-  </div>
-
-  <div class="user-buttons">
-    <button class="subscribe" (click)="follow()" *ngIf="!u.alreadyFollowed">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
-      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
-      2H20l-2-2z" />
-      </svg>
-      Subscribe
-    </button>
-    <button class="subscribe" (click)="unfollow()" *ngIf="u.alreadyFollowed">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
-      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
-      2H20l-2-2z" />
-      </svg>
-      Subscribed
-    </button>
-
-    <button class="report" (click)="reportUser()" *ngIf="!u.alreadyReported">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
-      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
-      </svg>
-      Report
-    </button>
-
-    <button class="report" (click)="reportUser()" disabled *ngIf="u.alreadyReported">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
-      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
-      </svg>
-      You already reported this user!
-    </button>
-  </div>
-  <!-- Posts Section -->
-  <div class="user-posts">
-    <h3>User's Posts</h3>
-    <ng-container *ngIf="u.posts.length > 0; else noPosts">
-      <app-posts [posts]="u.posts"></app-posts>
-    </ng-container>
-    <ng-template #noPosts>
-      <p class="no-posts">This user has not written any posts yet.</p>
-    </ng-template>
-  </div>
-</div>
+</main>

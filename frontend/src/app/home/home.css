@@ -1,0 +1,80 @@
+/* Custom primary color */
+:root {
+  --primary: #2b6cee;
+}
+
+/* Font */
+body,
+.font-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  font-size: 1.25rem;
+}
+
+/* Custom button style */
+.btn-primary-custom {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-primary-custom {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-primary-custom:hover {
+  background-color: rgba(43, 108, 238, 0.1);
+}
+
+/* Avatar */
+.avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Post image */
+.post-img {
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.5rem;
+}
+
+/* Tag pills */
+.tag-primary {
+  background-color: rgba(43, 108, 238, 0.1);
+  color: var(--primary);
+  border: none;
+}
+
+.tag-default {
+  background-color: #f8f9fa;
+  color: #212529;
+  border: none;
+}
+
+/* Dark mode support (optional) – Bootstrap doesn’t include dark mode by default */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #101622;
+    color: #e2e8f0;
+  }
+
+  .bg-light,
+  .card {
+    background-color: #1e293b !important;
+    color: #e2e8f0;
+  }
+
+  .text-muted {
+    color: #94a3b8 !important;
+  }
+}

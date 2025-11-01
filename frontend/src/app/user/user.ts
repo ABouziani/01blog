@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { PostsComponent } from '../posts/posts';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-user',
@@ -15,7 +16,7 @@ export class UserComponent {
   user: UserDto | null = null;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private auth:AuthService) { }
 
   ngOnInit(): void {
     let userId = this.route.snapshot.paramMap.get('id');
@@ -33,6 +34,9 @@ export class UserComponent {
             post.creatorUsername = data.username;
           });
           this.user = data;
+          if (data.id == this.auth.loggedId()) {
+            this.user.owner = true;
+          }
         },
         error: (err) => {
           console.error('Error fetching user:', err);

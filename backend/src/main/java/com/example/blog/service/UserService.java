@@ -1,12 +1,14 @@
 package com.example.blog.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.blog.dtoresponses.ActiveUsersDto;
 import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
 
@@ -62,5 +64,9 @@ public class UserService {
             }
         }
         return Optional.empty(); // Login failed
+    }
+
+    public List<ActiveUsersDto> getActiveUsersForHome(int number) {
+        return userRepository.getActiveUsersForHome(number);
     }
 }

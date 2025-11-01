@@ -75,7 +75,7 @@ public class PostsController {
     public ResponseEntity<Post> createPost(
             @RequestParam("title") @NotBlank @Size(min = 6, max = 100) String title,
             @RequestParam("description") @NotBlank @Size(min = 20, max = 1000) String description,
-            @RequestParam(value = "media", required = true) MultipartFile media,
+            @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

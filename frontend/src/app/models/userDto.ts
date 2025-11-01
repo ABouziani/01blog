@@ -11,4 +11,5 @@ export interface UserDto {
   posts: PostDto[];
   alreadyReported:boolean;
   alreadyFollowed:boolean;
+  owner:boolean;
 }

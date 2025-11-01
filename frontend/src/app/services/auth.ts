@@ -18,10 +18,11 @@ export class AuthService {
   private readonly TOKEN_KEY = 'access_token';
   private readonly REFRESH_KEY = 'refresh_token';
 
-  private loggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
+  public loggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
   private isadmin = signal<boolean>(false);
+  public loggedId = signal<number>(0);
 
-  constructor(private http: HttpClient,public router: Router) {
+  constructor(private http: HttpClient, public router: Router) {
     // On app start: check if we have a token AND if it's valid on backend
     this.checkAuthStatus();
   }
@@ -35,13 +36,13 @@ export class AuthService {
     // Send token to backend to verify
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.get<{ message: string,admin: string }>('http://localhost:8080/api/auth/islogged', { headers })
+    this.http.get<{ id: number, owner: boolean, role: string }>('http://localhost:8080/api/auth/islogged', { headers })
       .pipe(
         map(response => {
-          console.log("oninit : ",response)
-          if (response.message != "Token is valid") return false;
-          this.isadmin.set(response.admin == "ADMIN");
-          return true;  
+          console.log("oninit : ", response)
+          this.isadmin.set(response.role == "ADMIN");
+          this.loggedId.set(response.id);
+          return true;
         }), // 200 → valid
         catchError((err) => {
           console.log(err);
@@ -77,7 +78,9 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.loggedIn.value;
   }
-
+  setLoggedIn(b:boolean): void {
+    this.loggedIn.next(false);
+  }
   isAdmin(): boolean {
     return this.isadmin();
   }

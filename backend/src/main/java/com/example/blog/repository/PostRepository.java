@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.blog.dto.PostsWithReactionsCountDto;
 import com.example.blog.dto.ReactionCount;
+import com.example.blog.dtoresponses.HomePostDto;
 import com.example.blog.model.Post;
 
 @Repository
@@ -58,4 +59,32 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     WHERE r.post.id = :postId
     """)
     ReactionCount findReactionCountsByPostId(@Param("postId") Long postId);
+
+    @Query(value = """
+    SELECT p.title, u.username AS creator, p.media
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE p.user_id IN (
+            SELECT uf.user_id
+            FROM user_followers uf
+            WHERE uf.follower_id = :userId
+        )
+        ORDER BY p.created_at DESC
+        LIMIT :n;
+    """, nativeQuery = true)
+    List<HomePostDto> getRecentPostsForHome(@Param("userId") Long userId, @Param("n") int n);
+
+    @Query(value = """
+    SELECT 
+        p.title AS title,
+        u.username AS creator,
+        p.media AS media
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    LEFT JOIN reactions r ON p.id = r.post_id
+    GROUP BY p.id, p.title, u.username, p.media
+    ORDER BY COUNT(r.id) DESC
+    LIMIT :n
+    """, nativeQuery = true)
+    List<HomePostDto> getTopPostsForHome(@Param("n") int n);
 }

@@ -12,9 +12,10 @@ public class UserDto {
     private String photo;
     private LocalDateTime createdAt;
     private String role;
-    private List<PostDto> posts; // Include posts
+    private List<PostDto> posts;
     private boolean isAlreadyReported;
     private boolean isAlreadyFollowed;
+    private boolean owner;
 
     // Constructors
     public UserDto() {
@@ -99,5 +100,13 @@ public class UserDto {
 
     public void setPosts(List<PostDto> posts) {
         this.posts = posts;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
+    public boolean getOwner() {
+        return this.owner;
     }
 }

@@ -1,6 +1,9 @@
 package com.example.blog.controller;
 
+import java.util.Objects;
+
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +48,6 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id, Authentication authentication) {
-        System.out.println(authentication);
         if (id == 0) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             id = userDetails.getId();
@@ -68,6 +70,10 @@ public class UsersController {
 
         if (loggedUser.getFollowing().contains(user)) {
             user.setIsAlreadyFollowed(true);
+        }
+
+        if (Objects.equals(loggedUser.getId(), user.getId())) {
+            user.setOwner(true);
         }
 
         Hibernate.initialize(user.getPosts());

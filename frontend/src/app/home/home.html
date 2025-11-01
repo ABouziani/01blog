@@ -1,3 +1,132 @@
-<div>
-<app-posts></app-posts>
-</div>
+<!-- TopNavBar -->
+
+
+<main class="container py-5">
+  <!-- Hero Section -->
+  <div class="row align-items-center py-5">
+    <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+      <h1 class="display-4 fw-bold">Share Your Learning Journey</h1>
+      <p class="lead text-muted mt-3">
+        01Blog is a platform for students to document experiences, share insights, and connect with a community of
+        peers.
+      </p>
+      <button class="btn btn-primary-custom px-4 py-2 mt-3">Join the Community</button>
+    </div>
+    <div class="col-lg-6">
+      <div class="w-100 post-img" style="background-image: url('/frontphoto.jpeg');">
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Posts -->
+  <div class="py-5">
+    <h2 class="h3 fw-bold mb-4">Recent Posts</h2>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4" *ngFor="let post of recentPosts">
+        <div class="post-img" [style.background-image]="
+    post.media 
+      ? 'url(http://localhost:8080' + post.media + ')'
+      : 'url(https://www.contentviewspro.com/wp-content/uploads/2017/07/default_image.png)'
+  ">
+        </div>
+        <h5 class="mt-3">{{ post.title }}</h5>
+        <p class="text-muted small">{{ post.creator }}</p>
+      </div>
+      <span *ngIf="!recentPosts || recentPosts.length == 0">No posts from your followings, discover the plateform and follow users to get feeds!</span>
+    </div>
+    <div class="text-center mt-4">
+      <button class="btn btn-outline-secondary px-4 py-2" (click)="router.navigate(['/posts'])">Discover More</button>
+    </div>
+  </div>
+
+  <!-- Most Active Users -->
+  <div class="py-5">
+    <h2 class="h3 fw-bold mb-4">Most Active Users</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center" *ngFor="let user of activeUsers">
+        <div class="avatar" [style.background-image]="
+        user.avatar 
+        ? 'url(' + user.avatar + ')' 
+        :'url(https://cdn3.iconfinder.com/data/icons/sharp-users-vol-1/32/-_Default_Account_Avatar-512.png)'
+        "></div>
+        <p class=" fw-semibold mt-2 mb-0">{{ user.name }}</p>
+        <p class="text-muted small">{{ user.posts }} Posts</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts with Most Reactions -->
+  <div class="py-5">
+    <h2 class="h3 fw-bold mb-4">Posts with Most Reactions</h2>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3" *ngFor="let post of topPosts">
+        <div class="post-img" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'"></div>
+        <h6 class="mt-2">{{ post.title }}</h6>
+        <p class="text-muted small">{{ post.creator }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trending Topics -->
+  <div class="py-5">
+    <h2 class="h3 fw-bold mb-4">Trending Topics</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <button *ngFor="let tag of trendingTags" class="btn btn-sm rounded-pill" [class.tag-primary]="tag.primary"
+        [class.tag-default]="!tag.primary">
+        {{ tag.label }}
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-light border-top mt-5 py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-lg-3 mb-4 mb-md-0">
+        <div class="d-flex align-items-center">
+          <div class="me-2" style="width: 1.5rem; height: 1.5rem; color: var(--primary);">
+            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+            </svg>
+          </div>
+          <h5 class="mb-0">01Blog</h5>
+        </div>
+        <p class="text-muted mt-2 small">A community for students to share and discover.</p>
+      </div>
+      <div class="col-6 col-md-2 mb-4 mb-md-0">
+        <h6 class="fw-bold">Platform</h6>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-decoration-none text-muted">Explore</a></li>
+          <li><a href="#" class="text-decoration-none text-muted">Create Post</a></li>
+          <li><a href="#" class="text-decoration-none text-muted">Trending</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-2 mb-4 mb-md-0">
+        <h6 class="fw-bold">Company</h6>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-decoration-none text-muted">About Us</a></li>
+          <li><a href="#" class="text-decoration-none text-muted">Contact</a></li>
+          <li><a href="#" class="text-decoration-none text-muted">Careers</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-2 mb-4 mb-md-0">
+        <h6 class="fw-bold">Legal</h6>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-decoration-none text-muted">Privacy Policy</a></li>
+          <li><a href="#" class="text-decoration-none text-muted">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-2">
+        <h6 class="fw-bold">Follow Us</h6>
+        <div class="d-flex gap-3 mt-2">
+          <a href="#" class="text-muted"><i class="bi bi-twitter" style="font-size: 1.25rem;"></i></a>
+          <a href="#" class="text-muted"><i class="bi bi-github" style="font-size: 1.25rem;"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-muted small mt-4 pt-3 border-top">
+      © 2025 01Blog. All rights reserved.
+    </div>
+  </div>
+</footer>

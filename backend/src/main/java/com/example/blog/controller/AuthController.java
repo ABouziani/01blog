@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dto.LoginRequest;
 import com.example.blog.dto.TokenRefreshRequest;
+import com.example.blog.dtoresponses.EntityDtoMapper;
 import com.example.blog.exceptions.RefreshTokenNotFoundException;
 import com.example.blog.model.JwtResponse;
 import com.example.blog.model.RefreshToken;
@@ -59,7 +60,6 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword())
         );
 
-
         // Save it in context — now it contains UserDetailsImpl
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -88,15 +88,14 @@ public class AuthController {
         String token = authHeader.substring(7);
 
         if (jwtUtil.validateToken(token)) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Token is valid");
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             Long loggedUserId = userDetails.getId();
             User loggedUser = userService.findById(loggedUserId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-            response.put("admin", loggedUser.getRole().equals("ADMIN") ? "ADMIN":"USER");
-            response.put("adminUsername", loggedUser.getUsername());
-            return ResponseEntity.ok(response);
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            if (loggedUser.isBanned()) {
+                return ResponseEntity.status(401).body("User BANNED!");
+            }
+            return ResponseEntity.ok(EntityDtoMapper.toUserDto(loggedUser));
         } else {
             return ResponseEntity.status(401).body("Invalid or expired token");
         }

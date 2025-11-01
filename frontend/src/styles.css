@@ -1,15 +1,47 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color:rgb(26, 25, 28); 
+:root {
+  /* Light mode */
+  --primary: #2b6cee;
+  --bg: #ffffff;
+  --text: #212529;
+  --muted: #6c757d;
+  --card-bg: #f8f9fa;
+  --notifDropdown: rgb(218, 218, 218);
 }
 
-app-root {
-  display: block;
-  height: 100%;
-  width: 100%;
+.dark-theme {
+  /* Dark mode */
+  --primary: #9f9ba0;
+  --bg: #101622;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --card-bg: #1e293b;
+  --notifDropdown: rgb(53, 53, 53);
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Apply variables globally */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.text-muted {
+  color: var(--muted) !important;
+}
+
+.bg-light,
+.card {
+  background-color: var(--card-bg) !important;
+  color: var(--text);
+}
+
+/* Buttons */
+.btn-primary-custom {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-primary-custom {
+  color: var(--primary);
+  border-color: var(--primary);
+}
