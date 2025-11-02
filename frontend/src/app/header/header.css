@@ -122,11 +122,11 @@
             transition: background .12s;
 
             &:hover {
-              background: #fafcff;
+              background: #e2e2e2;
             }
 
             &.unread {
-              background: #f6fbff;
+              background: var(--text);
             }
 
             .avatar {

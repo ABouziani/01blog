@@ -66,6 +66,7 @@ body.dark .avatar {
 
 .post-title {
   cursor: pointer;
+  color: var(--text);
 }
 
 .post-title:hover {

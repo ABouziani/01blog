@@ -75,7 +75,7 @@
           <div class="card-bg rounded-3 overflow-hidden h-100">
             <div class="post-img" (click)="router.navigate(['/posts/' + post.id])" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'"></div>
             <div class="p-4 d-flex flex-column flex-grow-1">
-              <h3 class="post-title h5 fw-bold mb-2 text-dark dark:text-white" (click)="router.navigate(['/posts/' + post.id])">{{ post.title }}</h3>
+              <h3 class="post-title h5 fw-bold mb-2 " (click)="router.navigate(['/posts/' + post.id])">{{ post.title }}</h3>
               <p class="text-muted flex-grow-1">{{ post.description.length > 40 ? post.description.substring(0,37) + '...' : post.description }}</p>
               <!-- <div class="d-flex gap-3 mt-2 text-muted">
                 <div class="d-flex align-items-center gap-1">

@@ -10,6 +10,12 @@
     </a>
   </div>
   <nav class="menu">
+
+    <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="link-icon material-symbols-rounded">home</span>
+      <span class="link-title"></span>
+    </a>
+    
     <!-- Notifications (only when logged in) -->
     <ng-container *ngIf="authService.isLoggedIn()">
       <div class="notif-wrapper" (clickOutside)="closeDropdown()" #notifRoot>
@@ -51,11 +57,6 @@
         </div>
       </div>
     </ng-container>
-
-    <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <span class="link-icon material-symbols-rounded">home</span>
-      <span class="link-title"></span>
-    </a>
 
     <!-- Dropdown Container -->
     <div class="dropdown">
