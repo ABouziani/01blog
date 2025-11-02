@@ -10,52 +10,13 @@
     </a>
   </div>
   <nav class="menu">
-    <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <span class="link-icon material-symbols-rounded">home</span>
-      <span class="link-title">Home</span>
-    </a>
-
-    <a class="link" routerLink="/adminpanel" *ngIf="authService.isAdmin() && authService.isLoggedIn()"
-      routerLinkActive="active">
-      <span class="link-icon material-symbols-rounded">dashboard</span>
-      <span class="link-title">Admin Panel</span>
-    </a>
-
-    <!-- Non connecté -->
-    <ng-container *ngIf="!authService.isLoggedIn()">
-      <a class="link" routerLink="/signin" routerLinkActive="active">
-        <span class="link-icon material-symbols-rounded">login</span>
-        <span class="link-title">Signin</span>
-      </a>
-      <a class="link" routerLink="/register" routerLinkActive="active">
-        <span class="link-icon material-symbols-rounded">person_add</span>
-        <span class="link-title">Register</span>
-      </a>
-    </ng-container>
-
-    <!-- Connecté -->
-    <ng-container *ngIf="authService.isLoggedIn()">
-      <a class="link" routerLink="/profile" routerLinkActive="active">
-        <span class="link-icon material-symbols-rounded">account_circle</span>
-        <span class="link-title">Profile</span>
-      </a>
-
-      <a class="link" routerLink="/posts/create" routerLinkActive="active">
-        <span class="link-icon material-symbols-rounded">edit_note</span>
-        <span class="link-title">Create</span>
-      </a>
-
-      <button class="link logout-btn" (click)="authService.logout()">
-        <span class="link-icon material-symbols-rounded">logout</span>
-        <span class="link-title">Logout</span>
-      </button>
-    </ng-container>
     <!-- Notifications (only when logged in) -->
     <ng-container *ngIf="authService.isLoggedIn()">
       <div class="notif-wrapper" (clickOutside)="closeDropdown()" #notifRoot>
         <button class="link notif-btn" (click)="toggleDropdown()" aria-haspopup="true" aria-expanded="{{dropdownOpen}}">
           <span class="link-icon material-symbols-rounded">notifications</span>
-          <span class="link-title">Notifications</span>
+          <!-- <span class="link-title">Notifications</span> -->
+          <span class="link-title"></span>
           <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
         </button>
 
@@ -90,9 +51,74 @@
         </div>
       </div>
     </ng-container>
-    <button class="btn btn-outline-primary-custom" (click)="toggleDarkMode()">
-    <i class="bi" [ngClass]="darkMode ? 'bi-moon-fill' : 'bi-sun-fill'"></i>
-    {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
-  </button>
+
+    <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="link-icon material-symbols-rounded">home</span>
+      <span class="link-title"></span>
+    </a>
+
+    <!-- Dropdown Container -->
+    <div class="dropdown">
+      <button class="btn dropdown-toggle account-btn" type="button" id="menuDropdown" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <span class="material-symbols-rounded fs-3 align-middle">account_circle</span>
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="menuDropdown">
+        <!-- Admin Panel -->
+        <li *ngIf="authService.isAdmin() && authService.isLoggedIn()">
+          <a class="dropdown-item" routerLink="/adminpanel" routerLinkActive="active">
+            <span class="material-symbols-rounded me-2">dashboard</span>
+            Admin Panel
+          </a>
+        </li>
+
+        <!-- Not logged in -->
+        <ng-container *ngIf="!authService.isLoggedIn()">
+          <li>
+            <a class="dropdown-item" routerLink="/signin" routerLinkActive="active">
+              <span class="material-symbols-rounded me-2">login</span>
+              Signin
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="/register" routerLinkActive="active">
+              <span class="material-symbols-rounded me-2">person_add</span>
+              Register
+            </a>
+          </li>
+        </ng-container>
+
+        <!-- Logged in -->
+        <ng-container *ngIf="authService.isLoggedIn()">
+          <li>
+            <a class="dropdown-item" routerLink="/profile" routerLinkActive="active">
+              <span class="material-symbols-rounded me-2">account_circle</span>
+              Profile
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" routerLink="/posts/create" routerLinkActive="active">
+              <span class="material-symbols-rounded me-2">edit_note</span>
+              Create
+            </a>
+          </li>
+          <li>
+            <button class="dropdown-item" (click)="authService.logout()">
+              <span class="material-symbols-rounded me-2">logout</span>
+              Logout
+            </button>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+    <div class="theme-switch">
+      <input type="checkbox" id="themeCheckbox" class="checkbox" [checked]="darkMode" (change)="toggleDarkMode()">
+      <label for="themeCheckbox" class="checkbox-label">
+        <i class="fa-solid fa-moon"></i>
+        <i class="fa-solid fa-sun"></i>
+        <span class="ball"></span>
+      </label>
+    </div>
   </nav>
 </header>

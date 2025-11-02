@@ -5,10 +5,11 @@ import { AuthService } from '../services/auth';
 import { NotificationItem } from '../models/notification';
 import { catchError, interval, of, startWith, Subject, Subscription, switchMap, takeUntil, timer } from 'rxjs';
 import { NotificationService } from '../services/notification';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule,FormsModule],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })

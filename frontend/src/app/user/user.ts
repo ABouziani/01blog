@@ -3,7 +3,7 @@ import { UserDto } from '../models/userDto';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { PostsComponent } from '../posts/posts';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 
 @Component({
@@ -16,7 +16,7 @@ export class UserComponent {
   user: UserDto | null = null;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private auth:AuthService) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private auth:AuthService,public router:Router) { }
 
   ngOnInit(): void {
     let userId = this.route.snapshot.paramMap.get('id');

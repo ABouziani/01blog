@@ -1,10 +1,35 @@
 .app-header {
+  position: sticky; /* keeps header on top */
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  box-shadow: 0 0px 15px var(--text); /* subtle depth shadow */
+}
+
+/* Optional: soft glow line under header */
+.app-header::after {
+  content: "";
+  position: absolute;
+  bottom: -8px; /* slightly below header */
+  left: 0;
+  width: 100%;
+  height: 12px; /* thickness of the glow/shadow */
+  background: var(--bg);
+  /* background: rgba(247, 223, 6, 0.1); */
+  filter: blur(6px);
+  pointer-events: none;
+  border-radius: 10px; /* soft edges */
+}
+
+
+
+.app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
   /* background: #fff; */
-  border-bottom: 1px solid #e6e6e6;
+  /* border-bottom: 1px solid #e6e6e6; */
 
   .menu {
     display: flex;
@@ -160,3 +185,122 @@
 .logo {
   color: var(--primary)
 }
+
+
+
+/* Hide the default caret */
+.account-btn::after {
+  display: none;
+}
+
+/* Clean transparent button */
+.account-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text) !important; /* icon color from theme */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .account-btn:hover .material-symbols-rounded {
+  color: var(--primary);
+} */
+
+/* Dropdown menu styling (uses your vars) */
+.custom-dropdown {
+  background-color: var(--notifDropdown) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--card-bg) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Dropdown items */
+.custom-dropdown .dropdown-item {
+  color: var(--text) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.custom-dropdown .dropdown-item:hover {
+  background-color: var(--card-bg) !important;
+}
+
+.custom-dropdown .material-symbols-rounded {
+  font-size: 20px;
+  vertical-align: middle;
+  color: var(--text);
+}
+
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+/* Hide checkbox */
+.checkbox {
+  opacity: 0;
+  position: absolute;
+}
+
+/* Label = switch background */
+.checkbox-label {
+  width: 52px;
+  height: 28px;
+  background-color: var(--text);
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+}
+
+/* Icons */
+.checkbox-label i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.checkbox-label .fa-moon {
+  left: 6px;
+  color: #f1c40f;
+}
+
+.checkbox-label .fa-sun {
+  right: 6px;
+  color: #f39c12;
+}
+
+/* The moving ball */
+.checkbox-label .ball {
+  background-color: var(--bg);
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, background-color 0.3s ease;
+  z-index: 1;
+}
+
+/* Move ball when checked */
+.checkbox:checked + .checkbox-label .ball {
+  transform: translateX(24px);
+}
+
