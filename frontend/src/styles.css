@@ -6,6 +6,7 @@
   --muted: #6c757d;
   --card-bg: #f8f9fa;
   --notifDropdown: rgb(218, 218, 218);
+  --inputs-bg : rgb(240, 240, 240);
 }
 
 .dark-theme {
@@ -16,6 +17,7 @@
   --muted: #94a3b8;
   --card-bg: #1e293b;
   --notifDropdown: rgb(53, 53, 53);
+  --inputs-bg : rgb(75, 74, 74);
 }
 
 /* Apply variables globally */

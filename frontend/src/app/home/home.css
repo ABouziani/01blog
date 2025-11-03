@@ -61,6 +61,10 @@ body,
   border: none;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 /* Dark mode support (optional) – Bootstrap doesn’t include dark mode by default */
 @media (prefers-color-scheme: dark) {
   body {

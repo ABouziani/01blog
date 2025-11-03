@@ -61,7 +61,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     ReactionCount findReactionCountsByPostId(@Param("postId") Long postId);
 
     @Query(value = """
-    SELECT p.title, u.username AS creator, p.media
+    SELECT p.id, p.title, u.id AS creatorId, u.username AS creatorUsername, p.media
         FROM posts p
         JOIN users u ON p.user_id = u.id
         WHERE p.user_id IN (
@@ -75,14 +75,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<HomePostDto> getRecentPostsForHome(@Param("userId") Long userId, @Param("n") int n);
 
     @Query(value = """
-    SELECT 
+    SELECT
+        p.id AS id, 
         p.title AS title,
-        u.username AS creator,
+        u.id AS creatorId,
+        u.username AS creatorUsername,
         p.media AS media
     FROM posts p
     JOIN users u ON p.user_id = u.id
     LEFT JOIN reactions r ON p.id = r.post_id
-    GROUP BY p.id, p.title, u.username, p.media
+    GROUP BY p.id, p.title, u.id, u.username, p.media
     ORDER BY COUNT(r.id) DESC
     LIMIT :n
     """, nativeQuery = true)

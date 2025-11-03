@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-interface recentPosts { title: string; creator: string; media: string; }
-interface activeUsers { name: string; posts: number; avatar: string; }
-interface topPosts { title: string; creator: string; media: string; }
+interface recentPosts { id:number; title: string; creatorId: number; creatorUsername: string; media: string; }
+interface activeUsers { id:number; name: string; posts: number; avatar: string; }
+interface topPosts { id:number; title: string; creatorId: number; creatorUsername: string; media: string; }
+
 
 @Component({
   selector: 'app-home',

@@ -23,6 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = """
     SELECT 
+        u.id,
         u.username AS name, 
         COUNT(p.id) AS posts, 
         u.photo AS avatar

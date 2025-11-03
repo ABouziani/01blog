@@ -1,8 +1,10 @@
 package com.example.blog.dtoresponses;
 
 public record HomePostDto(
+        Long id,
         String title,
-        String creator,
+        Long creatorId,
+        String creatorUsername,
         String media
         ) {
 
