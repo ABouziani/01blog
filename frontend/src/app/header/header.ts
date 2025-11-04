@@ -6,10 +6,19 @@ import { NotificationItem } from '../models/notification';
 import { catchError, interval, of, startWith, Subject, Subscription, switchMap, takeUntil, timer } from 'rxjs';
 import { NotificationService } from '../services/notification';
 import { FormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule, CommonModule,FormsModule],
+  imports: [RouterModule, CommonModule,FormsModule, MatMenuModule,
+    MatButtonModule,
+    MatBadgeModule,
+    MatIconModule,
+    MatListModule],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -72,6 +81,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }));
       })
     ).subscribe(notifs => {
+      console.log("notifs:",notifs);
+      
       this.applyNotifications(notifs);
     });
   }

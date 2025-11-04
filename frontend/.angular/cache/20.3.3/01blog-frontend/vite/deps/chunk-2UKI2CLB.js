@@ -2,7 +2,7 @@ import {
   Platform,
   coerceElement,
   coerceNumberProperty
-} from "./chunk-XTSJNE3Q.js";
+} from "./chunk-7UIXWPLT.js";
 import {
   BidiModule
 } from "./chunk-BRGVXSCV.js";
@@ -67,6 +67,15 @@ import {
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
 
+// node_modules/@angular/cdk/fesm2022/fake-event-detection.mjs
+function isFakeMousedownFromScreenReader(event) {
+  return event.buttons === 0 || event.detail === 0;
+}
+function isFakeTouchstartFromScreenReader(event) {
+  const touch = event.touches && event.touches[0] || event.changedTouches && event.changedTouches[0];
+  return !!touch && touch.identifier === -1 && (touch.radiusX == null || touch.radiusX === 1) && (touch.radiusY == null || touch.radiusY === 1);
+}
+
 // node_modules/@angular/cdk/fesm2022/keycodes2.mjs
 var TAB = 9;
 var ENTER = 13;
@@ -122,15 +131,6 @@ function _getFocusedElementPierceShadowDom() {
 }
 function _getEventTarget(event) {
   return event.composedPath ? event.composedPath()[0] : event.target;
-}
-
-// node_modules/@angular/cdk/fesm2022/fake-event-detection.mjs
-function isFakeMousedownFromScreenReader(event) {
-  return event.buttons === 0 || event.detail === 0;
-}
-function isFakeTouchstartFromScreenReader(event) {
-  const touch = event.touches && event.touches[0] || event.changedTouches && event.changedTouches[0];
-  return !!touch && touch.identifier === -1 && (touch.radiusX == null || touch.radiusX === 1) && (touch.radiusY == null || touch.radiusY === 1);
 }
 
 // node_modules/@angular/cdk/fesm2022/passive-listeners.mjs
@@ -1975,6 +1975,41 @@ var A11yModule = class _A11yModule {
   }], () => [], null);
 })();
 
+// node_modules/@angular/cdk/fesm2022/id-generator.mjs
+var counters = {};
+var _IdGenerator = class __IdGenerator {
+  _appId = inject(APP_ID);
+  /**
+   * Generates a unique ID with a specific prefix.
+   * @param prefix Prefix to add to the ID.
+   */
+  getId(prefix) {
+    if (this._appId !== "ng") {
+      prefix += this._appId;
+    }
+    if (!counters.hasOwnProperty(prefix)) {
+      counters[prefix] = 0;
+    }
+    return `${prefix}${counters[prefix]++}`;
+  }
+  static ɵfac = function _IdGenerator_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || __IdGenerator)();
+  };
+  static ɵprov = ɵɵdefineInjectable({
+    token: __IdGenerator,
+    factory: __IdGenerator.ɵfac,
+    providedIn: "root"
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_IdGenerator, [{
+    type: Injectable,
+    args: [{
+      providedIn: "root"
+    }]
+  }], null, null);
+})();
+
 // node_modules/@angular/cdk/fesm2022/keycodes.mjs
 function hasModifierKey(event, ...modifiers) {
   if (modifiers.length) {
@@ -2397,41 +2432,6 @@ var FocusKeyManager = class extends ListKeyManager {
     }
   }
 };
-
-// node_modules/@angular/cdk/fesm2022/id-generator.mjs
-var counters = {};
-var _IdGenerator = class __IdGenerator {
-  _appId = inject(APP_ID);
-  /**
-   * Generates a unique ID with a specific prefix.
-   * @param prefix Prefix to add to the ID.
-   */
-  getId(prefix) {
-    if (this._appId !== "ng") {
-      prefix += this._appId;
-    }
-    if (!counters.hasOwnProperty(prefix)) {
-      counters[prefix] = 0;
-    }
-    return `${prefix}${counters[prefix]++}`;
-  }
-  static ɵfac = function _IdGenerator_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || __IdGenerator)();
-  };
-  static ɵprov = ɵɵdefineInjectable({
-    token: __IdGenerator,
-    factory: __IdGenerator.ɵfac,
-    providedIn: "root"
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_IdGenerator, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], null, null);
-})();
 
 // node_modules/@angular/cdk/fesm2022/coercion/private.mjs
 function coerceObservable(data) {
@@ -3158,12 +3158,18 @@ export {
   ENTER,
   ESCAPE,
   SPACE,
+  LEFT_ARROW,
+  UP_ARROW,
+  RIGHT_ARROW,
+  DOWN_ARROW,
   A,
+  _getShadowRoot,
   _getFocusedElementPierceShadowDom,
   _getEventTarget,
   normalizePassiveListenerOptions,
   FocusMonitor,
   _CdkPrivateStyleLoader,
+  _VisuallyHiddenLoader,
   coerceArray,
   MediaMatcher,
   CdkObserveContent,
@@ -3174,6 +3180,7 @@ export {
   _IdGenerator,
   hasModifierKey,
   FocusKeyManager,
+  AriaDescriber,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-JW774LHO.js.map
+//# sourceMappingURL=chunk-2UKI2CLB.js.map

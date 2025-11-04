@@ -4,7 +4,11 @@ import {
 import {
   ScrollingModule,
   ViewportRuler
-} from "./chunk-A6JITBHR.js";
+} from "./chunk-WCMXG32R.js";
+import "./chunk-46HAYV32.js";
+import {
+  MatCommonModule
+} from "./chunk-2UKI2CLB.js";
 import {
   DataSource,
   _RecycleViewRepeaterStrategy,
@@ -12,14 +16,11 @@ import {
   _ViewRepeaterOperation,
   isDataSource
 } from "./chunk-6TU72PAN.js";
-import "./chunk-46HAYV32.js";
-import {
-  MatCommonModule
-} from "./chunk-JW774LHO.js";
+import "./chunk-5EG33CFQ.js";
 import {
   Platform,
   _isNumberValue
-} from "./chunk-XTSJNE3Q.js";
+} from "./chunk-7UIXWPLT.js";
 import {
   Directionality
 } from "./chunk-BRGVXSCV.js";
@@ -79,11 +80,11 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-YO6GPXUM.js";
+import "./chunk-JRFR6BLO.js";
 import {
   isObservable,
   merge
 } from "./chunk-HWYXSU2G.js";
-import "./chunk-JRFR6BLO.js";
 import {
   BehaviorSubject,
   Subject,
