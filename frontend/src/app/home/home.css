@@ -65,6 +65,15 @@ body,
   cursor: pointer;
 }
 
+.title:hover {
+  text-decoration: underline;
+}
+
+.username:hover {
+  text-decoration: underline;
+  color: #0054fd !important;
+}
+
 /* Dark mode support (optional) – Bootstrap doesn’t include dark mode by default */
 @media (prefers-color-scheme: dark) {
   body {

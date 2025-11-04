@@ -2,13 +2,12 @@ import { Component, Input } from '@angular/core';
 import { UserDto } from '../models/userDto';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { PostsComponent } from '../posts/posts';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule, PostsComponent],
+  imports: [CommonModule],
   templateUrl: './user.html',
   styleUrl: './user.css'
 })

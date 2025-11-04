@@ -26,16 +26,19 @@
         <div class="clickable post-img" (click)="router.navigate(['/posts/' + post.id])" [style.background-image]="
     post.media 
       ? 'url(http://localhost:8080' + post.media + ')'
-      : 'url(https://www.contentviewspro.com/wp-content/uploads/2017/07/default_image.png)'
+      : 'url(/post_image.png)'
   ">
         </div>
-        <h5 class="clickable mt-3" (click)="router.navigate(['/posts/' + post.id])">{{ post.title }}</h5>
-        <p class="clickable text-muted small" (click)="router.navigate(['/users/' + post.creatorId])">@{{ post.creatorUsername }}</p>
+        <h5 class="clickable mt-3 title" (click)="router.navigate(['/posts/' + post.id])">{{ post.title }}</h5>
+        <p class="clickable text-muted small username" (click)="router.navigate(['/users/' + post.creatorId])">@{{
+          post.creatorUsername }}</p>
       </div>
-      <span *ngIf="!recentPosts || recentPosts.length == 0">No posts from your followings, discover the plateform and follow users to get feeds!</span>
+      <span *ngIf="!recentPosts || recentPosts.length == 0">No posts from your followings, discover the plateform and
+        follow users to get feeds!</span>
     </div>
     <div class="text-center mt-4">
-      <button class="clickable btn btn-outline-secondary px-4 py-2" (click)="router.navigate(['/posts'])">Discover More</button>
+      <button class="clickable btn btn-outline-secondary px-4 py-2" (click)="router.navigate(['/posts'])">Discover
+        More</button>
     </div>
   </div>
 
@@ -47,9 +50,9 @@
         <div class="clickable avatar" (click)="router.navigate(['/users/' + user.id])" [style.background-image]="
         user.avatar 
         ? 'url(' + user.avatar + ')' 
-        :'url(https://cdn3.iconfinder.com/data/icons/sharp-users-vol-1/32/-_Default_Account_Avatar-512.png)'
+        :'url(/user_avatar.png)'
         "></div>
-        <p class="clickable fw-semibold mt-2 mb-0" (click)="router.navigate(['/users/' + user.id])">@{{ user.name }}</p>
+        <p class="clickable fw-semibold mt-2 mb-0 username" (click)="router.navigate(['/users/' + user.id])">@{{ user.name }}</p>
         <p class="text-muted small">{{ user.posts }} Posts</p>
       </div>
     </div>
@@ -60,9 +63,14 @@
     <h2 class="h3 fw-bold mb-4">Posts with Most Reactions</h2>
     <div class="row g-4">
       <div class="col-md-6 col-lg-3" *ngFor="let post of topPosts">
-        <div class="clickable post-img" (click)="router.navigate(['/posts/' + post.id])" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'"></div>
-        <h6 class="clickable mt-2" (click)="router.navigate(['/posts/' + post.id])">{{ post.title }}</h6>
-        <p class="clickable text-muted small" (click)="router.navigate(['/users/' + post.creatorId])">@{{ post.creatorUsername }}</p>
+        <div class="clickable post-img" (click)="router.navigate(['/posts/' + post.id])" [style.background-image]="  
+    post.media 
+      ? 'url(http://localhost:8080' + post.media + ')'
+      : 'url(/post_image.png)'
+      "></div>
+        <h6 class="clickable mt-2 title" (click)="router.navigate(['/posts/' + post.id])">{{ post.title }}</h6>
+        <p class="clickable text-muted small username" (click)="router.navigate(['/users/' + post.creatorId])">@{{
+          post.creatorUsername }}</p>
       </div>
     </div>
   </div>
@@ -78,4 +86,3 @@
     </div>
   </div>
 </main>
-
