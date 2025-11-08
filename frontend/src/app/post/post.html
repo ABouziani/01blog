@@ -1,104 +1,104 @@
-<div class="post-container" *ngIf="!loading; else loadingTemplate">
-  <!-- Edit/Delete buttons -->
-  <div *ngIf="post && post.owner" class="post-actions">
-    <button class="delete-post" *ngIf="!isEditing" (click)="delete(post.id)">Delete</button>
-    <button class="edit-post" (click)="isEditing = !isEditing">
-      {{ isEditing ? 'Cancel Editing' : 'Edit' }}
-    </button>
-  </div>
-
-  <div class="post-card" *ngIf="post; else notFoundTemplate">
-    <div class="post-header">
-      <!-- Title -->
-      <h1 class="post-title" *ngIf="!isEditing">{{ post.title }}</h1>
-      <div *ngIf="isEditing" [formGroup]="postForm">
-        <textarea class="post-title" formControlName="title"></textarea>
+<!-- Main Content -->
+<main class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <!-- Hero Media -->
+      <div class="rounded-3 overflow-hidden shadow-lg mb-5">
+        <div class="post-media position-relative" *ngIf="post && post.media"
+          [style.background-image]="'url(' + post?.media + ')'">
+          <button class="btn rounded-circle play-btn bg-black bg-opacity-50 text-white">
+            <span class="material-symbols-outlined fs-1">play_arrow</span>
+          </button>
+          <div class="progress-bar">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <div class="flex-grow-1 bg-white bg-opacity-80" style="height: 4px; border-radius: 9999px;"></div>
+              <div class="position-relative">
+                <div class="position-absolute top-0 start-0 translate-middle rounded-circle bg-white"
+                  style="width: 16px; height: 16px;"></div>
+              </div>
+              <div class="flex-grow-2 bg-white bg-opacity-40" style="height: 4px; border-radius: 9999px;"></div>
+            </div>
+            <div class="d-flex justify-content-between text-white small">
+              <span>0:37</span>
+              <span>2:23</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="post-meta">
-        <span class="creator" [routerLink]="['/users', post.creator.id]">by {{ post.creator.username }}</span>
-        <span class="date">{{ post.createdAt | date:'medium' }}</span>
-      </div>
-    </div>
-
-    <div class="post-reactions">
-      <button class="reaction-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
-        👍 {{ post.likes || 0 }}
-      </button>
-
-      <button class="reaction-btn dislike" (click)="addReaction(post.id, 'DISLIKE')" [disabled]="postService.waiting">
-        👎 {{ post.dislikes || 0 }}
-      </button>
-    </div>
-
-    <!-- Post Content -->
-    <div class="post-content" [formGroup]="postForm">
-      <!-- Description -->
-      <p class="post-description" *ngIf="!isEditing" [innerText]="post.description"></p>
-      <textarea class="post-description" *ngIf="isEditing" formControlName="description"></textarea>
-
-      <!-- File Input -->
-      <input *ngIf="isEditing" type="file" (change)="onFileSelected($event)" accept="image/*,video/*"
-        class="file-input">
-
-      <!-- Preview -->
-      <div *ngIf="previewUrl">
-        <img *ngIf="isImage(previewUrl)" [src]="previewUrl" class="media-preview">
-        <video *ngIf="isVideo(previewUrl)" [src]="previewUrl" controls class="media-preview"></video>
-        <button type="button" (click)="selectedFile=null; previewUrl=null" class="remove-btn">Remove</button>
+      <!-- Post Header -->
+      <div class="mb-4">
+        <h1 class="h2 fw-bold title">{{ post?.title }}</h1>
+        <div class="d-flex align-items-center justify-content-between mt-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar-lg" [style.background-image]="'url(./user_avatar)'"></div>
+            <span class="fw-medium creator">{{ post?.creator?.username }}</span>
+          </div>
+          <small class="text-muted dark:text-gray-400">{{ post?.createdAt | date:'short' }}</small>
+        </div>
       </div>
 
-      <!-- Actions -->
-      <div class="form-actions" *ngIf="isEditing">
-        <button type="button" class="submit-btn" (click)="onSubmit()" [disabled]="isSubmitting || postForm.invalid">
-          <span *ngIf="!isSubmitting">Save Changes</span>
-          <span *ngIf="isSubmitting">Submitting...</span>
+      <hr class="divider">
+
+      <!-- Article Body -->
+      <article class="article-body font-serif">
+        <p>
+          This is the beginning of the article content. It's where the author shares their detailed learning journey,
+          insights, or project details. The text is formatted for maximum readability with appropriate line height and a
+          serif font to make long-form reading a comfortable and engaging experience for the students on the 01Blog
+          platform.
+        </p>
+        <p>
+          The content can also include subheadings, lists, and even inline images to better illustrate points and break
+          up the text, making it more digestible for the reader. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <h2>First Steps and Challenges</h2>
+        <p>
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+      </article>
+
+      <hr class="divider mt-5 mb-4">
+
+      <!-- Engagement -->
+      <div class="d-flex gap-4 mb-4">
+        <button class="d-flex align-items-center gap-1 engagement-btn">
+          <span class="material-symbols-outlined">thumb_up</span>
+          <span class="fw-semibold small">{{ post?.likes }}</span>
         </button>
-        <button type="button" class="cancel-btn" (click)="cancelEditing()">Cancel</button>
+        <button class="d-flex align-items-center gap-1 engagement-btn dislike">
+          <span class="material-symbols-outlined">thumb_down</span>
+          <span class="fw-semibold small">{{ post?.dislikes }}</span>
+        </button>
       </div>
 
-      <!-- Display media when not editing -->
-      <div class="post-media" *ngIf="post.media">
-        <img *ngIf="isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
-          class="media-image-video">
-        <video *ngIf="isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media" controls muted
-          preload="metadata"></video>
+      <!-- New Comment -->
+      <div class="d-flex gap-3 mb-4" *ngIf="post">
+        <div class="avatar mt-1" [style.background-image]="'url(/user_avatar.png)'"></div>
+        <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
       </div>
+      <!-- Comments Section -->
+      <section>
+        <h3 class="h4 fw-bold  mb-4 comments">Comments ({{ post?.comments?.length }})</h3>
 
-      <!-- Comments -->
-      <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
+
+        <!-- Existing Comments -->
+        <div class="mt-4">
+          <div class="d-flex gap-3 mb-4" *ngFor="let comment of post?.comments">
+            <div class="comment-avatar" [style.background-image]="'url(' + comment.user.photo + ')'"></div>
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <strong class="dark:text-white small username">{{ comment.user.username }}</strong>
+                <small class="text-muted dark:text-gray-400">{{ comment.createdAt | date:'short' }}</small>
+              </div>
+              <p class="mt-1 mb-0 dark:text-gray-300 commentcontent">{{ comment.content }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
-
-  <!-- Comments Section -->
-  <div class="comments-section" *ngIf="post && post.comments?.length">
-    <h3>Comments ({{ post.comments.length }})</h3>
-    <div class="comment" *ngFor="let comment of post.comments">
-      <div class="comment-author">{{ comment.user.username }}</div>
-      <div class="comment-date">{{ comment.createdAt.toString() | date:'short' }}</div>
-      <div class="comment-content">{{ comment.content }}</div>
-    </div>
-  </div>
-
-  <div class="no-comments" *ngIf="post && post.comments?.length === 0">
-    No comments yet.
-  </div>
-
-  <ng-template #notFoundTemplate>
-    <div class="error-card">
-      <h2>Post Not Found</h2>
-      <p>The requested post could not be located.</p>
-    </div>
-  </ng-template>
-</div>
-
-<ng-template #loadingTemplate>
-  <div class="loading-container">
-    <div class="skeleton-card">
-      <div class="skeleton skeleton-title"></div>
-      <div class="skeleton skeleton-meta"></div>
-      <div class="skeleton skeleton-description"></div>
-      <div class="skeleton skeleton-media"></div>
-    </div>
-  </div>
-</ng-template>
+</main>

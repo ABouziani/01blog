@@ -8,4 +8,5 @@ export interface CommentDto {
 interface User {
   id:number;
   username:string;
+  photo:String;
 }
