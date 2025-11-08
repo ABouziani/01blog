@@ -1,7 +1,8 @@
 <!-- create-post/create-post.component.html -->
 <div class="create-post-container">
   <div class="card">
-    <h2>Create New Post</h2>
+    <h2 *ngIf="!editing">Create New Post</h2>
+    <h2 *ngIf="editing">Update Post</h2>
 
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()" novalidate>
       <!-- Title Field -->
@@ -68,12 +69,21 @@
 
       <!-- Submit Button -->
       <div class="form-actions">
-        <button type="submit" [disabled]="isSubmitting || postForm.invalid" class="submit-btn">
+        <button type="submit" *ngIf="!editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn">
           <span *ngIf="!isSubmitting">Create Post</span>
           <span *ngIf="isSubmitting">Creating...</span>
         </button>
 
-        <button type="button" (click)="router.navigate(['/'])" class="cancel-btn">
+        <button type="button" *ngIf="editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn"
+        (click)="updatePost()">
+          <span *ngIf="!isSubmitting">Update Post</span>
+          <span *ngIf="isSubmitting">updating...</span>
+        </button>
+
+        <button type="button" *ngIf="!editing" (click)="router.navigate(['/'])" class="cancel-btn">
+          Cancel
+        </button>
+        <button type="button" *ngIf="editing" (click)="cancelEdit()" class="cancel-btn">
           Cancel
         </button>
       </div>

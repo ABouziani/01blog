@@ -8,10 +8,11 @@ import { AddCommentComponent } from '../addcomment/addcomment';
 import { CommentDto } from '../models/comment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CreatePostComponent } from '../createpost/createpost';
 
 @Component({
   selector: 'app-post',
-  imports: [ReactiveFormsModule, CommonModule, AddCommentComponent, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, AddCommentComponent, RouterLink, CreatePostComponent],
   templateUrl: './post.html',
   styleUrl: './post.css'
 })
@@ -41,7 +42,7 @@ export class PostComponent {
     this.postId = this.route.snapshot.paramMap.get('id');
     this.postService.getPost(this.postId).subscribe({
       next: (data) => {
-        console.log(data);
+        console.log("Post: ",data);
         this.post = data;
         if (this.post) {
           this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
@@ -61,6 +62,10 @@ export class PostComponent {
     });
   }
 
+
+  cancelEdit(event: string) {
+    if (event == 'cancel') this.isEditing = false;
+  }
 
   addReaction(postId: number, type: 'LIKE' | 'DISLIKE') {
     if (this.postService.waiting) return;
@@ -229,6 +234,18 @@ export class PostComponent {
       return 'Server error. Please try again later.';
     }
     return 'An error occurred while creating the post.';
+  }
+
+  onUpdate(data: Post) {
+    this.post = data;
+    if (this.post) {
+      this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
+      this.post.dislikes = data.reactions.filter(r => r.type == "dislike").length.toString();
+    }
+    this.post.comments.reverse();
+    this.isSubmitting = false;
+    this.loading = false;
+    this.isEditing = false;
   }
 
 }

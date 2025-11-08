@@ -166,3 +166,87 @@ body.dark .engagement-btn {
 .title, .creator, .comments, .commentcontent {
   color: var(--text);
 }
+
+
+/* Base style for both h1 and textarea title */
+.title,
+.post-title-edit {
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Textarea appearance to match h1 */
+.post-title-edit {
+  border: 2px solid var(--text);
+  resize: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+  color: var(--text);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus state — underline effect like a modern editor */
+.post-title-edit:focus {
+  border-color: var(--bs-primary);
+  box-shadow: none;
+}
+
+
+
+/* Dark mode tweaks */
+[data-bs-theme="dark"] .post-title-edit {
+  color: #f8f9fa;
+  background-color: transparent;
+}
+
+
+.post-actions {
+  margin-bottom: 20px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+
+
+
+/* loading  */
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.skeleton-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--card-bg), #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite linear;
+  height: 16px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.skeleton-title { height: 24px; width: 70%; }
+.skeleton-meta { height: 12px; width: 40%; }
+.skeleton-description { height: 12px; width: 100%; }
+.skeleton-media { height: 200px; width: 100%; }
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

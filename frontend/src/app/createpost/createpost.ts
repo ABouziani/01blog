@@ -1,10 +1,11 @@
 // create-post/create-post.component.ts
 
-import { Component, Input, input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // Remove HttpClientModule import from here
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Post } from '../post/post-model';
 
 @Component({
   selector: 'app-create-post',
@@ -21,10 +22,23 @@ export class CreatePostComponent {
   selectedFile: File | null = null;
   previewUrl: string | null = null; // For image/video preview
 
+  @Input() posttoedit: Post | null = null;
+  
+  
   @Input() editing: {
+    id:number;
     title: String;
     description: String;
   } | null = null;
+
+
+  @Output() cancelEvent = new EventEmitter<string>();
+  @Output() updateEvent = new EventEmitter<Post>();
+
+  cancelEdit() {
+    this.editing = null;
+    this.cancelEvent.emit('cancel');
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +51,7 @@ export class CreatePostComponent {
       // media: [null, Validators.required]
     });
   }
-
+  
   ngOnChanges() {
     if (this.editing) {
       this.postForm.patchValue({
@@ -118,6 +132,38 @@ export class CreatePostComponent {
           this.isSubmitting = false;
           this.errorMessage = this.getErrorMessage(error);
           console.error('Error creating post:', error);
+        }
+      });
+  }
+
+  updatePost(): void {
+    this.isSubmitting = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    const formData = new FormData();
+    formData.append('title', this.postForm.get('title')?.value);
+    formData.append('description', this.postForm.get('description')?.value);
+    if (this.selectedFile) {
+      formData.append('media', this.selectedFile); // 'media' should match your backend field name
+    }
+
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+      // ⚠️ DO NOT set Content-Type! Let the browser set it with boundary
+    });
+
+    this.http.put<Post>(`http://localhost:8080/api/posts/edit/${this.editing?.id}`, formData, { headers })
+      .subscribe({
+        next: (data) => {
+          alert("Post updated successfully!")
+          this.updateEvent.emit(data);
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          this.errorMessage = this.getErrorMessage(error);
+          console.error('Error editing post:', error);
         }
       });
   }
