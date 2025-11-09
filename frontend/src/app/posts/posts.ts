@@ -15,7 +15,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
 export class PostsComponent implements OnInit {
   @Input() posts: PostDto[] | null = null;
   loading = true;
-  readonly PREVIEW_LENGTH = 150;
+  readonly PREVIEW_LENGTH = 50;
 
   private internalPosts: PostDto[] = [];
 

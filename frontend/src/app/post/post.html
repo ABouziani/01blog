@@ -1,5 +1,5 @@
 <div class="container-fluid px-lg-4 py-4 py-lg-5" style="max-width: 1800px;">
-  <div class="row g-4" *ngIf="!isEditing && post">
+  <div class="row g-4 justify-content-center" *ngIf="!isEditing && post">
 
     <!-- Left Sidebar (Author) - 15% -->
     <aside class="d-none d-lg-block" style="flex: 0 0 15%; max-width: 15%;">
@@ -8,7 +8,7 @@
           <div class="author-header"></div>
           <div class="p-4">
             <img [src]="post.creator.photo ? post.creator.photo : '/user_avatar.png'" alt="{{ post.creator.username }}"
-              class="author-avatar mb-3">
+              class="author-avatar mb-3" style="background-color: white;">
             <h2 class="h5 fw-bold mb-2">@{{ post.creator.username }}</h2>
             <p class="text-muted small mb-4">{{ post.creator.bio }}</p>
             <button class="btn btn-profile w-100 mb-3" (click)="router.navigate(['/users/' + post.creator.id])">
@@ -30,7 +30,7 @@
     </aside>
 
     <!-- Main Content - 60% -->
-    <main style="flex: 0 0 55%; max-width: 55%;">
+    <main class="middlebar" style="flex: 0 0 55%; max-width: 55%;">
       <article class="article-card p-4 p-md-5 fade-in-up">
         <!-- Article Meta -->
         <div class="d-flex flex-wrap gap-2 mb-4">
@@ -50,16 +50,31 @@
         <!-- Mobile Author Info -->
         <div class="d-lg-none d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
           <img (click)="router.navigate(['/users/' + post.creator.id])" [src]="post.creator.photo ? post.creator.photo : '/user_avatar.png'" alt="{{ post.creator.username }}"
-            class="clickable rounded-3" style="width: 48px; height: 48px; object-fit: cover;">
+            class="clickable rounded-3" style="width: 48px; height: 48px; object-fit: cover; background-color: white;">
           <div>
             <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">@{{ post.creator.username }}</p>
             <p class="text-muted small mb-0">{{ post.creator.bio }}</p>
           </div>
+          <span *ngIf="post && post.owner" style="margin-left: auto;">Manage this post:</span>
+            <div *ngIf="post && post.owner" class="d-flex gap-2">
+              <button class="btn action-btn btn-delete flex-fill" *ngIf="!isEditing" (click)="delete(post.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
+                <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
+              </button>
+            </div>
         </div>
 
         <!-- Article Content -->
         <div class="article-content" *ngIf="!isEditing">
-          <hr class="section-divider">
+          <hr class="section-divider section-divider-mobile">
+          <div  *ngIf="post">
+          <img *ngIf="post.media && isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
+            class="media-image-video" style="display: block; width: 80%; height: auto;margin: auto ;object-fit: cover;margin-bottom: 10px;">
+          <video *ngIf="post.media && isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media"
+            controls muted preload="metadata"></video>
+        </div>
           <p [innerText]="post.description"></p>
         </div>
       </article>
@@ -180,4 +195,3 @@
   </app-create-post>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
