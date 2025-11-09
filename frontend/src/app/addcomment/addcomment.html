@@ -1,5 +1,5 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="add-comment-form">
-  <div class="flex-grow-1">
+  <div class="flex-grow-1 formcont">
     <textarea formControlName="content" placeholder="Write your comment..." 
       class="form-control rounded-2 bg-light dark:bg-gray-800 dark:bg-opacity-30 comment-content"></textarea>
     <button type="submit" [disabled]="commentForm.invalid || isLoading" class="btn btn-primary-custom mt-2 px-4">

@@ -21,7 +21,7 @@
 .dark-theme {
   /* Dark mode */
   --primary: #9f9ba0;
-  --bg: #111A22;
+  --bg: #292929;
   --text: #ebe6e4;
   --content:#CBD5E1;
   --muted: #94a3b8;
@@ -57,5 +57,6 @@ body {
   color: var(--primary);
   border-color: var(--primary);
 }
+
 
 

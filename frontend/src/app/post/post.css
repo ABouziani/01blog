@@ -1,3 +1,10 @@
+.container {
+  padding: 0px;
+  margin: auto!important;
+  width: 100%;
+}
+
+
 /* Cards */
 .card-bg {
   background-color: var(--bg-card);
@@ -235,11 +242,20 @@ textarea.form-control:focus {
   transform: scale(1.2);
 }
 
+.leftsidebar {
+  width: 15%;
+  padding: 0px !important;
+}
+
+.middle {
+  width: 60%;
+}
 
 
 .rightsidebar {
   /* background-color: red; */
   padding: 0px !important;
+  width: 25%;
 }
 
 .post-engagement {
