@@ -1,3 +1,7 @@
+.form-control::placeholder {
+color: gray;
+}
+
 .add-comment-form {
   display: flex;
   flex-direction: column;
@@ -37,4 +41,31 @@
 
 .formcont {
   width: 100%;
+}
+
+
+.btn-comment {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-comment:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  color: white;
+}
+
+.btn-comment:disabled {
+  background: gray;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }

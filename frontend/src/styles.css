@@ -6,6 +6,7 @@
   --content:#212529;
   --muted: #6c757d;
   --card-bg: #f8f9fa;
+  --comment-bg: #e4e9ee;
   --notifDropdown: rgb(218, 218, 218);
   --inputs-bg : rgb(240, 240, 240);
   --bg-light: #f6f6f8;
@@ -25,7 +26,8 @@
   --text: #ebe6e4;
   --content:#CBD5E1;
   --muted: #94a3b8;
-  --card-bg: #1e293b;
+  --card-bg: #353a41;
+  --comment-bg: #6f6f70;
   --notifDropdown: rgb(53, 53, 53);
   --inputs-bg : rgb(75, 74, 74);
 }
