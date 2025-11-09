@@ -1,5 +1,5 @@
 <div class="container py-4">
-  <div class="row gx-5" *ngIf="post">
+  <div class="row gx-5" *ngIf="!isEditing && post">
     <!-- Left Sidebar (Author) -->
     <aside class="leftsidebar d-none d-lg-block">
       <!-- Profile Card -->
@@ -58,7 +58,7 @@
     </main>
 
     <!-- Right Sidebar (Social) -->
-    <aside class="rightsidebar d-xl-block">
+    <aside class="rightsidebar col-xl-3 d-xl-block">
       <div class="sticky-sidebar">
         <div class="card-bg rounded-3 p-4 h-100 d-flex flex-column">
           <!-- Kudos -->
@@ -105,6 +105,8 @@
       </div>
     </aside>
   </div>
+  <app-create-post *ngIf="isEditing && post" [editing]="{id:post.id,title:post.title,description:post.description}"
+      (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)"></app-create-post>
 </div>
 
 
