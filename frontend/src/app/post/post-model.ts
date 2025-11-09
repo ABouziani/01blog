@@ -17,6 +17,7 @@ export interface Post {
 interface User {
   id:number;
   username: String;
+  bio:string;
   photo:String;
 }
 

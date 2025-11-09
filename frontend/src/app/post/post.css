@@ -1,252 +1,266 @@
-/* Fonts */
-body,
-.font-display {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.font-serif {
-  font-family: 'Lora', serif;
-}
-
-/* Base */
-body {
-  background-color: var(--bg-light);
-  color: var(--text-light);
-}
-
-body.dark {
-  background-color: var(--bg-dark);
+/* Cards */
+.card-bg {
+  background-color: var(--bg-card);
   color: var(--text-dark);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-/* Material Symbols */
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  vertical-align: middle;
-  font-size: 1.25rem;
+.card-bg:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
-/* Sticky Header */
-.sticky-header {
-  background-color: rgba(246, 246, 248, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-light);
+/* Dark mode support */
+body.dark .card-bg {
+  background-color: var(--bg-dark-card);
+  color: #f5f5f5;
 }
-body.dark .sticky-header {
-  background-color: rgba(16, 22, 34, 0.8);
-  border-bottom-color: var(--border-dark);
+
+.dark .text-muted {
+  color: #b0b0b0 !important;
 }
 
 /* Avatar */
-.avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+.avatar,
+.avatar-sm {
+  background-size: cover;
+  background-position: center;
   border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-}
-.avatar-lg {
-  width: 3rem;
-  height: 3rem;
-}
-.avatar-xl {
-  width: 4rem;
-  height: 4rem;
 }
 
-/* Post Media */
-.post-media {
-  aspect-ratio: 16 / 9;
-  background-size: cover;
-  background-position: center;
-  position: relative;
+.avatar {
+  width: 3.5rem;
+  height: 3.5rem;
 }
 
-.play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+.avatar-sm {
+  width: 2rem;
+  height: 2rem;
 }
 
-.progress-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0.75rem 1rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
-}
-
-/* Search */
-.search-addon {
-  background-color: #e5e7eb;
-  border-right: none;
-}
-body.dark .search-addon {
-  background-color: rgba(30, 41, 59, 0.3);
-  color: var(--text-muted-dark);
-}
-.search-input {
-  background-color: #e5e7eb;
-  border-left: none;
-}
-body.dark .search-input {
-  background-color: rgba(30, 41, 59, 0.3);
-  color: white;
-}
-
-/* Button */
+/* Buttons */
 .btn-primary-custom {
   background-color: var(--primary);
-  border-color: var(--primary);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
+
 .btn-primary-custom:hover {
-  background-color: #255bd2;
-  border-color: #255bd2;
+  background-color: var(--primary-hover);
 }
 
-/* Article prose */
-.article-body {
-  font-size: 1.125rem;
-  line-height: 1.75;
-  color: #4b5563;
-}
-body.dark .article-body {
-  color: #d1d5db;
-}
-
-.article-body h2 {
-  font-size: 1.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  font-weight: 700;
-  color: var(--text-light);
-}
-body.dark .article-body h2 {
-  color: var(--text-dark);
-}
-
-.article-body p {
-  margin-bottom: 1.25rem;
-}
-
-/* HR */
-.divider {
-  border-color: var(--border-light);
-}
-body.dark .divider {
-  border-color: var(--border-dark);
-}
-
-/* Engagement buttons */
-.engagement-btn {
-  color: var(--text-muted-light);
-}
-body.dark .engagement-btn {
-  color: var(--text-muted-dark);
-}
-.engagement-btn:hover {
+.btn-outline-primary-subtle {
+  border-color: var(--primary);
   color: var(--primary);
 }
-.engagement-btn.dislike:hover {
-  color: #ef4444;
+
+.btn-outline-primary-subtle:hover {
+  background-color: var(--primary);
+  color: #fff;
 }
 
-/* Comments */
-.comment-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background-size: cover;
-  background-position: center;
+/* Post Content */
+.prose p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
 }
 
-.title, .creator, .comments, .commentcontent {
-  color: var(--text);
+.prose h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
 
-
-/* Base style for both h1 and textarea title */
-.title,
-.post-title-edit {
-  font-family: inherit;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+/* Figures */
+.prose figure {
+  margin: 1.5rem 0;
 }
 
-/* Textarea appearance to match h1 */
-.post-title-edit {
-  border: 2px solid var(--text);
+.prose img {
+  width: 100%;
+  display: block;
+}
+
+.prose figcaption {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Tags */
+.tag-pill {
+  background-color: var(--tag-bg);
+  color: var(--text-dark);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.dark .tag-pill {
+  background-color: var(--tag-dark-bg);
+  color: #f5f5f5;
+}
+
+/* Sidebar list hover effect */
+.card-hover:hover {
+  background-color: rgba(43, 108, 238, 0.1);
+  color: var(--primary);
+}
+
+/* Sticky sidebar */
+.sticky-sidebar {
+  position: sticky;
+  top: 1rem;
+}
+
+/* Comment box */
+textarea.form-control {
   resize: none;
-  outline: none;
-  background-color: transparent;
-  padding: 0;
-  color: var(--text);
-  transition: all 0.2s ease-in-out;
 }
 
-/* Focus state — underline effect like a modern editor */
-.post-title-edit:focus {
-  border-color: var(--bs-primary);
+textarea.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(43, 108, 238, 0.25);
+}
+
+/* Scrollbar for right sidebar comments */
+.flex-grow.overflow-auto {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.flex-grow.overflow-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.flex-grow.overflow-auto::-webkit-scrollbar-thumb {
+  background-color: var(--text-muted);
+  border-radius: 3px;
+}
+
+/* Utility for text truncation */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  color: var(--text);
+}
+
+.content {
+  color: var(--content);
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #2b6cee, #1e4bb8);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(43, 108, 238, 0.4);
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(43, 108, 238, 0.6);
+}
+
+.engagement-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  background-color: #ffffff;
+  color: #495057;
+}
+
+/* Hover effect */
+.engagement-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* Disabled state */
+.engagement-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
   box-shadow: none;
 }
 
+/* Like Button */
+.like-btn {
+  color: #2b6cee;
+  background-color: #f0f4ff;
+}
 
+.like-btn:hover:not(:disabled) {
+  background-color: #d9e4ff;
+}
 
-/* Dark mode tweaks */
-[data-bs-theme="dark"] .post-title-edit {
-  color: #f8f9fa;
-  background-color: transparent;
+/* Dislike Button */
+.dislike-btn {
+  color: #ff4d4f;
+  background-color: #fff0f0;
+}
+
+.dislike-btn:hover:not(:disabled) {
+  background-color: #ffd6d8;
+}
+
+/* Icon sizing */
+.engagement-btn .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+/* Smooth transition for icons */
+.engagement-btn span {
+  transition: transform 0.2s ease;
+}
+
+/* Optional: “pop” icon on hover */
+.engagement-btn:hover .material-symbols-outlined {
+  transform: scale(1.2);
 }
 
 
-.post-actions {
-  margin-bottom: 20px;
+
+.rightsidebar {
+  /* background-color: red; */
+  padding: 0px !important;
 }
 
-.clickable {
-  cursor: pointer;
+.post-engagement {
+  margin-bottom: 0px !important;
 }
 
-
-
-
-/* loading  */
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
+.comments {
+  max-height: 500px;          /* Limit height */
+  overflow-y: auto;           /* Enable vertical scrolling */
+  overflow-x: hidden;         /* Prevent horizontal scroll */
+  padding-right: 0.25rem;     /* Optional padding for hidden scrollbar */
 }
 
-.skeleton-card {
-  width: 100%;
-  max-width: 600px;
-  border-radius: 8px;
-  background: var(--card-bg);
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* Hide scrollbar in WebKit browsers (Chrome, Safari) */
+.comments::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
-.skeleton {
-  background: linear-gradient(90deg, var(--card-bg), #f5f5f5 50%, #eee 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite linear;
-  height: 16px;
-  margin-bottom: 12px;
-  border-radius: 4px;
-}
-
-.skeleton-title { height: 24px; width: 70%; }
-.skeleton-meta { height: 12px; width: 40%; }
-.skeleton-description { height: 12px; width: 100%; }
-.skeleton-media { height: 200px; width: 100%; }
-
-@keyframes skeleton-loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+/* Hide scrollbar in Firefox */
+.comments {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE and Edge */
 }
