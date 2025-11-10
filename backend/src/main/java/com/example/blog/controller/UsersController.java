@@ -2,18 +2,20 @@ package com.example.blog.controller;
 
 import java.util.Objects;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.blog.dtoresponses.EntityDtoMapper;
 import com.example.blog.dtoresponses.UserDto;
@@ -24,6 +26,8 @@ import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/api/users")
@@ -82,6 +86,22 @@ public class UsersController {
         // loggedUser.markAuthorNotificationsAsRead(user.getId());
         // userRepository.save(loggedUser);
         return ResponseEntity.ok(EntityDtoMapper.toUserDto(user));
+    }
+
+    @PutMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserDto> updateUser(
+            @RequestParam("bio") @NotBlank @Size(min = 10, max = 1000) String bio,
+            @RequestParam("email") @NotBlank @Size(min = 10, max = 1000) String email,
+            @RequestParam("noPhoto") @NotBlank String noPhoto,
+            @RequestParam(value = "media", required = false) MultipartFile media,
+            Authentication authentication
+    ) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+
+        User updatedUser = userService.updatePost(loggedUserId, bio, email, media, noPhoto == "true");
+
+        return ResponseEntity.ok(EntityDtoMapper.toUserDto(updatedUser));
     }
 
     // POST /api/users/register

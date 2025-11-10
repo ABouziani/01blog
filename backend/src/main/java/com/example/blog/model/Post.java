@@ -38,9 +38,9 @@ public class Post {
     @Size(min = 6, max = 100, message = "Title must be at least 6 characters long")
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length=10000)
     @NotBlank(message = "description cannot be blank")
-    @Size(min = 20, max = 1000, message = "description must be at least 20 characters long")
+    @Size(min = 20, message = "description must be at least 20 characters long")
     private String description;
 
     private LocalDateTime createdAt = LocalDateTime.now();

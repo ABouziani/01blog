@@ -1,0 +1,99 @@
+<!-- create-post/create-post.component.html -->
+<div class="update-profile-container">
+    <div class="card">
+        <h2>Update Profile</h2>
+
+        <form [formGroup]="userForm" (ngSubmit)="updatePost()" novalidate>
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" disabled [value]="editing?.username + '  (You cannot change your username)'" style="color: grey;">
+
+                <!-- <div class="error-message" *ngIf="username?.invalid && username?.touched">
+                    <span *ngIf="username?.errors?.['required']">username is required</span>
+                    <span *ngIf="username?.errors?.['minlength']">username must be at least 3 characters</span>
+                    <span *ngIf="username?.errors?.['maxlength']">username cannot exceed 100 characters</span>
+                </div> -->
+            </div>
+
+            <!-- email Field -->
+            <div class="form-group">
+                <label for="email">email *</label>
+                <input type="text" id="email" formControlName="email" [class.error]="email?.invalid && email?.touched"
+                    placeholder="Enter an email">
+
+                <div class="error-message" *ngIf="email?.invalid && email?.touched">
+                    <span *ngIf="email?.errors?.['required']">email is required</span>
+                    <span *ngIf="email?.errors?.['minlength']">email must be at least 3 characters</span>
+                    <span *ngIf="email?.errors?.['maxlength']">email cannot exceed 100 characters</span>
+                </div>
+            </div>
+
+            <!-- Bio Field -->
+            <div class="form-group">
+                <label for="bio">bio *</label>
+                <textarea id="bio" formControlName="bio" [class.error]="bio?.invalid && bio?.touched"
+                    placeholder="Enter a bio" rows="6"></textarea>
+
+                <div class="error-message" *ngIf="bio?.invalid && bio?.touched">
+                    <span *ngIf="bio?.errors?.['required']">bio is required</span>
+                    <span *ngIf="bio?.errors?.['minlength']">bio must be at least 10 characters</span>
+                    <span *ngIf="bio?.errors?.['maxlength']">bio cannot exceed 1000 characters</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Profile photo preview</label>
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar" [style.background-image]="'url(' + editing?.photo + ')'"></div>
+
+                    <button class="remove-btn" *ngIf="editing?.photo" type="button" (click)="removePhoto()">
+                        ✕
+                    </button>
+                </div>
+                <div class="profile-avatar" [style.background-image]="'url(' + editing?.photo + ')'"></div>
+            </div>
+
+            <!-- Media Upload Field -->
+            <div class="form-group">
+                <label for="media">Upload Media (optional)</label>
+
+                <input type="file" id="media" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+
+                <!-- Preview -->
+                <div *ngIf="previewUrl">
+                    <img [src]="previewUrl" alt="Preview" class="media-preview">
+                </div>
+                <button *ngIf="previewUrl" type="button" (click)="selectedFile = null; previewUrl = null;" class="remove-preview-btn">
+                    Remove
+                </button>
+
+                <div class="error-message" *ngIf="errorMessage && !userForm.invalid">
+                    {{ errorMessage }}
+                </div>
+                <small class="hint">Supported: JPG, PNG, GIF (max 10MB)</small>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages">
+                <div class="success-message" *ngIf="successMessage">
+                    {{ successMessage }}
+                </div>
+                <div class="error-message" *ngIf="errorMessage">
+                    {{ errorMessage }}
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" [disabled]="isSubmitting || userForm.invalid" class="submit-btn">
+                    <span *ngIf="!isSubmitting">Update profile</span>
+                    <span *ngIf="isSubmitting">submiting...</span>
+                </button>
+                <button type="button" *ngIf="editing" (click)="cancelEdit()" class="cancel-btn">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -3,6 +3,8 @@ package com.example.blog.dtoresponses;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.blog.model.User;
+
 public class UserDto {
 
     private Long id;
@@ -16,6 +18,8 @@ public class UserDto {
     private boolean isAlreadyReported;
     private boolean isAlreadyFollowed;
     private boolean owner;
+    private List<User> followers;
+    private List<User> following;
 
     // Constructors
     public UserDto() {
@@ -108,5 +112,21 @@ public class UserDto {
 
     public boolean getOwner() {
         return this.owner;
+    }
+
+    public List<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<User> followers) {
+        this.followers = followers;
+    }
+
+    public List<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<User> following) {
+        this.following = following;
     }
 }

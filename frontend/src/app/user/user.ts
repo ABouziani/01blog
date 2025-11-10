@@ -4,18 +4,20 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
+import { EditprofileComponent } from '../editprofile/editprofile';
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule],
+  imports: [CommonModule, EditprofileComponent],
   templateUrl: './user.html',
   styleUrl: './user.css'
 })
 export class UserComponent {
   user: UserDto | null = null;
   error: string | null = null;
+  isEditing = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private auth:AuthService,public router:Router) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private auth: AuthService, public router: Router) { }
 
   ngOnInit(): void {
     let userId = this.route.snapshot.paramMap.get('id');
@@ -38,8 +40,8 @@ export class UserComponent {
           }
         },
         error: (err) => {
-          console.error('Error fetching user:', err);
-          this.error = 'Failed to load user data.';
+          // this.error = err.error.message;
+          this.error = 'Bad request!';
         }
       });
   }
@@ -56,7 +58,10 @@ export class UserComponent {
         next: (data) => {
           console.log(data);
           alert(data.message)
-          if (this.user) this.user.alreadyFollowed = true;
+          if (this.user) {
+            this.user.alreadyFollowed = true;
+            this.user.followers.length++
+          };
         },
         error: (err) => {
           console.error('Error following user:', err);
@@ -81,7 +86,10 @@ export class UserComponent {
         next: (data) => {
           console.log(data);
           alert(data.message)
-          if (this.user) this.user.alreadyFollowed = false;
+          if (this.user) {
+            this.user.alreadyFollowed = false;
+            this.user.followers.length--;
+          }
         },
         error: (err) => {
           console.error('Error unfollowing user:', err);
@@ -107,7 +115,7 @@ export class UserComponent {
     };
 
     return this.http.post('http://localhost:8080/api/reports/add', body, { headers })
-    .subscribe({
+      .subscribe({
         next: (data) => {
           console.log(data)
           alert("User reported to admins successfully!")
@@ -121,5 +129,21 @@ export class UserComponent {
           }, 1500);
         }
       });
+  }
+
+  onUpdate(data: UserDto) {
+    data.posts.forEach(post => {
+      post.creatorId = data.id.toString();
+      post.creatorUsername = data.username;
+    });
+    this.user = data;
+    if (data.id == this.auth.loggedId()) {
+      this.user.owner = true;
+    }
+    this.isEditing = false;
+  }
+
+  cancelEdit(event: string) {
+    if (event == 'cancel') this.isEditing = false;
   }
 }

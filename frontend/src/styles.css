@@ -62,3 +62,23 @@ body {
 
 
 
+
+/* Main container to fill the viewport and use flex layout */
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* full viewport height */
+}
+
+/* Root/content grows to fill space */
+.root, router-outlet {
+  flex: 1; /* takes remaining space */
+}
+
+/* Footer styles */
+.footer {
+  /* background-color: #222; */
+  /* color: white; */
+  text-align: center;
+  padding: 15px 0;
+}

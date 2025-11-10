@@ -9,7 +9,15 @@ export interface UserDto {
   createdAt: string; // or Date
   role: string;
   posts: PostDto[];
-  alreadyReported:boolean;
-  alreadyFollowed:boolean;
-  owner:boolean;
+  alreadyReported: boolean;
+  alreadyFollowed: boolean;
+  owner: boolean;
+  followers: User[];
+  following: User[];
+}
+
+interface User {
+  id: number;
+  username: string;
+  photo: string;
 }

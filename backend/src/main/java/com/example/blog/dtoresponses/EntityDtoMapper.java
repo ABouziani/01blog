@@ -22,6 +22,8 @@ public class EntityDtoMapper {
         dto.setIsAlreadyReported(user.isAlreadyReported());
         dto.setIsAlreadyFollowed(user.isAlreadyFollowed());
         dto.setOwner(user.getOwner());
+        dto.setFollowers(user.getFollowers());
+        dto.setFollowing(user.getFollowing());
 
         // Map posts (without including creator's posts again to avoid deep nesting)
         if (user.getPosts() != null) {

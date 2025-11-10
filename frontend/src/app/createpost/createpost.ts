@@ -47,7 +47,7 @@ export class CreatePostComponent {
   ) {
     this.postForm = this.fb.group({
       title: [this.editing?.title || '', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(1000)]],
+      description: ['', [Validators.required, Validators.minLength(20)]],
       // media: [null, Validators.required]
     });
   }
