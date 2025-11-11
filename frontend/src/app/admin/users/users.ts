@@ -14,7 +14,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [MatTableModule, MatButtonModule, CommonModule, MatDialogModule, RouterLink],
   templateUrl: './users.html',
-  styleUrl: './users.css'
+  styleUrls: ['./users.css','../adminpanel/adminpanel.css']
 })
 export class AdminUsersComponent {
   private userAdminService = inject(UserAdminService);

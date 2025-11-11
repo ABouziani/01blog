@@ -1,50 +1,45 @@
-<h2>Posts</h2>
-<table mat-table [dataSource]="posts" class="mat-elevation-z8">
-  <ng-container matColumnDef="author">
-    <th mat-header-cell *matHeaderCellDef>Author</th>
-    <td mat-cell *matCellDef="let post">{{ post.authorName }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="preview">
-    <th mat-header-cell *matHeaderCellDef>Content Preview</th>
-    <td mat-cell *matCellDef="let post">
-      {{ post.description && post.description.length > 50 ? (post.description.substring(0, 47) + '...') :
-      post.description }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef>Status</th>
-    <td mat-cell *matCellDef="let post">
-      <span [class.hidden]="post.isHidden">{{ post.isHidden ? 'Hidden' : 'Visible' }}</span>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef>Actions</th>
-    <td mat-cell *matCellDef="let post">
-      @if (post.isHidden) {
-      <button mat-button (click)="openConfirmDialog('unhide', post.id, post.authorName)">Unhide</button>
-      } @else {
-      <button mat-button color="warn" (click)="openConfirmDialog('hide', post.id, post.authorName)">
-        Hide
-      </button>
-      }
-      <button mat-button color="primary" (click)="openConfirmDialog('delete', post.id, post.authorName)">
-        Delete
-      </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-<br/>
-&nbsp;
-&nbsp;
-&nbsp;
-<span>
+<!-- Posts Section -->
+<div class="content-header">
+  <h2 class="content-title">Posts Management</h2>
+</div>
+<div class="table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Content Preview</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let post of posts">
+        <td>{{ post.authorName }}</td>
+        <td>{{ post.description && post.description.length > 50 ? (post.description.substring(0, 47) + '...') :
+          post.description }}</td>
+        <td>
+          <span class="status-badge" [class.status-active]="!post.isHidden" [class.status-hidden]="post.isHidden">
+            {{ post.isHidden ? 'Hidden' : 'Visible' }}
+          </span>
+        </td>
+        <td>
+          @if (post.isHidden) {
+          <button class="btn-action btn-success-action"
+            (click)="openConfirmDialog('unhide', post.id, post.authorName)">Unhide</button>
+          } @else {
+          <button class="btn-action btn-danger-action"
+            (click)="openConfirmDialog('hide', post.id, post.authorName)">Hide</button>
+          }
+          <button class="btn-action btn-primary-action"
+            (click)="openConfirmDialog('delete', post.id, post.authorName)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   @if (posts && posts.length == 0) {
-  No posts to show!
+  <div class="empty-state">
+    <div class="empty-icon">📝</div>
+    <div class="empty-text">No posts to show!</div>
+  </div>
   }
-</span>
+</div>

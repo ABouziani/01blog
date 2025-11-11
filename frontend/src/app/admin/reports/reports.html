@@ -1,72 +1,57 @@
-<h2>Reports</h2>
-<table mat-table [dataSource]="reports" class="mat-elevation-z8">
-    <ng-container matColumnDef="reporter">
-        <th mat-header-cell *matHeaderCellDef>Reporter</th>
-        <td mat-cell *matCellDef="let report">
-            <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
+<!-- Reports Section -->
+<div class="content-header">
+  <h2 class="content-title">Reports Management</h2>
+</div>
+<div class="table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reporter</th>
+        <th>Reported User</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of reports">
+        <td>
+          <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
         </td>
-    </ng-container>
-
-    <ng-container matColumnDef="reported">
-        <th mat-header-cell *matHeaderCellDef>Reported User</th>
-        <td mat-cell *matCellDef="let report">
-            @if (report.reportedUserId) {
-            <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername
-                }}</span>
-            } @else if (report.reportedPostId) {
-            <span>Post {{ report.reportedPostId }}</span>
-            } @else {
-            <span>Unknown</span>
-            }
+        <td>
+          @if (report.reportedUserId) {
+          <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername
+            }}</span>
+          } @else if (report.reportedPostId) {
+          <span>Post {{ report.reportedPostId }}</span>
+          } @else {
+          <span>Unknown</span>
+          }
         </td>
-    </ng-container>
-
-    <ng-container matColumnDef="reason">
-        <th mat-header-cell *matHeaderCellDef>Reason</th>
-        <td mat-cell *matCellDef="let report">{{ report.reason }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let report">
-            <span [class.status-pending]="report.status === 'pending'"
-                [class.status-resolved]="report.status === 'resolved'"
-                [class.status-dismissed]="report.status === 'dismissed'">
-                {{ report.status | titlecase }}
-            </span>
+        <td>{{ report.reason }}</td>
+        <td>
+          <span class="status-badge" [class.status-pending]="report.status === 'pending'"
+            [class.status-resolved]="report.status === 'resolved'"
+            [class.status-dismissed]="report.status === 'dismissed'">
+            {{ report.status | titlecase }}
+          </span>
         </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let report">
-            @if (report.status === 'pending') {
-            <button mat-button color="warn" (click)="resolveWithAction(report, 'ban_user')">
-                Ban User
-            </button>
-            <!-- <button mat-button color="primary" (click)="resolveWithAction(report, 'delete_post')">
-                Delete Post
-            </button> -->
-            <button mat-button (click)="resolveWithAction(report, 'dismiss')">
-                Dismiss
-            </button>
-            } @else {
-            <em><button mat-button (click)="resolveWithAction(report, 'delete')">
-                    Delete
-                </button></em>
-            }
+        <td>
+          @if (report.status === 'pending') {
+          <button class="btn-action btn-danger-action" (click)="resolveWithAction(report, 'ban_user')">Ban User</button>
+          <button class="btn-action btn-secondary-action"
+            (click)="resolveWithAction(report, 'dismiss')">Dismiss</button>
+          } @else {
+          <button class="btn-action btn-primary-action" (click)="resolveWithAction(report, 'delete')">Delete</button>
+          }
         </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-<br/>
-&nbsp;
-&nbsp;
-&nbsp;
-<span>
-    @if (reports && reports.length == 0) {
-        No reports to show!
-    }
-</span>
+      </tr>
+    </tbody>
+  </table>
+  @if (reports && reports.length == 0) {
+  <div class="empty-state">
+    <div class="empty-icon">🚩</div>
+    <div class="empty-text">No reports to show!</div>
+  </div>
+  }
+</div>

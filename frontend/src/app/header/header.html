@@ -1,36 +1,35 @@
 <header class="app-header">
   <div class="logocontainer">
-    <a class="navbar-brand d-flex align-items-center text-dark" routerLink="/">
-      <div class="me-2" style="width: 1.5rem; height: 1.5rem; color: var(--primary);">
-        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
-        </svg>
-      </div>
+    <a class="navbar-brand" routerLink="/">
+      <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+      </svg>
       <strong class="logo">01Blog</strong>
     </a>
   </div>
   <nav class="menu">
-
     <a class="link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <span class="link-icon material-symbols-rounded">home</span>
+      <i class="bi bi-house link-icon"></i>
       <span class="link-title"></span>
     </a>
 
     <!-- Notifications (only when logged in) -->
     <ng-container *ngIf="authService.isLoggedIn()">
       <div class="dropdown notif-dropdown-container">
-        <button class="btn btn-link link position-relative p-0 d-flex align-items-center" type="button"
-          id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
-          <span class="material-symbols-rounded fs-3 align-middle">notifications</span>
-          <span class="link-title"></span>
+        <button class="btn btn-link position-relative p-0" type="button" id="notifDropdown" data-bs-toggle="dropdown"
+          aria-expanded="false" aria-label="Notifications">
+          <a class="link" >
+            <i class="bi bi-bell link-icon"></i>
+            <span class="link-title"></span>
+          </a>
           <span *ngIf="unreadCount > 0"
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            class=" notifcount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             {{ unreadCount }}
           </span>
         </button>
 
         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notifDropdown"
-          style="width: 300px; max-height: 400px; overflow-y: auto;">
+          style="width: 320px; max-height: 400px; overflow-y: auto;">
           <!-- Header -->
           <li class="px-3 py-2 d-flex justify-content-between align-items-center border-bottom">
             <strong class="notif-title">Notifications</strong>
@@ -40,13 +39,13 @@
           <!-- Notifications list -->
           <ng-container *ngIf="notifications?.length; else noNotif">
             <li *ngFor="let n of notifications">
-              <a class="dropdown-item py-2 px-3 d-flex align-items-start" [class.bg-body-secondary]="n.unread"
+              <a class="notif-dropdown-item py-2 px-3 d-flex align-items-start" [class.notif-unread]="n.unread"
                 (click)="openNotification(n)">
-                <img [src]="n.authorPhoto ? 'n.authorPhoto' : '/user_avatar.png'" class="rounded-circle me-2" width="36" height="36"
-                  alt="{{ n.authorUsername }} avatar" />
+                <img [src]="n.authorPhoto ? n.authorPhoto : '/user_avatar.png'" class="rounded-circle me-2" width="36"
+                  height="36" alt="{{ n.authorUsername }} avatar" />
                 <div class="flex-grow-1">
                   <div class="fw-medium">
-                    <span class="text">{{ n.authorUsername }}</span> created a new post
+                    <span class="notif-text">{{ n.authorUsername }}</span> created a new post
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-1">
                     <small class="text-muted">{{ n.postCreatedAt | date: 'short' }}</small>
@@ -77,14 +76,14 @@
     <div class="dropdown">
       <button class="btn dropdown-toggle account-btn" type="button" id="menuDropdown" data-bs-toggle="dropdown"
         aria-expanded="false">
-        <span class="material-symbols-rounded fs-3 align-middle">account_circle</span>
+        <i class="bi bi-person-circle" style="font-size: 1.375rem;"></i>
       </button>
 
       <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="menuDropdown">
         <!-- Admin Panel -->
         <li *ngIf="authService.isAdmin() && authService.isLoggedIn()">
           <a class="dropdown-item clickable" routerLink="/adminpanel" routerLinkActive="active">
-            <span class="material-symbols-rounded me-2">dashboard</span>
+            <i class="bi bi-speedometer2"></i>
             Admin Panel
           </a>
         </li>
@@ -93,13 +92,13 @@
         <ng-container *ngIf="!authService.isLoggedIn()">
           <li>
             <a class="dropdown-item clickable" routerLink="/signin" routerLinkActive="active">
-              <span class="material-symbols-rounded me-2">login</span>
-              Signin
+              <i class="bi bi-box-arrow-in-right"></i>
+              Sign in
             </a>
           </li>
           <li>
             <a class="dropdown-item clickable" routerLink="/register" routerLinkActive="active">
-              <span class="material-symbols-rounded me-2">person_add</span>
+              <i class="bi bi-person-plus"></i>
               Register
             </a>
           </li>
@@ -109,25 +108,27 @@
         <ng-container *ngIf="authService.isLoggedIn()">
           <li>
             <a class="dropdown-item clickable" routerLink="/profile" routerLinkActive="active">
-              <span class="material-symbols-rounded me-2">account_circle</span>
+              <i class="bi bi-person-circle"></i>
               Profile
             </a>
           </li>
           <li>
             <a class="dropdown-item clickable" routerLink="/posts/create" routerLinkActive="active">
-              <span class="material-symbols-rounded me-2">edit_note</span>
+              <i class="bi bi-plus-circle"></i>
               Create new post
             </a>
           </li>
           <li>
             <button class="dropdown-item clickable" (click)="authService.logout()">
-              <span class="material-symbols-rounded me-2">logout</span>
+              <i class="bi bi-box-arrow-right"></i>
               Logout
             </button>
           </li>
         </ng-container>
       </ul>
     </div>
+
+    <!-- Theme Switch -->
     <div class="theme-switch">
       <input type="checkbox" id="themeCheckbox" class="checkbox" [checked]="darkMode" (change)="toggleDarkMode()">
       <label for="themeCheckbox" class="checkbox-label">

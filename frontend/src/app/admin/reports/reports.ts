@@ -21,7 +21,7 @@ import { RouterLink } from '@angular/router';
     RouterLink,
   ],
   templateUrl: './reports.html',
-  styleUrl: './reports.css'
+  styleUrls: ['./reports.css','../adminpanel/adminpanel.css']
 })
 export class AdminReportsComponent {
   private reportAdminService = inject(ReportAdminService);

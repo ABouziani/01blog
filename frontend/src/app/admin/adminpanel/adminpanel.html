@@ -1,33 +1,64 @@
-<mat-sidenav-container class="admin-container">
-      <mat-sidenav mode="side" opened>
-        <mat-nav-list>
-          <a mat-list-item (click)="selectTab('users')" routerLink="users" routerLinkActive="active" [class.active]="activeTab() === 'users'">
-            <span matListItemTitle>Users</span>
-          </a>
-          <a mat-list-item (click)="selectTab('posts')" routerLink="posts" routerLinkActive="active" [class.active]="activeTab() === 'posts'">
-            <span matListItemTitle>Posts</span>
-          </a>
-          <a mat-list-item (click)="selectTab('reports')" routerLink="reports" routerLinkActive="active" [class.active]="activeTab() === 'reports'">
-            <span matListItemTitle>Reports</span>
-          </a>
-        </mat-nav-list>
-      </mat-sidenav>
+<div class="admin-container">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="bi bi-shield-check"></i> Admin Panel
+      </div>
+    </div>
+    <nav class="nav-list">
+      <div class="nav-item">
+        <a class="nav-link active" (click)="selectTab('users')" routerLink="users" routerLinkActive="active"
+          [class.active]="activeTab() === 'users'">
+          <i class="bi bi-people"></i>
+          <span>Users</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" (click)="selectTab('posts')" routerLink="posts" routerLinkActive="active"
+          [class.active]="activeTab() === 'posts'">
+          <i class="bi bi-file-text"></i>
+          <span>Posts</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" (click)="selectTab('reports')" routerLink="reports" routerLinkActive="active"
+          [class.active]="activeTab() === 'reports'">
+          <i class="bi bi-flag"></i>
+          <span>Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
 
-      <mat-sidenav-content>
-        <mat-toolbar color="primary">Welcome&nbsp;<span class="admin-username">{{ adminUsername }},</span></mat-toolbar>
-        <mat-toolbar color="primary">Admin Panel</mat-toolbar>
-        <div class="admin-content">
-          @switch (activeTab()) {
-            @case ('users') {
-              <app-admin-users></app-admin-users>
-            }
-            @case ('posts') {
-              <app-admin-posts></app-admin-posts>
-            }
-            @case ('reports') {
-              <app-admin-reports></app-admin-reports>
-            }
-          }
+  <!-- Main Content -->
+  <main class="admin-main">
+    <!-- Top Bar -->
+    <div class="admin-topbar">
+      <div class="topbar-content">
+        <div>
+          <button class="mobile-toggle">
+            <i class="bi bi-list"></i>
+          </button>
+          <span class="topbar-welcome">Welcome, <span class="topbar-username">{{ adminUsername }}</span></span>
         </div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+        <div class="topbar-title">Admin Dashboard</div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="admin-content">
+      @switch (activeTab()) {
+      @case ('users') {
+      <app-admin-users></app-admin-users>
+      }
+      @case ('posts') {
+      <app-admin-posts></app-admin-posts>
+      }
+      @case ('reports') {
+      <app-admin-reports></app-admin-reports>
+      }
+      }
+    </div>
+  </main>
+</div>

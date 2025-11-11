@@ -17,6 +17,8 @@
   --text-muted-dark: #9ca3af;   /* gray-400 */
   --border-light: #e5e7eb;      /* gray-200 */
   --border-dark: #1f293740;     /* gray-800/25 */
+  --table-text: rgb(102, 102, 102);
+  --unreadnotif-bg:rgb(184, 184, 184);
 }
 
 .dark-theme {
@@ -30,6 +32,8 @@
   --comment-bg: #6f6f70;
   --notifDropdown: rgb(53, 53, 53);
   --inputs-bg : rgb(75, 74, 74);
+  --table-text: rgb(204, 186, 219);
+  --unreadnotif-bg:#232e3b;
 }
 
 /* Apply variables globally */

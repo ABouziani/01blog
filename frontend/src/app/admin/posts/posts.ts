@@ -19,7 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDialogModule
   ],
   templateUrl: './posts.html',
-  styleUrl: './posts.css'
+  styleUrls: ['./posts.css','../adminpanel/adminpanel.css']
 })
 export class AdminPostsComponent {
   private postAdminService = inject(PostAdminService);
