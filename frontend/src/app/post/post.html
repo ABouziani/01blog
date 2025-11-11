@@ -49,32 +49,35 @@
 
         <!-- Mobile Author Info -->
         <div class="d-lg-none d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
-          <img (click)="router.navigate(['/users/' + post.creator.id])" [src]="post.creator.photo ? post.creator.photo : '/user_avatar.png'" alt="{{ post.creator.username }}"
+          <img (click)="router.navigate(['/users/' + post.creator.id])"
+            [src]="post.creator.photo ? post.creator.photo : '/user_avatar.png'" alt="{{ post.creator.username }}"
             class="clickable rounded-3" style="width: 48px; height: 48px; object-fit: cover; background-color: white;">
           <div>
-            <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">@{{ post.creator.username }}</p>
+            <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">@{{
+              post.creator.username }}</p>
             <p class="text-muted small mb-0">{{ post.creator.bio }}</p>
           </div>
           <span *ngIf="post && post.owner" style="margin-left: auto;">Manage this post:</span>
-            <div *ngIf="post && post.owner" class="d-flex gap-2">
-              <button class="btn action-btn btn-delete flex-fill" *ngIf="!isEditing" (click)="delete(post.id)">
-                <i class="bi bi-trash"></i>
-              </button>
-              <button class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
-                <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
-              </button>
-            </div>
+          <div *ngIf="post && post.owner" class="d-flex gap-2">
+            <button class="btn action-btn btn-delete flex-fill" *ngIf="!isEditing" (click)="delete(post.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+            <button class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
+              <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Article Content -->
         <div class="article-content" *ngIf="!isEditing">
           <hr class="section-divider section-divider-mobile">
-          <div  *ngIf="post">
-          <img *ngIf="post.media && isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
-            class="media-image-video" style="display: block; width: 80%; height: auto;margin: auto ;object-fit: cover;margin-bottom: 10px;">
-          <video *ngIf="post.media && isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media"
-            controls muted preload="metadata"></video>
-        </div>
+          <div *ngIf="post">
+            <img *ngIf="post.media && isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
+              class="media-image-video"
+              style="display: block; width: 80%; height: auto;margin: auto ;object-fit: cover;margin-bottom: 10px;">
+            <video *ngIf="post.media && isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media"
+              controls muted preload="metadata"></video>
+          </div>
           <p [innerText]="post.description"></p>
         </div>
       </article>
@@ -96,16 +99,17 @@
             <i class="bi bi-chat-dots-fill" style="font-size: 1.25rem; color: #764ba2;"></i>
             <span class="fw-bold small">{{ post.comments.length }}</span>
           </div>
-          
+
         </div>
         <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
-            <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
-              <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i>
-            </button>
-            <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')" [disabled]="postService.waiting">
-              <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i>
-            </button>
-          </div>
+          <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
+            <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i>
+          </button>
+          <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
+            [disabled]="postService.waiting">
+            <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Mobile Comments -->
@@ -118,11 +122,13 @@
 
           <div class="comments-list">
             <div *ngFor="let c of post.comments" class="comment-item">
-              <img (click)="router.navigate(['/users/' + c.user.id])" [src]="c.user.photo ? c.user.photo : '/user_avatar.png'" alt="{{ c.user.username }}"
+              <img (click)="router.navigate(['/users/' + c.user.id])"
+                [src]="c.user.photo ? c.user.photo : '/user_avatar.png'" alt="{{ c.user.username }}"
                 class="clickable comment-avatar">
               <div class="flex-grow-1">
                 <div class="comment-bubble">
-                  <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{ c.user.username }}</p>
+                  <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
+                    c.user.username }}</p>
                   <p class="comment-text">{{ c.content }}</p>
                 </div>
                 <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
@@ -154,7 +160,8 @@
             <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
               <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i>
             </button>
-            <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')" [disabled]="postService.waiting">
+            <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
+              [disabled]="postService.waiting">
               <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i>
             </button>
           </div>
@@ -171,15 +178,22 @@
 
         <div class="comments-list" style="max-height: 400px; overflow-y: auto;">
           <div *ngFor="let c of post.comments" class="comment-item">
-            <img (click)="router.navigate(['/users/' + c.user.id])" [src]="c.user.photo ? c.user.photo : '/user_avatar.png'" alt="{{ c.user.username }}"
-              class="clickable comment-avatar">
-            <div class="flex-grow-1">
-              <div class="comment-bubble">
-                <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{ c.user.username }}</p>
-                <p class="comment-text">{{ c.content }}</p>
+            <div>
+              <img (click)="router.navigate(['/users/' + c.user.id])"
+                [src]="c.user.photo ? c.user.photo : '/user_avatar.png'" alt="{{ c.user.username }}"
+                class="clickable comment-avatar">
+              <div class="flex-grow-1">
+                <div class="comment-bubble">
+                  <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
+                    c.user.username }}</p>
+                  <p class="comment-text">{{ c.content }}</p>
+                </div>
+                <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
               </div>
-              <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
             </div>
+            <button type="button" class="remove-preview-btn">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
         </div>
 
@@ -194,4 +208,3 @@
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">
   </app-create-post>
 </div>
-
