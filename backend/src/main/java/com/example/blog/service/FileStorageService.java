@@ -38,7 +38,7 @@ public class FileStorageService {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             
             // Return just the file name (e.g., "abc123.jpg")
-            return "http://localhost:8080/api/files/" + uniqueFileName;
+            return "/api/files/" + uniqueFileName;
             
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file: " + uniqueFileName, e);

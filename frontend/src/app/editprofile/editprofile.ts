@@ -45,8 +45,8 @@ export class EditprofileComponent {
     public router: Router
   ) {
     this.userForm = this.fb.group({
-      bio: ['', [Validators.required, Validators.minLength(5)]],
-      email: ['', [Validators.required, Validators.minLength(5)]],
+      bio: [''],
+      email: ['', [Validators.required, Validators.email]],
       // media: [null, Validators.required]
     });
   }

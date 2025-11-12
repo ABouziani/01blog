@@ -2,9 +2,12 @@ package com.example.blog.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.blog.dto.NewCommentRequest;
@@ -47,5 +50,20 @@ public class CommentService {
         newComment.setContent(newCommentRequest.getContent());
         newComment.setCreatedAt(LocalDateTime.now());
         return commentRepository.save(newComment);
+    }
+
+    public ResponseEntity<?> deleteComment (Long commentId, Long loggedUserId) {
+        Optional<User> loggedUserOpt = userService.findById(loggedUserId);
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+
+        if (commentOpt.isPresent() && loggedUserOpt.isPresent()) {
+            if (!Objects.equals(commentOpt.get().getUser().getId(), loggedUserOpt.get().getId())) {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("You can delete only your comments");
+            }
+            commentRepository.delete(commentOpt.get());
+        }
+        return ResponseEntity.ok().build();
     }
 }

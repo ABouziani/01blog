@@ -32,11 +32,28 @@ public class UserService {
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User registerUser(User user) {
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public User registerUser(String username, String email, String password, String bio, MultipartFile photo) {
+        String mediaUrl = null;
+        if (photo != null && !photo.isEmpty()) {
+            mediaUrl = fileStorageService.storeFile(photo);
+        }
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setBio(bio);
         user.setCreatedAt(LocalDateTime.now());
-        // Hash the password before saving
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setLastNotifCheck(LocalDateTime.now());
+        String hashedPassword = passwordEncoder.encode(password);
         user.setPassword(hashedPassword);
+        user.setPhoto(mediaUrl);
         return userRepository.save(user);
     }
 

@@ -12,13 +12,14 @@ import { AdminPostsComponent } from './admin/posts/posts';
 import { AdminReportsComponent } from './admin/reports/reports';
 import { WelcomeComponent } from './welcome/welcome';
 import { PostsComponent } from './posts/posts';
+import { RegisterComponent } from './register/register';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent , canActivate: [unAuthGuard]},
     { path: 'home', component: HomeComponent , canActivate: [authGuard]},
     { path: 'posts', component: PostsComponent , canActivate: [authGuard]},
     { path: 'signin', component: SigninComponent, canActivate: [unAuthGuard] },
-    // { path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
+    { path: 'register', component: RegisterComponent, canActivate: [unAuthGuard]},
     { path: 'posts/create', component: CreatePostComponent, canActivate: [authGuard] },
     { path: 'posts/:id', component: PostComponent, canActivate: [authGuard] },
     { path: 'users/:id', component: UserComponent, canActivate: [authGuard] },

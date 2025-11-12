@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dto.NewCommentRequest;
 import com.example.blog.model.Comment;
+import com.example.blog.repository.UserRepository;
 import com.example.blog.service.CommentService;
 import com.example.blog.service.UserDetailsImpl;
 
@@ -23,14 +26,24 @@ public class CommentsController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("/add")
     public ResponseEntity<Comment> addComment(@Valid @RequestBody NewCommentRequest commentReq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        Comment savedComment = commentService.addComment(commentReq,loggedUserId);
-        return ResponseEntity.ok(savedComment); 
+        Comment savedComment = commentService.addComment(commentReq, loggedUserId);
+        return ResponseEntity.ok(savedComment);
     }
 
-    
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        return commentService.deleteComment(commentId, loggedUserId);
+    }
+
 }

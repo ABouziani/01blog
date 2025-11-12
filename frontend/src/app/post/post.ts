@@ -42,7 +42,7 @@ export class PostComponent {
     this.postId = this.route.snapshot.paramMap.get('id');
     this.postService.getPost(this.postId).subscribe({
       next: (data) => {
-        console.log("Post: ",data);
+        console.log("Post: ", data);
         this.post = data;
         if (this.post) {
           this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
@@ -92,6 +92,7 @@ export class PostComponent {
   }
 
   onCommentAdded(data: CommentDto) {
+    data.owner = true;
     this.post?.comments.unshift(data);
   }
 
@@ -248,4 +249,42 @@ export class PostComponent {
     this.isEditing = false;
   }
 
+
+  deleteComment(commentId: number) {
+    if (!confirm("Are you sure you want to delete this comment?")) return;
+
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      alert("You must be logged in to delete a comment.");
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.delete<{ message: string }>(`http://localhost:8080/api/comments/delete/${commentId}`, { headers })
+      .subscribe({
+        next: (response) => {
+          // ✅ Remove comment from UI
+          if (this.post && this.post.comments) {
+            this.post.comments = this.post.comments.filter(c => c.id !== commentId);
+          }
+
+          alert('Comment deleted successfully!');
+        },
+        error: (error) => {
+          console.error('Error deleting comment:', error);
+          if (error.status === 403) {
+            alert('You are not authorized to delete this comment.');
+          } else if (error.status === 404) {
+            alert('Comment not found.');
+          } else {
+            alert('An error occurred while deleting the comment.');
+          }
+        }
+      });
+  }
+
 }
+

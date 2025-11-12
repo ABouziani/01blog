@@ -1,1 +1,122 @@
-<p>register works!</p>
+<div class="register-container">
+  <h2>User Registration</h2>
+
+  <!-- Success and Error Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <!-- Registration Form -->
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- Username -->
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
+        placeholder="Enter your username"
+      />
+      <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+        <div *ngIf="f['username'].errors['required']">Username is required.</div>
+        <div *ngIf="f['username'].errors['minlength']">
+          Username must be at least 3 characters long.
+        </div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+        placeholder="Enter your email"
+      />
+      <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+        <div *ngIf="f['email'].errors['required']">Email is required.</div>
+        <div *ngIf="f['email'].errors['email']">Invalid email format.</div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+        placeholder="Enter your password"
+      />
+      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+        <div *ngIf="f['password'].errors['required']">Password is required.</div>
+        <div *ngIf="f['password'].errors['minlength']">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="passverif">password confirmation</label>
+      <input
+        type="password"
+        id="passverif"
+        formControlName="passverif"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['passverif'].errors }"
+        placeholder="Enter your passverif"
+      />
+      <div *ngIf="submitted && f['passverif'].errors" class="invalid-feedback">
+        <div *ngIf="f['passverif'].errors['required']">password confirmation is required.</div>
+        <div *ngIf="f['passverif'].errors['minlength'] || passverif != password">
+          Password confirmation must be at least 6 characters long and equals to password.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bio -->
+    <div class="form-group">
+      <label for="bio">Bio</label>
+      <textarea
+        id="bio"
+        formControlName="bio"
+        class="form-control"
+        placeholder="Tell us about yourself..."
+      ></textarea>
+    </div>
+
+    <!-- Photo / Video Upload -->
+    <div class="form-group">
+      <label for="photo">Profile Photo or Video</label>
+      <input
+        type="file"
+        id="photo"
+        (change)="onFileSelected($event)"
+        accept="image/*,video/*"
+        class="form-control-file"
+      />
+
+      <!-- Preview -->
+      <div class="preview" *ngIf="previewUrl">
+          <img [src]="previewUrl" alt="Preview" class="preview-img" />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="isSubmitting || registerForm.invalid"
+    >
+      {{ isSubmitting ? 'Registering...' : 'Register' }}
+    </button>
+  </form>
+</div>

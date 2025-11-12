@@ -7,8 +7,8 @@
         <div class="author-card fade-in-up">
           <div class="author-header"></div>
           <div class="p-4">
-            <img [src]="post.creator.photo ? post.creator.photo : '/user_avatar.png'" alt="{{ post.creator.username }}"
-              class="author-avatar mb-3" style="background-color: white;">
+            <img [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
+              alt="{{ post.creator.username }}" class="author-avatar mb-3" style="background-color: white;">
             <h2 class="h5 fw-bold mb-2">@{{ post.creator.username }}</h2>
             <p class="text-muted small mb-4">{{ post.creator.bio }}</p>
             <button class="btn btn-profile w-100 mb-3" (click)="router.navigate(['/users/' + post.creator.id])">
@@ -122,17 +122,22 @@
 
           <div class="comments-list">
             <div *ngFor="let c of post.comments" class="comment-item">
-              <img (click)="router.navigate(['/users/' + c.user.id])"
-                [src]="c.user.photo ? c.user.photo : '/user_avatar.png'" alt="{{ c.user.username }}"
-                class="clickable comment-avatar">
-              <div class="flex-grow-1">
-                <div class="comment-bubble">
-                  <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
-                    c.user.username }}</p>
-                  <p class="comment-text">{{ c.content }}</p>
+              <div>
+                <img (click)="router.navigate(['/users/' + c.user.id])"
+                  [src]="c.user.photo ? 'http://localhost:8080' + c.user.photo : '/user_avatar.png'"
+                  alt="{{ c.user.username }}" class="clickable comment-avatar">
+                <div class="flex-grow-1">
+                  <div class="comment-bubble">
+                    <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
+                      c.user.username }}</p>
+                    <p class="comment-text">{{ c.content }}</p>
+                  </div>
+                  <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
                 </div>
-                <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
               </div>
+              <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-preview-btn">
+              <i class="bi bi-trash"></i>
+            </button>
             </div>
           </div>
 
@@ -180,8 +185,8 @@
           <div *ngFor="let c of post.comments" class="comment-item">
             <div>
               <img (click)="router.navigate(['/users/' + c.user.id])"
-                [src]="c.user.photo ? c.user.photo : '/user_avatar.png'" alt="{{ c.user.username }}"
-                class="clickable comment-avatar">
+                [src]="c.user.photo ? 'http://localhost:8080' + c.user.photo : '/user_avatar.png'"
+                alt="{{ c.user.username }}" class="clickable comment-avatar">
               <div class="flex-grow-1">
                 <div class="comment-bubble">
                   <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
@@ -191,7 +196,7 @@
                 <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
               </div>
             </div>
-            <button type="button" class="remove-preview-btn">
+            <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-preview-btn">
               <i class="bi bi-trash"></i>
             </button>
           </div>

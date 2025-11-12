@@ -64,7 +64,7 @@ public class User {
     private String role = "USER"; // default role
 
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime lastnotifcheck;
+    private LocalDateTime lastnotifcheck = LocalDateTime.now();
 
     private String photo; // can store file path or URL
 

@@ -68,6 +68,11 @@ public class PostsController {
         if (Objects.equals(post.getCreator().getId(), loggedUserId) || loggedUser.getRole().equals("ADMIN")) {
             post.setIsOwner(true);
         }
+        post.getComments().forEach(comment -> {
+            if (Objects.equals(comment.getUser().getId(), loggedUserId)) {
+                comment.setOwner(true);
+            }
+        });
         return post;
     }
 

@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +25,6 @@ import com.example.blog.repository.UserRepository;
 import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -44,10 +43,34 @@ public class UsersController {
 
     // POST /api/users/register
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
-        // System.out.println("Received password: " + user.getPassword());
-        User savedUser = userService.registerUser(user);
-        return ResponseEntity.ok(savedUser); // returns 200 + JSON of saved user
+    public ResponseEntity<?> registerUser(
+            @RequestParam("username") @NotBlank @Size(min = 3) String username,
+            @RequestParam("email") @NotBlank @Size(min = 6) String email,
+            @RequestParam("password") @NotBlank @Size(min = 6) String password,
+            @RequestParam("passverif") @NotBlank @Size(min = 6) String passverif,
+            @RequestParam("bio") @Size(max = 500) String bio,
+            @RequestParam(value = "photo", required = false) MultipartFile photo,
+            Authentication authentication
+    ) {
+        if (!password.equals(passverif)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Passwords don't match");
+        }
+
+        if (userService.existsByUsername(username)) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Username already taken");
+        }
+
+        if (userService.existsByEmail(email)) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Email already registered");
+        }
+        User savedUser = userService.registerUser(username, email, password, bio, photo);
+        return ResponseEntity.ok(savedUser);
     }
 
     @GetMapping("/{id}")
@@ -90,7 +113,7 @@ public class UsersController {
 
     @PutMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserDto> updateUser(
-            @RequestParam("bio") @NotBlank @Size(min = 10, max = 1000) String bio,
+            @RequestParam("bio") @Size(max = 500) String bio,
             @RequestParam("email") @NotBlank @Size(min = 10, max = 1000) String email,
             @RequestParam("noPhoto") @NotBlank String noPhoto,
             @RequestParam(value = "media", required = false) MultipartFile media,
@@ -104,19 +127,18 @@ public class UsersController {
         return ResponseEntity.ok(EntityDtoMapper.toUserDto(updatedUser));
     }
 
-    // POST /api/users/register
-    @PostMapping("/follow")
-    public ResponseEntity<User> FollowUser(@Valid @RequestBody User user) {
-        // System.out.println("Received password: " + user.getPassword());
-        User savedUser = userService.registerUser(user);
-        return ResponseEntity.ok(savedUser); // returns 200 + JSON of saved user
-    }
+    // // POST /api/users/register
+    // @PostMapping("/follow")
+    // public ResponseEntity<User> FollowUser(@Valid @RequestBody User user) {
+    //     // System.out.println("Received password: " + user.getPassword());
+    //     User savedUser = userService.registerUser(user);
+    //     return ResponseEntity.ok(savedUser); // returns 200 + JSON of saved user
+    // }
     // // POST /api/users/login
     // @PostMapping("/login")
     // public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
     //     String identifier = body.get("identifier"); // username or email
     //     String password = body.get("password");
-
     //     Optional<User> userOpt = userService.findByUsernameOrEmail(identifier);
     //     if (userOpt.isPresent() && userService.checkPassword(userOpt.get(), password)) {
     //         return ResponseEntity.ok("Login successful!");
