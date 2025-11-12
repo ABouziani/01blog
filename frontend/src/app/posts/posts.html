@@ -10,11 +10,27 @@
     <div class="post-card" *ngFor="let post of displayedPosts" [routerLink]="['/posts', post.id]">
       <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
       </div>
+      <div class="post-meta">
+        <span class="post-author" [routerLink]="['/users', post.creatorId]">
+          {{ post.creatorUsername }}
+        </span>
+        <time class="post-date" [attr.datetime]="post.createdAt">
+          {{ post.createdAt | date:'mediumDate' }}
+        </time>
+      </div>
       <div class="post-body">
         <h3 class="post-title">{{ post.title }}</h3>
         <p class="post-description">
           {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
         </p>
+      </div>
+      <div>
+        <span class="post-likes">
+          {{ post.likes }}
+        </span>
+        <span class="post-dislikes">
+          {{ post.dislikes }}
+        </span>
       </div>
     </div>
 

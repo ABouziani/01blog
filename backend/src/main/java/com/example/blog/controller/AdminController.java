@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.ResolveReportRequest;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.service.AdminService;
+import com.example.blog.service.UserDetailsImpl;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -34,8 +36,10 @@ public class AdminController {
 
     // === USERS ===
     @GetMapping("/users")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
+    public ResponseEntity<List<UserDto>> getAllUsers(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        return ResponseEntity.ok(adminService.getAllUsers(loggedUserId));
     }
 
     @PutMapping("/users/{id}/ban")
