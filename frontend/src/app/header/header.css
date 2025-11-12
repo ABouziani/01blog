@@ -1,7 +1,7 @@
 /* Header */
 .app-header {
   background: var(--bg);
-  border-bottom: 1px solid #ff0000;
+  /* border-bottom: 1px solid #ff0000; */
   padding: 0.3rem 1.5rem;
   display: flex;
   justify-content: space-between;

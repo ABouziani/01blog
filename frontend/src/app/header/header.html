@@ -44,7 +44,7 @@
                 <img [src]="n.authorPhoto ? 'http://localhost:8080' + n.authorPhoto : '/user_avatar.png'" class="rounded-circle me-2" width="36"
                   height="36" alt="{{ n.authorUsername }} avatar" />
                 <div class="flex-grow-1">
-                  <div class="fw-medium">
+                  <div class="clickable fw-medium">
                     <span class="notif-text">{{ n.authorUsername }}</span> created a new post
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-1">

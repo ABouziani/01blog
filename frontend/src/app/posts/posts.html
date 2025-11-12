@@ -1,77 +1,27 @@
 <div class="posts-container">
-    <div class="loading" *ngIf="loading">
-      <div class="spinner"></div>
-    </div>
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
 
-    <div class="posts-grid" *ngIf="!loading">
-      <article class="post-card" *ngFor="let post of displayedPosts">
-        <!-- Media Section -->
-        <div class="post-media" *ngIf="post.media">
-          <!-- Image -->
-          <img *ngIf="isImage(post.media.toString())" 
-               class="media-image-video"
-               [src]="'http://localhost:8080' + post.media" 
-               alt="Post image"
-               style="width: 100%; height: 100%;" />
 
-          <!-- Video thumbnail -->
-          <img *ngIf="isVideo(post.media.toString()) && post.thumbnail" 
-               [src]="post.thumbnail"
-               alt="Video thumbnail" 
-               class="video-thumb"
-               style="width: 100%; height: 100%;" />
-
-          <!-- <ng-template #thumbLoading>
-            <span>Generating thumbnail...</span>
-          </ng-template> -->
-        </div>
-
-        <!-- Content Section -->
-        <div class="post-content">
-          <header class="post-header">
-            <h2 class="post-title" [routerLink]="['/posts', post.id]">
-              {{ post.title }}
-            </h2>
-            <div class="post-meta">
-              <span class="post-author" [routerLink]="['/users', post.creatorId]">
-                {{ post.creatorUsername }}
-              </span>
-              <time class="post-date" [attr.datetime]="post.createdAt">
-                {{ post.createdAt | date:'mediumDate' }}
-              </time>
-            </div>
-          </header>
-
-          <!-- Preview description -->
-          <p class="post-description">
-            {{ getPreview(post.description) }}
-          </p>
-
-          <!-- Read More button -->
-          <button class="read-more-btn" [routerLink]="['/posts', post.id]">
-            <span>Read Full Article →</span>
-          </button>
-
-          
-
-          <div class="post-reactions">
-            <button class="reaction-btn like" 
-                    (click)="addReaction(post.id, 'LIKE')"
-                    [disabled]="postsService.loadingReaction[post.id] === 'LIKE'">
-              <span>👍 {{ post.likes || 0 }}</span>
-            </button>
-
-            <button class="reaction-btn dislike" 
-                    (click)="addReaction(post.id, 'DISLIKE')"
-                    [disabled]="postsService.loadingReaction[post.id] === 'DISLIKE'">
-              <span>👎 {{ post.dislikes || 0 }}</span>
-            </button>
-          </div>
-        </div>
-      </article>
-
-      <div class="empty-state" *ngIf="displayedPosts.length === 0">
-        <p>No posts available</p>
+  <!-- Posts Section -->
+  <h2 class="posts-section-title">Posts</h2>
+  <div class="posts-grid" *ngIf="displayedPosts">
+    <div class="post-card" *ngFor="let post of displayedPosts" [routerLink]="['/posts', post.id]">
+      <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
+      </div>
+      <div class="post-body">
+        <h3 class="post-title">{{ post.title }}</h3>
+        <p class="post-description">
+          {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+        </p>
       </div>
     </div>
+
+    <div class="empty-posts" *ngIf="!displayedPosts">
+      <div class="empty-posts-icon">📝</div>
+      <br>
+      <p class="empty-posts-text">No posts yet</p>
+    </div>
   </div>
+</div>

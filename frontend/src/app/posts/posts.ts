@@ -9,7 +9,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
   selector: 'app-posts',
   templateUrl: './posts.html',
   imports: [CommonModule, RouterLink],
-  styleUrl: './posts.css',
+  styleUrls: ['./posts.css', '../user/user.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class PostsComponent implements OnInit {
