@@ -16,6 +16,12 @@ export class PostsComponent implements OnInit {
   @Input() posts: PostDto[] | null = null;
   loading = true;
   readonly PREVIEW_LENGTH = 50;
+  private scrollTimer: any;
+  loadingMore = false;
+  allLoaded = false;
+  lastPostId: number = 0;
+  pageSize: number = 8;
+
 
   private internalPosts: PostDto[] = [];
 
@@ -31,19 +37,20 @@ export class PostsComponent implements OnInit {
       this.loading = false;
       return;
     }
-
-    this.postsService.getPosts().subscribe({
-      next: (data) => {
-        console.log(data)
-        this.internalPosts = data;
-        this.generateThumbnails(this.internalPosts);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching posts:', err);
-        this.loading = false;
-      }
-    });
+    this.loadMore();
+    // this.postsService.getPosts(this.lastPostId, this.pageSize).subscribe({
+    //   next: (data) => {
+    //     console.log(data)
+    //     this.generateThumbnails(data);
+    //     this.internalPosts = data;
+    //     this.loading = false;
+    //   },
+    //   error: (err) => {
+    //     console.error('Error fetching posts:', err);
+    //     this.loading = false;
+    //   }
+    // });
+    window.addEventListener('scroll', this.onScroll, { passive: true });
   }
 
   get displayedPosts(): PostDto[] {
@@ -133,4 +140,62 @@ export class PostsComponent implements OnInit {
   isVideo(url: string): boolean {
     return /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url);
   }
+
+
+  onScroll = () => {
+    // Clear any previous timer
+    clearTimeout(this.scrollTimer);
+
+    // Set a new timer — this runs only AFTER scrolling stops for 200ms
+    this.scrollTimer = setTimeout(() => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const viewportHeight = window.innerHeight;
+      const fullHeight = document.documentElement.scrollHeight;
+
+      if (scrollTop + viewportHeight >= fullHeight - 100) {
+        if (!this.loadingMore && !this.allLoaded) {
+          this.loadMore();
+        }
+      }
+    }, 500);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.onScroll);
+  }
+
+
+
+  loadMore() {
+    console.log("last ID", this.lastPostId)
+    if (this.loadingMore || this.allLoaded) return;
+    this.loadingMore = true;
+
+    setTimeout(() => {
+      this.postsService.getPosts(this.lastPostId, this.pageSize).subscribe({
+      next: (data) => {
+        
+        if (data.length == 0) {
+          this.allLoaded = true;
+          this.loadingMore = false;
+          return;
+        }
+        this.generateThumbnails(data);
+        this.internalPosts = [...this.internalPosts, ...data];
+        const oldestPost = this.internalPosts.reduce((min, p) => p.id < min.id ? p : min, this.internalPosts[0]);
+        this.lastPostId = oldestPost.id;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching posts:', err);
+        this.loading = false;
+      },
+      complete: () => {
+        this.loadingMore = false;
+      }
+    });
+    }, 1000);
+  }
+
+
 }

@@ -52,8 +52,13 @@ public class PostService {
         return postRepository.findByCreatorIdWithReactions(userId);
     }
 
-    public List<PostsWithReactionsCountDto> getAllPosts() {
-        return postRepository.findAllPostsWithReactionsCount();
+    public List<PostsWithReactionsCountDto> getAllPosts(Long lastId, int pageSize) {
+        
+        if (lastId == 0) {
+            return postRepository.findAllPostsWithReactionsCount(null,pageSize);
+        } else {
+            return postRepository.findAllPostsWithReactionsCount(lastId,pageSize);
+        }
     }
 
     public Optional<Post> getPostById(Long postId) {
@@ -88,7 +93,7 @@ public class PostService {
         User loggedUser = userRepository.findById(requesterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
         String requesterRole = loggedUser.getRole();
-        
+
         if (!post.getCreator().getId().equals(requesterId) && !requesterRole.equals("ADMIN")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only modify your own posts");
         }
@@ -156,12 +161,12 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public List<HomePostDto> getRecentPostsForHome(Long userId,int number) {
-        return postRepository.getRecentPostsForHome(userId,number);
+    public List<HomePostDto> getRecentPostsForHome(Long userId, int number) {
+        return postRepository.getRecentPostsForHome(userId, number);
     }
 
     public List<HomePostDto> getTopPostsForHome(int number) {
         return postRepository.getTopPostsForHome(number);
     }
-    
+
 }

@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label for="photo">Profile photo preview</label>
                 <div class="profile-avatar-wrapper">
-                    <div class="profile-avatar" [style.background-image]="'url(' + editing?.photo + ')'"></div>
+                    <div class="profile-avatar" [style.background-image]="'url(http://localhost:8080' + editing?.photo + ')'"></div>
 
                     <button class="remove-btn" *ngIf="editing?.photo" type="button" (click)="removePhoto()">
                         ✕

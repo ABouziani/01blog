@@ -293,7 +293,7 @@
 .empty-state {
   text-align: center;
   padding: 3rem 1.5rem;
-  background: white;
+  background: var(--card-bg);
   border-radius: 16px;
   border: 2px dashed #cbd5e1;
   color: #94a3b8;

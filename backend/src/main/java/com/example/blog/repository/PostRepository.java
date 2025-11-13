@@ -31,9 +31,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     LEFT JOIN reactions r ON r.post_id = p.id
     JOIN users u ON u.id = p.user_id
     WHERE p.is_hidden = false
+      AND (:lastId IS NULL OR p.id < :lastId)
     GROUP BY p.id, p.title, p.description, p.media, p.created_at, p.user_id, u.username
+    ORDER BY p.id DESC
+    LIMIT :pageSize
     """, nativeQuery = true)
-    List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount();
+    List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount(@Param("lastId") Long lastId, @Param("pageSize") int pageSize);
 
     // Fetch posts by creator ID with reactions
     @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.creator.id = :userId AND p.isHidden = false")

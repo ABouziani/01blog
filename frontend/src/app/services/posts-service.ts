@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { PostDto } from '../models/postDto';
 import { catchError, finalize, tap } from 'rxjs/operators';
@@ -14,9 +14,13 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(): Observable<PostDto[]> {
-    return this.http.get<PostDto[]>(this.apiUrl);
-  }
+  getPosts(lastId: number, pageSize: number): Observable<PostDto[]> {
+  let params = new HttpParams().set('pageSize', pageSize.toString());
+  params = params.set('lastId', lastId.toString());
+
+  return this.http.get<PostDto[]>(this.apiUrl, { params });
+}
+
 
   // Track loading state per post and reaction type
   loadingReaction: { [postId: number]: 'LIKE' | 'DISLIKE' | null } = {};

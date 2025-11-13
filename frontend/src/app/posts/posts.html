@@ -19,12 +19,13 @@
         </time>
       </div>
       <div class="post-body">
+        <span>{{ post.id }}</span>
         <h3 class="post-title">{{ post.title }}</h3>
         <p class="post-description">
           {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
         </p>
       </div>
-      <div>
+      <div class="reactions">
         <span class="post-likes">
           {{ post.likes }}
         </span>
@@ -32,6 +33,9 @@
           {{ post.dislikes }}
         </span>
       </div>
+
+      <div #scrollSentinel class="scroll-sentinel"></div>
+
     </div>
 
     <div class="empty-posts" *ngIf="!displayedPosts">
@@ -39,5 +43,13 @@
       <br>
       <p class="empty-posts-text">No posts yet</p>
     </div>
+  </div>
+  <div class="loading-more" *ngIf="loadingMore">
+    Loading posts...
+  </div>
+  <div class="all-loaded" *ngIf="allLoaded">
+    <div class="empty-posts-icon">📝</div>
+    <br>
+    <p class="empty-posts-text">No more posts!</p>
   </div>
 </div>

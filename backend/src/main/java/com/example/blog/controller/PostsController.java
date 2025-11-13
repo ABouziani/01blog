@@ -54,8 +54,11 @@ public class PostsController {
     }
 
     @GetMapping("/getallposts")
-    public List<PostsWithReactionsCountDto> getallPosts() {
-        return postService.getAllPosts();
+    public List<PostsWithReactionsCountDto> getAllPosts(
+            @RequestParam(required = false) Long lastId,
+            @RequestParam(defaultValue = "6") int pageSize) {
+
+        return postService.getAllPosts(lastId, pageSize);
     }
 
     @GetMapping("/getpost/{postid}")
