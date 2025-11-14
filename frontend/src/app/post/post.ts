@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { AddCommentComponent } from '../addcomment/addcomment';
 import { CommentDto } from '../models/comment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreatePostComponent } from '../createpost/createpost';
 
@@ -18,10 +18,16 @@ import { CreatePostComponent } from '../createpost/createpost';
 })
 
 export class PostComponent {
+  private apiUrlPostComment = 'http://localhost:8080/api/comments/getpostcomments/'
   postId: string | null = "";
   post: Post | null = null;
   loading = true;
   isEditing = false;
+  loadingMore = false;
+  allLoaded = false;
+  lastCommentId: number = 0;
+  pageSize: number = 4;
+  private scrollTimer: any;
 
   //forediting
   postForm: FormGroup;
@@ -43,6 +49,7 @@ export class PostComponent {
     this.postService.getPost(this.postId).subscribe({
       next: (data) => {
         console.log("Post: ", data);
+        data.comments = []
         this.post = data;
         if (this.post) {
           this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
@@ -52,7 +59,7 @@ export class PostComponent {
             description: this.post.description
           });
         }
-        this.post.comments.reverse();
+        this.loadComments();
         this.loading = false;
       },
       error: (err) => {
@@ -60,6 +67,7 @@ export class PostComponent {
         this.loading = false;
       }
     });
+    // window.addEventListener('scroll', this.onScroll, { passive: true });
   }
 
 
@@ -238,12 +246,15 @@ export class PostComponent {
   }
 
   onUpdate(data: Post) {
+    this.lastCommentId = 0;
+    data.comments = [];
     this.post = data;
+    this.loadComments();
     if (this.post) {
       this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
       this.post.dislikes = data.reactions.filter(r => r.type == "dislike").length.toString();
     }
-    this.post.comments.reverse();
+    // this.post.comments.reverse();
     this.isSubmitting = false;
     this.loading = false;
     this.isEditing = false;
@@ -286,5 +297,63 @@ export class PostComponent {
       });
   }
 
+
+  loadComments() {
+    console.log("last ID", this.lastCommentId)
+    if (this.loadingMore || this.allLoaded) return;
+    this.loadingMore = true;
+
+    setTimeout(() => {
+      let params = new HttpParams().set('pageSize', this.pageSize.toString());
+      params = params.set('lastId', this.lastCommentId.toString());
+
+      this.http.get<CommentDto[]>(this.apiUrlPostComment + this.postId, { params }).subscribe({
+        next: (data) => {
+          if (data.length == 0) {
+            this.allLoaded = true;
+            this.loadingMore = false;
+            return;
+          }
+          if (this.post) {
+            data.reverse();
+            this.post.comments = [...this.post.comments, ...data];
+            const oldestComment = this.post.comments.reduce((min, p) => p.id < min.id ? p : min, this.post.comments[0]);
+            this.lastCommentId = oldestComment.id;
+          }
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching comments:', err);
+          this.loading = false;
+        },
+        complete: () => {
+          this.loadingMore = false;
+        }
+      });
+    }, 1000);
+  }
+
+  onScroll(event: Event) {
+    clearTimeout(this.scrollTimer);
+
+    this.scrollTimer = setTimeout(() => {
+      const element = event.target as HTMLElement;
+
+      const scrollTop = element.scrollTop;
+      const visibleHeight = element.clientHeight;
+      const fullHeight = element.scrollHeight;
+
+      if (scrollTop + visibleHeight >= fullHeight - 50) {
+        if (!this.loadingMore && !this.allLoaded) {
+          this.loadComments();
+        }
+      }
+    }, 500);
+  }
+
+
+  // ngOnDestroy(): void {
+  //   window.removeEventListener('scroll', this.onScroll);
+  // }
 }
 

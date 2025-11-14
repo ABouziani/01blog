@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -52,7 +55,7 @@ public class CommentService {
         return commentRepository.save(newComment);
     }
 
-    public ResponseEntity<?> deleteComment (Long commentId, Long loggedUserId) {
+    public ResponseEntity<?> deleteComment(Long commentId, Long loggedUserId) {
         Optional<User> loggedUserOpt = userService.findById(loggedUserId);
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
 
@@ -65,5 +68,14 @@ public class CommentService {
             commentRepository.delete(commentOpt.get());
         }
         return ResponseEntity.ok().build();
+    }
+
+    public List<Comment> getCommentsByPostId(Long postid, Long lastId, int pageSize) {
+        Pageable limit = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+        if (lastId == 0) {
+            return commentRepository.getCommentsByPostId(postid, null, limit);
+        } else {
+            return commentRepository.getCommentsByPostId(postid, lastId, limit);
+        }
     }
 }

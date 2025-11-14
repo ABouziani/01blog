@@ -120,7 +120,7 @@
             Comments ({{ post.comments.length }})
           </h3>
 
-          <div class="comments-list">
+          <div class="comments-list" (scroll)="onScroll($event)">
             <div *ngFor="let c of post.comments" class="comment-item">
               <div>
                 <img (click)="router.navigate(['/users/' + c.user.id])"
@@ -136,9 +136,17 @@
                 </div>
               </div>
               <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-preview-btn">
-              <i class="bi bi-trash"></i>
-            </button>
+                <i class="bi bi-trash"></i>
+              </button>
             </div>
+            <div class="loading-more" *ngIf="loadingMore">
+            Loading comments...
+          </div>
+          <div class="all-loaded" *ngIf="allLoaded">
+            <div class="empty-comments-icon">📝</div>
+            <br>
+            <p class="empty-comments-text">No more comments!</p>
+          </div>
           </div>
 
           <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
@@ -181,7 +189,7 @@
           Comments ({{ post.comments.length }})
         </h3>
 
-        <div class="comments-list" style="max-height: 400px; overflow-y: auto;">
+        <div class="comments-list" style="max-height: 400px; overflow-y: auto;" (scroll)="onScroll($event)">
           <div *ngFor="let c of post.comments" class="comment-item">
             <div>
               <img (click)="router.navigate(['/users/' + c.user.id])"
@@ -199,6 +207,14 @@
             <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-preview-btn">
               <i class="bi bi-trash"></i>
             </button>
+          </div>
+          <div class="loading-more" *ngIf="loadingMore">
+            Loading comments...
+          </div>
+          <div class="all-loaded" *ngIf="allLoaded">
+            <div class="empty-comments-icon">📝</div>
+            <br>
+            <p class="empty-comments-text">No more comments!</p>
           </div>
         </div>
 

@@ -199,17 +199,30 @@
   max-height: 400px;
   overflow-y: auto;
 
-  /* Hide scrollbar for Chrome, Edge, Safari */
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* Internet Explorer and Edge */
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #999999 var(--card-bg); /* thumb color / track color */
 }
 
+/* Chrome, Edge, Safari */
 .comments-list::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari, Edge */
+  width: 2px; /* thin scrollbar */
 }
+
+.comments-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.comments-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8; /* darker on hover */
+}
+
 
 .comment-item {
   display: flex;
@@ -491,4 +504,37 @@
 
 .clickable {
   cursor: pointer;
+}
+
+
+
+.loading-more {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  color: gray;
+  font-style: italic;
+  margin-top: -40px;
+}
+
+.all-loaded {
+  grid-column: 1 / -1;
+  height: fit-content;
+  text-align: center;
+  /* padding: 3rem 2rem; */
+  background: var(--card-bg);
+  border-radius: 16px;
+  /* border: 2px dashed #cbd5e1; */
+  margin-top: -40px;
+}
+
+.all-loaded-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.all-loaded-text {
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 500;
 }

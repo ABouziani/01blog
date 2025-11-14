@@ -3,6 +3,7 @@ package com.example.blog.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,9 +39,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """, nativeQuery = true)
     List<PostsWithReactionsCountDto> findAllPostsWithReactionsCount(@Param("lastId") Long lastId, @Param("pageSize") int pageSize);
 
-    // Fetch posts by creator ID with reactions
-    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.creator.id = :userId AND p.isHidden = false")
-    List<Post> findByCreatorIdWithReactions(@Param("userId") Long userId);
+    @Query("""
+    SELECT p FROM Post p 
+        LEFT JOIN FETCH p.reactions 
+        WHERE p.creator.id = :userId
+        AND p.isHidden = false
+        AND (:lastId IS NULL OR p.id < :lastId)
+        ORDER BY p.id DESC
+    """)
+    List<Post> findByCreatorIdWithReactions(@Param("userId") Long userId,@Param("lastId") Long lastId,Pageable pageable);
 
     // // Fetch single post by ID with reactions
     // @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.id = :id")

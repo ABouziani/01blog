@@ -11,6 +11,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,16 +50,21 @@ public class PostService {
     @Autowired
     private UserService userService;
 
-    public List<Post> getPostsByUserId(Long userId) {
-        return postRepository.findByCreatorIdWithReactions(userId);
+    public List<Post> getPostsByUserId(Long userId, Long lastId, int pageSize) {
+        Pageable limit = PageRequest.of(0, pageSize);
+        if (lastId == 0) {
+            return postRepository.findByCreatorIdWithReactions(userId, null, limit);
+        } else {
+            return postRepository.findByCreatorIdWithReactions(userId, lastId, limit);
+        }
     }
 
     public List<PostsWithReactionsCountDto> getAllPosts(Long lastId, int pageSize) {
-        
+
         if (lastId == 0) {
-            return postRepository.findAllPostsWithReactionsCount(null,pageSize);
+            return postRepository.findAllPostsWithReactionsCount(null, pageSize);
         } else {
-            return postRepository.findAllPostsWithReactionsCount(lastId,pageSize);
+            return postRepository.findAllPostsWithReactionsCount(lastId, pageSize);
         }
     }
 

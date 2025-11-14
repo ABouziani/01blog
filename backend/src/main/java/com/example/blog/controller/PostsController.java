@@ -48,9 +48,10 @@ public class PostsController {
     private UserRepository userRepository;
 
     @GetMapping("/getuserposts/{userid}")
-
-    public List<Post> getPosts(@PathVariable Long userid) {
-        return postService.getPostsByUserId(userid);
+    public List<Post> getPosts(@PathVariable Long userid,
+            @RequestParam(required = false) Long lastId,
+            @RequestParam(defaultValue = "6") int pageSize) {
+        return postService.getPostsByUserId(userid, lastId, pageSize);
     }
 
     @GetMapping("/getallposts")
@@ -71,11 +72,11 @@ public class PostsController {
         if (Objects.equals(post.getCreator().getId(), loggedUserId) || loggedUser.getRole().equals("ADMIN")) {
             post.setIsOwner(true);
         }
-        post.getComments().forEach(comment -> {
-            if (Objects.equals(comment.getUser().getId(), loggedUserId)) {
-                comment.setOwner(true);
-            }
-        });
+        // post.getComments().forEach(comment -> {
+        //     if (Objects.equals(comment.getUser().getId(), loggedUserId)) {
+        //         comment.setOwner(true);
+        //     }
+        // });
         return post;
     }
 

@@ -11,21 +11,29 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 
 export class PostsService {
   private apiUrl = 'http://localhost:8080/api/posts/getallposts';
+  private apiUrlUser = 'http://localhost:8080/api/posts/getuserposts/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getPosts(lastId: number, pageSize: number): Observable<PostDto[]> {
-  let params = new HttpParams().set('pageSize', pageSize.toString());
-  params = params.set('lastId', lastId.toString());
+    let params = new HttpParams().set('pageSize', pageSize.toString());
+    params = params.set('lastId', lastId.toString());
 
-  return this.http.get<PostDto[]>(this.apiUrl, { params });
-}
+    return this.http.get<PostDto[]>(this.apiUrl, { params });
+  }
+
+  getUserPosts(userId: number,lastId: number, pageSize: number): Observable<PostDto[]> {
+    let params = new HttpParams().set('pageSize', pageSize.toString());
+    params = params.set('lastId', lastId.toString());
+
+    return this.http.get<PostDto[]>(this.apiUrlUser + userId, { params });
+  }
 
 
   // Track loading state per post and reaction type
   loadingReaction: { [postId: number]: 'LIKE' | 'DISLIKE' | null } = {};
 
-  addReaction(postId: number, type: 'LIKE' | 'DISLIKE'): Observable<any>{
+  addReaction(postId: number, type: 'LIKE' | 'DISLIKE'): Observable<any> {
     // Optional: Prevent action if already loading
     if (this.loadingReaction[postId]) return of(null);
 
@@ -43,23 +51,23 @@ export class PostsService {
     };
 
     return this.http.post('http://localhost:8080/api/reactions/add', body, { headers });
-      // .pipe(
-      //   tap(response => {
-      //     // // ✅ Optimistically update the UI
-      //     // this.updatePostReaction(postId, type);
-      //     console.log(response);
-      //   }),
-      //   catchError(error => {
-      //     console.error('Reaction error:', error);
-      //     // Optional: show error message
-      //     alert('Failed to react. Please try again.');
-      //     return of(null);
-      //   }),
-      //   finalize(() => {
-      //     // Re-enable button
-      //     this.loadingReaction[postId] = null;
-      //   })
-      // )
-      // .subscribe();
+    // .pipe(
+    //   tap(response => {
+    //     // // ✅ Optimistically update the UI
+    //     // this.updatePostReaction(postId, type);
+    //     console.log(response);
+    //   }),
+    //   catchError(error => {
+    //     console.error('Reaction error:', error);
+    //     // Optional: show error message
+    //     alert('Failed to react. Please try again.');
+    //     return of(null);
+    //   }),
+    //   finalize(() => {
+    //     // Re-enable button
+    //     this.loadingReaction[postId] = null;
+    //   })
+    // )
+    // .subscribe();
   }
 }

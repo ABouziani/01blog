@@ -17,7 +17,7 @@
           </div>
           <div class="profile-info">
             <div class="usernamebio">
-                <h1 class="profile-username">{{ user.username }}</h1>
+              <h1 class="profile-username">{{ user.username }}</h1>
               <p class="profile-bio">{{ user.bio }}</p>
               <div class="action-buttons" *ngIf="!user.owner">
                 <button class="btn-action btn-subscribe" (click)="follow()" *ngIf="!user.alreadyFollowed">
@@ -118,15 +118,24 @@
           </div>
         </div>
 
-        <div class="empty-posts" *ngIf="!user.posts || user.posts.length === 0">
+        <div class="empty-posts" *ngIf="(!user.posts || user.posts.length === 0) && allLoaded">
           <div class="empty-posts-icon">📝</div>
           <br>
           <p class="empty-posts-text">No posts yet</p>
         </div>
       </div>
     </div>
+    <div class="loading-more" *ngIf="loadingMore">
+      Loading posts...
+    </div>
+    <div class="all-loaded" *ngIf="allLoaded">
+      <div class="empty-posts-icon">📝</div>
+      <br>
+      <p class="empty-posts-text">No more posts!</p>
+    </div>
   </div>
-  <app-editprofile *ngIf="isEditing && user" [editing]="{id:user.id, username:user.username, bio:user.bio, email:user.email, photo:user.photo}"
+  <app-editprofile *ngIf="isEditing && user"
+    [editing]="{id:user.id, username:user.username, bio:user.bio, email:user.email, photo:user.photo}"
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">
   </app-editprofile>
 </main>

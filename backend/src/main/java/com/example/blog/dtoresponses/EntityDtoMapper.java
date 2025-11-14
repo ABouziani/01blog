@@ -1,7 +1,5 @@
 package com.example.blog.dtoresponses;
 
-import java.util.stream.Collectors;
-
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
 
@@ -26,11 +24,11 @@ public class EntityDtoMapper {
         dto.setFollowing(user.getFollowing());
 
         // Map posts (without including creator's posts again to avoid deep nesting)
-        if (user.getPosts() != null) {
-            dto.setPosts(user.getPosts().stream()
-                .map(EntityDtoMapper::toPostDtoShallow) // Use shallow version
-                .collect(Collectors.toList()));
-        }
+        // if (user.getPosts() != null) {
+        //     dto.setPosts(user.getPosts().stream()
+        //         .map(EntityDtoMapper::toPostDtoShallow) // Use shallow version
+        //         .collect(Collectors.toList()));
+        // }
 
         return dto;
     }

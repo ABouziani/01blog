@@ -2,7 +2,6 @@ package com.example.blog.controller;
 
 import java.util.Objects;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -103,7 +102,7 @@ public class UsersController {
             user.setOwner(true);
         }
 
-        Hibernate.initialize(user.getPosts());
+        // Hibernate.initialize(user.getPosts());
 
         //Mark notifs from this user as read
         // loggedUser.markAuthorNotificationsAsRead(user.getId());

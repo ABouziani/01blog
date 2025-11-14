@@ -496,3 +496,34 @@
 /* .empty {
   height: auto;
 } */
+
+
+.loading-more {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  color: gray;
+  font-style: italic;
+}
+
+.all-loaded {
+  grid-column: 1 / -1;
+  height: fit-content;
+  text-align: center;
+  /* padding: 3rem 2rem; */
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 2px dashed #cbd5e1;
+  margin-top: 3rem;
+}
+
+.all-loaded-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.all-loaded-text {
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 500;
+}

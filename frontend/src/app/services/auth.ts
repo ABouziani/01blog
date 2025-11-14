@@ -58,7 +58,7 @@ export class AuthService {
   login(identifier: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('http://localhost:8080/api/auth/login', { identifier, password }).pipe(
       tap(response => {
-        console.log(response);
+        console.log(response.accessToken);
         localStorage.setItem(this.TOKEN_KEY, response.accessToken);
         localStorage.setItem(this.REFRESH_KEY, response.refreshToken);
         this.loggedIn.next(true);
