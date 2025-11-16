@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dtoresponses.NotificationResponseDto;
@@ -43,9 +44,11 @@ public class NotificationsController {
 
     // --- 1. Get current user's notifications ---
     @GetMapping
-    public ResponseEntity<List<NotificationResponseDto>> getNotifications() {
+    public ResponseEntity<List<NotificationResponseDto>> getNotifications(
+            @RequestParam(required = false) Long lastId,
+            @RequestParam(defaultValue = "10") int pageSize) {
         User viewer = getCurrentUser();
-        List<NotificationResponseDto> notifications = notificationService.getNotificationsForUser(viewer);
+        List<NotificationResponseDto> notifications = notificationService.getNotificationsForUser(viewer, lastId, pageSize);
         return ResponseEntity.ok(notifications);
     }
 
@@ -70,6 +73,6 @@ public class NotificationsController {
     public ResponseEntity<?> markAllAsRead() {
         User user = getCurrentUser();
         notificationService.markAllNotificationsAsRead(user);
-        return ResponseEntity.ok(Map.of("success","true"));
+        return ResponseEntity.ok(Map.of("success", "true"));
     }
 }

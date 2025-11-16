@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,8 @@ public class NotificationService {
 
     // --- 2. Get notifications for a viewer (follower) ---
     @Transactional(readOnly = true)
-    public List<NotificationResponseDto> getNotificationsForUser(User viewer) {
+    public List<NotificationResponseDto> getNotificationsForUser(User viewer, Long lastId, int pageSize) {
+
         User managedViewer = userRepository.findById(viewer.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -43,9 +46,13 @@ public class NotificationService {
             return Collections.emptyList();
         }
 
-        // Fetch notifications from followed authors
-        List<Notification> notifications = notificationRepository.findByAuthorIn(followingAuthors);
-
+        List<Notification> notifications;
+        Pageable limit = PageRequest.of(0, pageSize);
+        if (lastId == 0) {
+            notifications = notificationRepository.findByAuthorIn(followingAuthors, null, limit);
+        } else {
+            notifications = notificationRepository.findByAuthorIn(followingAuthors, lastId, limit);
+        }
         Set<Long> customUnreadIds = customUnreadNotifRepository.findNotificationIdsMarkedUnreadByUser(viewer.getId());
 
         return notifications.stream()
@@ -73,7 +80,8 @@ public class NotificationService {
 
     // --- 3. Mark a notification as unread (after it was read) ---
     @Transactional
-    public void markNotificationAsUnread(User user, Long notificationId) {
+    public void markNotificationAsUnread(User user, Long notificationId
+    ) {
         // Verify the notification exists and belongs to someone the user follows
         Notification notif = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
@@ -91,13 +99,15 @@ public class NotificationService {
 
     // --- 4. Mark a notification as read (removes from custom unread) ---
     @Transactional
-    public void markNotificationAsRead(User user, Long notificationId) {
+    public void markNotificationAsRead(User user, Long notificationId
+    ) {
         customUnreadNotifRepository.deleteByUserIdAndNotificationId(user.getId(), notificationId);
     }
 
     // --- 5. Mark all notifications as read ---
     @Transactional
-    public void markAllNotificationsAsRead(User user) {
+    public void markAllNotificationsAsRead(User user
+    ) {
         user.setLastNotifCheck(LocalDateTime.now());
         userRepository.save(user); // or use a dedicated update method
 

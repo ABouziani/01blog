@@ -87,6 +87,10 @@
   margin-top: 30%;
 }
 
+.dropdown-menu-notifs {
+  height: 600px;
+  overflow-y: scroll;
+}
 
 .notif-dropdown-container .btn-link {
   color: #64748b;
@@ -419,4 +423,40 @@
 
 .dropdown-menu::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+
+.loading-more {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  color: gray;
+  font-style: italic;
+  /* margin-top: -40px; */
+}
+
+.all-loaded {
+  grid-column: 1 / -1;
+  height: fit-content;
+  text-align: center;
+  /* padding: 3rem 2rem; */
+  background: var(--card-bg);
+  border-radius: 16px;
+  /* border: 2px dashed #cbd5e1; */
+  /* margin-top: -40px; */
+}
+
+.all-loaded-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.all-loaded-text {
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.empty-comments-text {
+  color: var(--text);
 }

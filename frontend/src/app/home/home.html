@@ -1,104 +1,99 @@
 <main class="container py-4">
-    <!-- Hero Section -->
-    <div class="row align-items-center hero-section">
-      <div class="col-lg-6 mb-4 mb-lg-0">
-        <h1 class="hero-title">Share Your Learning Journey</h1>
-        <p class="hero-text">
-          01Blog is a platform for students to document experiences, share insights, and connect with a community of
-          peers.
-        </p>
-        <button class="btn-hero" (click)="router.navigate(['/posts'])">Discover the Community</button>
-      </div>
-      <div class="col-lg-6">
-        <div class="hero-image" style="background-image: url('/frontphoto.jpeg');"></div>
-      </div>
+  <!-- Hero Section -->
+  <div class="row align-items-center hero-section">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+      <h1 class="hero-title">Share Your Learning Journey</h1>
+      <p class="hero-text">
+        01Blog is a platform for students to document experiences, share insights, and connect with a community of
+        peers.
+      </p>
+      <button class="btn-hero" (click)="router.navigate(['/posts'])">Discover the Community</button>
     </div>
-
-    <!-- Recent Posts -->
-    <div class="section-spacing">
-      <h2 class="section-title">Recent Posts</h2>
-      <div class="row g-3">
-        <div class="col-md-6 col-lg-4" *ngFor="let post of recentPosts">
-          <div class="post-card">
-            <div class="post-card-image clickable" 
-                 (click)="router.navigate(['/posts/' + post.id])" 
-                 [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
-            </div>
-            <div class="post-card-body">
-              <h5 class="post-card-title clickable" (click)="router.navigate(['/posts/' + post.id])">
-                {{ post.title }}
-              </h5>
-              <p class="post-card-author clickable" (click)="router.navigate(['/users/' + post.creatorId])">
-                @{{ post.creatorUsername }}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-12" *ngIf="!recentPosts || recentPosts.length == 0">
-          <div class="empty-state">
-            No posts from your followings, discover the platform and follow users to get feeds!
-          </div>
-        </div>
-      </div>
-      <div class="text-center mt-4">
-        <button class="btn-discover clickable" (click)="router.navigate(['/posts'])">
-          Discover More
-        </button>
-      </div>
+    <div class="col-lg-6">
+      <div class="hero-image" style="background-image: url('/frontphoto.jpeg');"></div>
     </div>
+  </div>
 
-    <!-- Most Active Users -->
-    <div class="section-spacing">
-      <h2 class="section-title">Most Active Users</h2>
-      <div class="row g-4 justify-content-center">
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let user of activeUsers">
-          <div class="user-card">
-            <div class="user-avatar clickable" 
-                 (click)="router.navigate(['/users/' + user.id])" 
-                 [style.background-image]="user.avatar ? 'url(' + user.avatar + ')' : 'url(/user_avatar.png)'">
-            </div>
-            <p class="user-name clickable" (click)="router.navigate(['/users/' + user.id])">
-              @{{ user.name }}
+  <!-- Recent Posts -->
+  <div class="section-spacing">
+    <h2 class="section-title">Recent Posts</h2>
+    <div class="row g-3">
+      <div class="col-md-6 col-lg-4" *ngFor="let post of recentPosts">
+        <div class="post-card">
+          <div class="post-card-image clickable" (click)="router.navigate(['/posts/' + post.id])"
+            [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
+          </div>
+          <div class="post-card-body">
+            <h5 class="post-card-title clickable" (click)="router.navigate(['/posts/' + post.id])">
+              {{ post.title }}
+            </h5>
+            <p class="post-card-author clickable" (click)="router.navigate(['/users/' + post.creatorId])">
+              @{{ post.creatorUsername }}
             </p>
-            <p class="user-stats">{{ user.posts }} Posts</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="!recentPosts || recentPosts.length == 0">
+        <div class="empty-state">
+          No posts from your followings, discover the platform and follow users to get feeds!
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <button class="btn-discover clickable" (click)="router.navigate(['/posts'])">
+        Discover More
+      </button>
+    </div>
+  </div>
+
+  <!-- Most Active Users -->
+  <div class="section-spacing">
+    <h2 class="section-title">Most Active Users</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let user of activeUsers">
+        <div class="user-card">
+          <div class="user-avatar clickable" (click)="router.navigate(['/users/' + user.id])"
+            [style.background-image]="user.avatar ? 'url(http://localhost:8080' + user.avatar + ')' : 'url(/user_avatar.png)'">
+          </div>
+          <p class="user-name clickable" (click)="router.navigate(['/users/' + user.id])">
+            @{{ user.name }}
+          </p>
+          <p class="user-stats">{{ user.posts }} Posts</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts with Most Reactions -->
+  <div class="section-spacing">
+    <h2 class="section-title">Posts with Most Reactions</h2>
+    <div class="row g-3">
+      <div class="col-6 col-md-4 col-lg-3" *ngFor="let post of topPosts">
+        <div class="small-post-card">
+          <div class="small-post-image clickable" (click)="router.navigate(['/posts/' + post.id])"
+            [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
+          </div>
+          <div class="small-post-body">
+            <h6 class="small-post-title clickable" (click)="router.navigate(['/posts/' + post.id])">
+              {{ post.title }}
+            </h6>
+            <p class="small-post-author clickable" (click)="router.navigate(['/users/' + post.creatorId])">
+              @{{ post.creatorUsername }}
+            </p>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Posts with Most Reactions -->
-    <div class="section-spacing">
-      <h2 class="section-title">Posts with Most Reactions</h2>
-      <div class="row g-3">
-        <div class="col-6 col-md-4 col-lg-3" *ngFor="let post of topPosts">
-          <div class="small-post-card">
-            <div class="small-post-image clickable" 
-                 (click)="router.navigate(['/posts/' + post.id])" 
-                 [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
-            </div>
-            <div class="small-post-body">
-              <h6 class="small-post-title clickable" (click)="router.navigate(['/posts/' + post.id])">
-                {{ post.title }}
-              </h6>
-              <p class="small-post-author clickable" (click)="router.navigate(['/users/' + post.creatorId])">
-                @{{ post.creatorUsername }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Trending Topics -->
+  <div class="section-spacing">
+    <h2 class="section-title">Trending Topics</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <button *ngFor="let tag of trendingTags" class="tag-pill" [class.tag-primary]="tag.primary"
+        [class.tag-default]="!tag.primary">
+        {{ tag.label }}
+      </button>
     </div>
-
-    <!-- Trending Topics -->
-    <div class="section-spacing">
-      <h2 class="section-title">Trending Topics</h2>
-      <div class="d-flex flex-wrap gap-2">
-        <button *ngFor="let tag of trendingTags" 
-                class="tag-pill" 
-                [class.tag-primary]="tag.primary"
-                [class.tag-default]="!tag.primary">
-          {{ tag.label }}
-        </button>
-      </div>
-    </div>
-  </main>
+  </div>
+</main>

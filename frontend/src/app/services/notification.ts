@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NotificationItem } from '../models/notification';
@@ -12,7 +12,7 @@ import { AuthService } from './auth';
 export class NotificationService {
   private base = 'http://localhost:8080/api/notifications';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   private authHeaders(): { headers?: HttpHeaders } {
     const token = localStorage.getItem('access_token');
@@ -22,8 +22,10 @@ export class NotificationService {
     return {};
   }
 
-  getNotifications(): Observable<NotificationItem[]> {
-    return this.http.get<NotificationItem[]>(`${this.base}`, this.authHeaders())
+  getNotifications(lastId: number, pageSize: number): Observable<NotificationItem[]> {
+    let params = new HttpParams().set('pageSize', pageSize.toString());
+    params = params.set('lastId', lastId.toString());
+    return this.http.get<NotificationItem[]>(`${this.base}`, { params })
       .pipe(
         catchError(err => {
           console.error('Failed fetching notifications', err);

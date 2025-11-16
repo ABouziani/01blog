@@ -11,10 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule, CommonModule,FormsModule, MatMenuModule,
+  imports: [RouterModule, CommonModule, FormsModule, MatMenuModule,
     MatButtonModule,
     MatBadgeModule,
     MatIconModule,
@@ -28,11 +29,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   unreadCount = 0;
   dropdownOpen = false;
   defaultAvatar = '/assets/default-avatar.png'; // change as needed
+  loadingMore = false;
+  allLoaded = false;
+  lastNotifId: number = 0;
+  pageSize: number = 10;
+  private scrollTimer: any;
 
   private destroy$ = new Subject<void>();
   private pollingSub?: Subscription;
   darkMode = false;
-  
+
   constructor(
     public authService: AuthService,
     private notificationService: NotificationService,
@@ -42,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Start polling only if user is logged in
     // if (this.authService.isLoggedIn()) {
-      this.startPolling();
+    this.startPolling();
     // }
     console.log("*********************", this.authService.isAdmin());
 
@@ -68,21 +74,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   startPolling(): void {
     // ensure previous subscription stopped
     this.stopPolling();
+    this.lastNotifId = 0;
 
     // Start immediately, then every 30s
     this.pollingSub = timer(0, 1000000000).pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
         if (!this.authService.isLoggedIn()) return of([] as NotificationItem[]);
-        return this.notificationService.getNotifications()
+        return this.notificationService.getNotifications(this.lastNotifId, this.pageSize)
           .pipe(catchError(err => {
             console.error('Polling error', err);
             return of([] as NotificationItem[]);
           }));
       })
     ).subscribe(notifs => {
-      console.log("notifs:",notifs);
-      
+      console.log("notifs:", notifs);
+      const oldestNotif = notifs.reduce((min, p) => p.id < min.id ? p : min, notifs[0]);
+      this.lastNotifId = oldestNotif.id;
       this.applyNotifications(notifs);
     });
   }
@@ -179,7 +187,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.notificationService.markAsRead(n.id).subscribe(res => {
         if (!res || !res.success) {
           // on failure re-sync
-          this.notificationService.getNotifications().subscribe(list => this.applyNotifications(list));
+          this.lastNotifId = 0;
+          this.loadNotifs();
+          this.unreadCount = this.notifications.filter(n => n.unread).length;
         }
       });
     }
@@ -219,5 +229,79 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.unreadCount = this.unreadCount + 1;
       alert("success");
     });
+  }
+
+  loadNotifs() {
+    console.log("last ID", this.lastNotifId)
+    if (this.loadingMore || this.allLoaded) return;
+    this.loadingMore = true;
+
+    setTimeout(() => {
+
+      this.notificationService.getNotifications(this.lastNotifId, this.pageSize)
+        .pipe(catchError(err => {
+          console.error('Polling error', err);
+          return of([] as NotificationItem[]);
+        })).subscribe({
+          next: (data) => {
+            if (data.length == 0) {
+              this.allLoaded = true;
+              this.loadingMore = false;
+              return;
+            }
+            this.notifications = [...this.notifications, ...data];
+            const oldestNotif = this.notifications.reduce((min, p) => p.id < min.id ? p : min, this.notifications[0]);
+            this.lastNotifId = oldestNotif.id;
+            this.unreadCount = this.notifications.filter(n => n.unread).length;
+
+          },
+          error: (err) => {
+            console.error('Error fetching notifications:', err);
+            // this.loading = false;
+          },
+          complete: () => {
+            this.loadingMore = false;
+          }
+        });
+    }, 1000);
+  }
+
+  onScroll(event: Event) {
+    clearTimeout(this.scrollTimer);
+
+    this.scrollTimer = setTimeout(() => {
+      const element = event.target as HTMLElement;
+
+      const scrollTop = element.scrollTop;
+      const visibleHeight = element.clientHeight;
+      const fullHeight = element.scrollHeight;
+
+      if (scrollTop + visibleHeight >= fullHeight - 50) {
+        if (!this.loadingMore && !this.allLoaded) {
+          this.loadNotifs();
+        }
+      }
+    }, 500);
+  }
+  trapScroll(e: WheelEvent) {
+    const box = e.currentTarget as HTMLElement;
+
+    const atTop = box.scrollTop === 0;
+    const atBottom = box.scrollHeight - box.scrollTop === box.clientHeight;
+
+    const scrollTop = box.scrollTop;
+    const visibleHeight = box.clientHeight;
+    const fullHeight = box.scrollHeight;
+
+    if (scrollTop + visibleHeight >= fullHeight - 20) {
+      this.loadNotifs();
+    }
+
+    if (atTop && e.deltaY < 0) {
+      e.preventDefault();
+    }
+    if (atBottom && e.deltaY > 0) {
+      e.preventDefault();
+    }
   }
 }
