@@ -18,12 +18,12 @@ import jakarta.validation.constraints.Size;
 
 // @Table(name = "reports")
 @Entity
-@Table(name = "reports", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"reporter_id", "reported_id"})
+@Table(name = "reports_posts", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"reporter_id", "reported_post_id"})
 })
-public class Report {
+public class ReportPosts {
 
-    public Report() {
+    public ReportPosts() {
     }
 
     @Id
@@ -36,9 +36,9 @@ public class Report {
     private User reporter;
 
     @ManyToOne
-    @JoinColumn(name = "reported_id", referencedColumnName = "id")
+    @JoinColumn(name = "reported_post_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User reported;
+    private Post reportedpost;
 
     @Size(min = 10, max = 300, message = "Report reason must be between 10 and 300 characters long")
     @Column(nullable = false)
@@ -67,12 +67,12 @@ public class Report {
         this.reporter = reporter;
     }
 
-    public User getReported() {
-        return reported;
+    public Post getReportedPost() {
+        return reportedpost;
     }
 
-    public void setReported(User reported) {
-        this.reported = reported;
+    public void setReportedPost(Post reportedpost) {
+        this.reportedpost = reportedpost;
     }
 
     public String getReason() {

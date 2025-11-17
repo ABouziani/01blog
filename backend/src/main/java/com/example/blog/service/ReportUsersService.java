@@ -11,31 +11,31 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.NewReportRequest;
 import com.example.blog.exceptions.DuplicateReportException;
-import com.example.blog.model.Report;
+import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
-import com.example.blog.repository.ReportRepository;
+import com.example.blog.repository.ReportUserRepository;
 
 ;
 
 @Service
-public class ReportService {
+public class ReportUsersService {
 
     @Autowired
-    private ReportRepository reportRepository;
+    private ReportUserRepository reportUserRepository;
 
     @Autowired
     private UserService userService;
 
-    public List<Report> getAllReports() {
-        return reportRepository.findAll();
+    public List<ReportUsers> getAllReports() {
+        return reportUserRepository.findAll();
     }
 
-    public Report addReport(NewReportRequest newReportRequest, Long creatorId) {
+    public ReportUsers addReport(NewReportRequest newReportRequest, Long creatorId) {
         if (Objects.equals(newReportRequest.getReportedId(), creatorId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot report yourself!");
         }
         
-        if (reportRepository.existsByReporterIdAndReportedId(creatorId, newReportRequest.getReportedId())) {
+        if (reportUserRepository.existsByReporterIdAndReportedId(creatorId, newReportRequest.getReportedId())) {
             throw new DuplicateReportException();
         }
 
@@ -45,11 +45,11 @@ public class ReportService {
         User reported = userService.findById(newReportRequest.getReportedId())
                 .orElseThrow(() -> new RuntimeException("Reported user not found"));
 
-        Report newReport = new Report();
+        ReportUsers newReport = new ReportUsers();
         newReport.setReporter(reporter);
         newReport.setReported(reported);
         newReport.setReason(newReportRequest.getReason());
         newReport.setCreatedAt(LocalDateTime.now());
-        return reportRepository.save(newReport);
+        return reportUserRepository.save(newReport);
     }
 }

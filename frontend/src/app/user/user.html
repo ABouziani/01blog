@@ -36,7 +36,7 @@
                   </svg>
                   Unsubscribe
                 </button>
-                <button class="btn-action btn-report" (click)="reportUser()" *ngIf="!user.alreadyReported">
+                <button class="btn-action btn-report" (click)="showPopup = true" *ngIf="!user.alreadyReported">
                   <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
                       10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
@@ -51,6 +51,18 @@
                   </svg>
                   Already Reported
                 </button>
+                <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
+                <div class="popup-box" *ngIf="showPopup">
+                  <h3>Report this user</h3>
+
+                  <label>Reason</label>
+                  <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
+
+                  <div class="actions">
+                    <button class="cancel" (click)="closePopup()">Cancel</button>
+                    <button class="submit" (click)="reportUser()">Submit</button>
+                  </div>
+                </div>
               </div>
             </div>
 

@@ -11,10 +11,10 @@ import com.example.blog.dtoresponses.adminDtos.PostDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
-import com.example.blog.model.Report;
+import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostAdminRepo;
-import com.example.blog.repository.ReportRepository;
+import com.example.blog.repository.ReportUserRepository;
 import com.example.blog.repository.UserRepository;
 
 @Service
@@ -23,14 +23,14 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final PostAdminRepo postRepository;
-    private final ReportRepository reportRepository;
+    private final ReportUserRepository reportUserRepository;
 
     public AdminService(UserRepository userRepository,
             PostAdminRepo postRepository,
-            ReportRepository reportRepository) {
+            ReportUserRepository reportUserRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
-        this.reportRepository = reportRepository;
+        this.reportUserRepository = reportUserRepository;
     }
 
     // === USERS ===
@@ -111,7 +111,7 @@ public class AdminService {
 
     // === REPORTS ===
     public List<ReportDto> getAllReports() {
-        return reportRepository.findAll().stream()
+        return reportUserRepository.findAll().stream()
                 .map(r -> new ReportDto(
                 r.getId(),
                 r.getReporter().getId(),
@@ -127,7 +127,7 @@ public class AdminService {
     }
 
     public void resolveReport(Long reportId, String action) {
-        Report report = reportRepository.findById(reportId)
+        ReportUsers report = reportUserRepository.findById(reportId)
                 .orElseThrow(() -> new RuntimeException("Report not found"));
 
         Long reportedUserId = report.getReported().getId();
@@ -140,7 +140,7 @@ public class AdminService {
                 userRepository.save(user);
             }
             case "delete" -> {
-                reportRepository.deleteById(reportId);
+                reportUserRepository.deleteById(reportId);
                 return ;
             }
             case "dismiss" -> {
@@ -151,8 +151,8 @@ public class AdminService {
         }
 
         // ✅ Delete the report after handling (as you requested)
-        // reportRepository.deleteById(reportId);
+        // reportUserRepository.deleteById(reportId);
         report.setStatus("resolved");
-        reportRepository.save(report);
+        reportUserRepository.save(report);
     }
 }

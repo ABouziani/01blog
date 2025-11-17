@@ -6,10 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { EditprofileComponent } from '../editprofile/editprofile';
 import { PostsService } from '../services/posts-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule, EditprofileComponent],
+  imports: [CommonModule, FormsModule, EditprofileComponent],
   templateUrl: './user.html',
   styleUrl: './user.css'
 })
@@ -23,6 +24,8 @@ export class UserComponent {
   pageSize: number = 4;
   private scrollTimer: any;
   loading = true;
+  showPopup = false;
+  reason = '';
 
   constructor(private postsService: PostsService, private http: HttpClient, private route: ActivatedRoute, private auth: AuthService, public router: Router) { }
 
@@ -111,23 +114,32 @@ export class UserComponent {
       });
   }
 
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.reason = '';
+  }
+
   reportUser() {
 
-    const token = localStorage.getItem('access_token'); // or however you store your JWT
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
+    if (!this.reason.trim()) {
+      alert('Please provide a reason.');
+      return;
+    }
 
     const body = {
       reportedId: this.user?.id,
-      reason: "test report"
+      reason: this.reason
     };
 
-    return this.http.post('http://localhost:8080/api/reports/add', body, { headers })
+    return this.http.post('http://localhost:8080/api/reports/adduserreport', body)
       .subscribe({
         next: (data) => {
           console.log(data)
+          this.closePopup();
           alert("User reported to admins successfully!")
           if (this.user) this.user.alreadyReported = true;
         },

@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.blog.dtoresponses.EntityDtoMapper;
 import com.example.blog.dtoresponses.UserDto;
 import com.example.blog.model.User;
-import com.example.blog.repository.ReportRepository;
+import com.example.blog.repository.ReportUserRepository;
 import com.example.blog.repository.UserRepository;
 import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
@@ -35,7 +35,7 @@ public class UsersController {
     private UserService userService;
 
     @Autowired
-    private ReportRepository reportRepository;
+    private ReportUserRepository reportUserRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -90,7 +90,7 @@ public class UsersController {
                 .orElseThrow(() -> new RuntimeException("Bad request!"));
         // Ensure posts are fetched (avoid LazyInitializationException)
 
-        if (reportRepository.existsByReporterIdAndReportedId(loggedUserId, user.getId())) {
+        if (reportUserRepository.existsByReporterIdAndReportedId(loggedUserId, user.getId())) {
             user.setIsAlreadyReported(true);
         }
 

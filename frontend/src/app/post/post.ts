@@ -7,12 +7,12 @@ import { catchError, finalize, of, tap } from 'rxjs';
 import { AddCommentComponent } from '../addcomment/addcomment';
 import { CommentDto } from '../models/comment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreatePostComponent } from '../createpost/createpost';
 
 @Component({
   selector: 'app-post',
-  imports: [ReactiveFormsModule, CommonModule, AddCommentComponent, RouterLink, CreatePostComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, AddCommentComponent, RouterLink, CreatePostComponent],
   templateUrl: './post.html',
   styleUrl: './post.css'
 })
@@ -28,6 +28,8 @@ export class PostComponent {
   lastCommentId: number = 0;
   pageSize: number = 4;
   private scrollTimer: any;
+  showPopup = false;
+  reason = '';
 
   //forediting
   postForm: FormGroup;
@@ -355,5 +357,49 @@ export class PostComponent {
   // ngOnDestroy(): void {
   //   window.removeEventListener('scroll', this.onScroll);
   // }
-}
 
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.reason = '';
+  }
+
+  submitReport() {
+    if (!this.reason.trim()) {
+      alert('Please provide a reason.');
+      return;
+    }
+
+    const token = localStorage.getItem('access_token'); // or however you store your JWT
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = {
+      reportedPostId: this.postId,
+      reason: this.reason
+    };
+
+    return this.http.post('http://localhost:8080/api/reports/addpostreport', body)
+      .subscribe({
+        next: (data) => {
+          console.log(data)
+          this.closePopup();
+          alert("Post reported to admins successfully!")
+          // if (this.user) this.user.alreadyReported = true;
+        },
+        error: (err) => {
+          console.error('Error reporting this post:', err);
+          // this.error = 'Failed to report this user!';
+          setTimeout(() => {
+            // this.error = '';
+          }, 1500);
+        }
+      });
+
+  }
+}

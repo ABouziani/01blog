@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.blog.dto.NewReportPostRequest;
 import com.example.blog.dto.NewReportRequest;
-import com.example.blog.model.Report;
-import com.example.blog.service.ReportService;
+import com.example.blog.model.ReportPosts;
+import com.example.blog.model.ReportUsers;
+import com.example.blog.service.ReportPostsService;
+import com.example.blog.service.ReportUsersService;
 import com.example.blog.service.UserDetailsImpl;
 
 import jakarta.validation.Valid;
@@ -24,21 +27,32 @@ import jakarta.validation.Valid;
 public class ReportsController {
 
     @Autowired
-    private ReportService reportService;
+    private ReportUsersService reportUsersService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Report> addReport(@Valid @RequestBody NewReportRequest reportReq) {
+    @Autowired
+    private ReportPostsService reportPostsService;
+
+    @PostMapping("/adduserreport")
+    public ResponseEntity<ReportUsers> addReportUser(@Valid @RequestBody NewReportRequest reportReq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        Report savedReport = reportService.addReport(reportReq,loggedUserId);
-        return ResponseEntity.ok(savedReport); 
+        ReportUsers savedReport = reportUsersService.addReport(reportReq, loggedUserId);
+        return ResponseEntity.ok(savedReport);
     }
 
-    @GetMapping("/getall")
-    public List<Report> getReports() {
-        return reportService.getAllReports();
+    @PostMapping("/addpostreport")
+    public ResponseEntity<ReportPosts> addReportPost(@Valid @RequestBody NewReportPostRequest postReportReq) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        ReportPosts savedReport = reportPostsService.addReport(postReportReq, loggedUserId);
+        return ResponseEntity.ok(savedReport);
     }
 
-    
+    @GetMapping("/getalluserreport")
+    public List<ReportUsers> getReports() {
+        return reportUsersService.getAllReports();
+    }
+
 }
