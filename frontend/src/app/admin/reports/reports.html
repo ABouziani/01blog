@@ -2,6 +2,9 @@
 <div class="content-header">
   <h2 class="content-title">Reports Management</h2>
 </div>
+<div style="display: flex;">
+  <div class="users-reports">Users Reports</div>
+</div>
 <div class="table-container">
   <table class="data-table">
     <thead>
@@ -14,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let report of reports">
+      <tr class="tr-tr" *ngFor="let report of userReports">
         <td>
           <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
         </td>
@@ -48,7 +51,63 @@
       </tr>
     </tbody>
   </table>
-  @if (reports && reports.length == 0) {
+  @if (userReports && userReports.length == 0) {
+  <div class="empty-state">
+    <div class="empty-icon">🚩</div>
+    <div class="empty-text">No reports to show!</div>
+  </div>
+  }
+</div>
+
+<div style="display: flex;">
+  <div class="posts-reports">Posts Reports</div>
+</div>
+<div class="posts-table-container table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reporter</th>
+        <th>Reported Post</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="tr-tr" *ngFor="let report of postReports">
+        <td>
+          <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
+        </td>
+        <td>
+          <span class="clickable post-title" [routerLink]="[`/posts/${report.reportedPost.id}`]">{{
+            report.reportedPost.title.length > 60 ? report.reportedPost.title.substring(0,57) + '...' :
+            report.reportedPost.title }}</span>
+
+        </td>
+        <td>{{ report.reason }}</td>
+        <td>
+          <span class="status-badge" [class.status-pending]="report.status === 'pending'"
+            [class.status-resolved]="report.status === 'resolved'"
+            [class.status-dismissed]="report.status === 'dismissed'">
+            {{ report.status | titlecase }}
+          </span>
+        </td>
+        <td>
+          @if (report.status === 'pending') {
+          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report, 'delete_post')">Delete post</button>
+          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report, 'hide_post')">Delete
+            post</button>
+          <button class="btn-action btn-secondary-action"
+            (click)="resolvePostReportWithAction(report, 'dismiss')">Dismiss</button>
+          } @else {
+          <button class="btn-action btn-primary-action"
+            (click)="resolvePostReportWithAction(report, 'delete_report')">Delete</button>
+          }
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  @if (postReports && postReports.length == 0) {
   <div class="empty-state">
     <div class="empty-icon">🚩</div>
     <div class="empty-text">No reports to show!</div>

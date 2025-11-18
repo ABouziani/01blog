@@ -40,7 +40,7 @@ public class ReportPosts {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post reportedpost;
 
-    @Size(min = 10, max = 300, message = "Report reason must be between 10 and 300 characters long")
+    @Size(min = 10, max = 300, message = "Report reason must be between more than 10 characters long")
     @Column(nullable = false)
     private String reason;
 

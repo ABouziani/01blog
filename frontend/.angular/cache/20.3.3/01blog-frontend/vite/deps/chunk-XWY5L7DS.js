@@ -4,11 +4,11 @@ import {
   ViewportRuler
 } from "./chunk-AEXRWMMC.js";
 import {
-  coerceCssPixelValue
-} from "./chunk-46HAYV32.js";
-import {
   _isTestEnvironment
 } from "./chunk-VENV3F3G.js";
+import {
+  coerceCssPixelValue
+} from "./chunk-46HAYV32.js";
 import {
   supportsScrollBehavior
 } from "./chunk-5EG33CFQ.js";
@@ -3449,4 +3449,4 @@ export {
   createOverlayRef,
   OverlayModule
 };
-//# sourceMappingURL=chunk-FXOKWNXP.js.map
+//# sourceMappingURL=chunk-XWY5L7DS.js.map

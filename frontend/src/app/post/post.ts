@@ -30,6 +30,7 @@ export class PostComponent {
   private scrollTimer: any;
   showPopup = false;
   reason = '';
+  reporterror = '';
 
   //forediting
   postForm: FormGroup;
@@ -369,7 +370,18 @@ export class PostComponent {
 
   submitReport() {
     if (!this.reason.trim()) {
-      alert('Please provide a reason.');
+      this.reporterror = 'Please provide a reason.';
+      setTimeout(() => {
+        this.reporterror = '';
+      }, 1500);
+      return;
+    }
+
+    if (this.reason.trim().length < 10) {
+      this.reporterror = 'Reason must be more that 10 characters long!';
+      setTimeout(() => {
+        this.reporterror = '';
+      }, 2500);
       return;
     }
 

@@ -1,6 +1,7 @@
 package com.example.blog.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dtoresponses.adminDtos.PostDto;
+import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.ResolveReportRequest;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
@@ -101,14 +103,19 @@ public class AdminController {
 
     // === REPORTS ===
     @GetMapping("/reports")
-    public ResponseEntity<List<ReportDto>> getAllReports() {
-        return ResponseEntity.ok(adminService.getAllReports());
+    public ResponseEntity<?> getAllReports() {
+        List<PostReportDto> postReports = adminService.getAllPostsReports();
+        List<ReportDto> userReports = adminService.getAllUsersReports();
+        return ResponseEntity.ok(Map.of(
+            "postReports",postReports,
+            "userReports",userReports
+        ));
     }
 
     @PostMapping("/reports/{id}/resolve")
     public ResponseEntity<Void> resolveReport(
-        @PathVariable Long id,
-        @RequestBody ResolveReportRequest request
+            @PathVariable Long id,
+            @RequestBody ResolveReportRequest request
     ) {
         adminService.resolveReport(id, request.action());
         return ResponseEntity.ok().build();

@@ -160,8 +160,13 @@
   transition: background 0.2s ease;
 }
 
+.tr-tr:hover {
+  /* background-color: red; */
+  transform: scale(1.009);
+}
+
 .data-table tbody tr:hover {
-  background: var(--comment-bg);
+  /* background: var(--comment-bg); */
 }
 
 .data-table tbody tr:last-child {

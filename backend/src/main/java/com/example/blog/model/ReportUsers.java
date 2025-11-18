@@ -40,7 +40,7 @@ public class ReportUsers {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User reported;
 
-    @Size(min = 10, max = 300, message = "Report reason must be between 10 and 300 characters long")
+    @Size(min = 10, message = "Report reason must be more than 10 characters long")
     @Column(nullable = false)
     private String reason;
 

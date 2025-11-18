@@ -89,9 +89,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       })
     ).subscribe(notifs => {
       console.log("notifs:", notifs);
-      const oldestNotif = notifs.reduce((min, p) => p.id < min.id ? p : min, notifs[0]);
-      this.lastNotifId = oldestNotif.id;
-      this.applyNotifications(notifs);
+      if (notifs.length > 0) {
+        const oldestNotif = notifs.reduce((min, p) => p.id < min.id ? p : min, notifs[0]);
+        this.lastNotifId = oldestNotif.id;
+        this.applyNotifications(notifs);
+      }
     });
   }
 

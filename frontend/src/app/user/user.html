@@ -140,7 +140,7 @@
     <div class="loading-more" *ngIf="loadingMore">
       Loading posts...
     </div>
-    <div class="all-loaded" *ngIf="allLoaded">
+    <div class="all-loaded" *ngIf="allLoaded && user.posts.length > 0">
       <div class="empty-posts-icon">📝</div>
       <br>
       <p class="empty-posts-text">No more posts!</p>

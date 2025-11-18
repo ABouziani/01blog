@@ -48,7 +48,7 @@ public class ReportPostsService {
                 .orElseThrow(() -> new RuntimeException("Reported Post not found"));
 
         if (Objects.equals(reportedPost.getCreator().getId(), creatorId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot report posts!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot report your posts!");
         }
 
         ReportPosts newReport = new ReportPosts();

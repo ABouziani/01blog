@@ -39,13 +39,13 @@
           <button class="btn-action btn-primary-action"
             (click)="openConfirmDialog('delete', user.id, user.username)">Delete</button>
           @if (!user.isBanned) {
-          @if (!user.isAdmin) {
+          <!-- @if (!user.isAdmin) {
           <button class="btn-action btn-secondary-action"
             (click)="openConfirmDialog('make-admin', user.id, user.username)">Make Admin</button>
           } @else {
           <button class="btn-action btn-secondary-action"
             (click)="openConfirmDialog('remove-admin', user.id, user.username)">Remove Admin</button>
-          }
+          } -->
           }
         </td>
       </tr>

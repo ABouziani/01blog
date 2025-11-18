@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.blog.dtoresponses.adminDtos.PostDto;
+import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
 import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostAdminRepo;
+import com.example.blog.repository.ReportPostsRepository;
 import com.example.blog.repository.ReportUserRepository;
 import com.example.blog.repository.UserRepository;
 
@@ -24,13 +26,15 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PostAdminRepo postRepository;
     private final ReportUserRepository reportUserRepository;
+    private final ReportPostsRepository reportPostsRepository;
 
     public AdminService(UserRepository userRepository,
             PostAdminRepo postRepository,
-            ReportUserRepository reportUserRepository) {
+            ReportUserRepository reportUserRepository,ReportPostsRepository reportPostsRepository ) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.reportUserRepository = reportUserRepository;
+        this.reportPostsRepository = reportPostsRepository;
     }
 
     // === USERS ===
@@ -110,7 +114,7 @@ public class AdminService {
     }
 
     // === REPORTS ===
-    public List<ReportDto> getAllReports() {
+    public List<ReportDto> getAllUsersReports() {
         return reportUserRepository.findAll().stream()
                 .map(r -> new ReportDto(
                 r.getId(),
@@ -119,6 +123,20 @@ public class AdminService {
                 r.getReported().getId(),
                 r.getReported().getUsername(),
                 null, // no post reports yet
+                r.getReason(),
+                r.getCreatedAt(),
+                r.getStatus()
+        ))
+                .collect(Collectors.toList());
+    }
+
+    public List<PostReportDto> getAllPostsReports() {
+        return reportPostsRepository.findAll().stream()
+                .map(r -> new PostReportDto(
+                r.getId(),
+                r.getReporter().getId(),
+                r.getReporter().getUsername(),
+                r.getReportedPost(),
                 r.getReason(),
                 r.getCreatedAt(),
                 r.getStatus()

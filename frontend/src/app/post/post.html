@@ -42,14 +42,16 @@
               <i class="bi bi-eye"></i>
               5.4K views
             </span> -->
-          <span  (click)="showPopup = true" class="reportpost report-badge">
+          <span (click)="showPopup = true" class="reportpost report-badge">
             <i class="bi bi-flag-fill"></i>
             <!-- Report this post -->
           </span>
           <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
           <div class="popup-box" *ngIf="showPopup">
             <h3>Report this post</h3>
-
+            <div class="reporterror" *ngIf="reporterror">
+              {{ reporterror }}
+            </div>
             <label>Reason</label>
             <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
 
@@ -66,8 +68,9 @@
         <!-- Mobile Author Info -->
         <div class="d-lg-none d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
           <img (click)="router.navigate(['/users/' + post.creator.id])"
-            [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'" alt="{{ post.creator.username }}"
-            class="clickable rounded-3" style="width: 48px; height: 48px; object-fit: cover; background-color: white;">
+            [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
+            alt="{{ post.creator.username }}" class="clickable rounded-3"
+            style="width: 48px; height: 48px; object-fit: cover; background-color: white;">
           <div>
             <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">@{{
               post.creator.username }}</p>

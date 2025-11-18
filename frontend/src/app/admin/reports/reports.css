@@ -6,3 +6,34 @@
 .reportlink:hover {
     font-weight: bold;
 } */
+
+.posts-reports,
+.users-reports {
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-size: 1.0rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    margin-left: 100px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.post-title {
+    color: #667eea;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+@media (max-width: 768px) {
+
+    .content-title {
+        font-size: 1.25rem;
+    }
+}
