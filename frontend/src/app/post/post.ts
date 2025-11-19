@@ -312,11 +312,6 @@ export class PostComponent {
 
       this.http.get<CommentDto[]>(this.apiUrlPostComment + this.postId, { params }).subscribe({
         next: (data) => {
-          if (data.length == 0) {
-            this.allLoaded = true;
-            this.loadingMore = false;
-            return;
-          }
           if (this.post) {
             data.reverse();
             this.post.comments = [...this.post.comments, ...data];
@@ -324,6 +319,11 @@ export class PostComponent {
             this.lastCommentId = oldestComment.id;
           }
           this.loading = false;
+          if (data.length < this.pageSize) {
+            this.allLoaded = true;
+            this.loadingMore = false;
+            return;
+          }
         },
         error: (err) => {
           console.error('Error fetching comments:', err);

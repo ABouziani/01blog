@@ -23,7 +23,7 @@ export const routes: Routes = [
     { path: 'posts/create', component: CreatePostComponent, canActivate: [authGuard] },
     { path: 'posts/:id', component: PostComponent, canActivate: [authGuard] },
     { path: 'users/:id', component: UserComponent, canActivate: [authGuard] },
-    { path: 'profile', component: UserComponent, canActivate: [authGuard] },
+    { path: 'myprofile', component: UserComponent, canActivate: [authGuard] },
     {
         path: 'adminpanel', component: AdminPanel, canActivate: [authGuard], children: [
             { path: 'users', component: AdminUsersComponent },

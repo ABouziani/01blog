@@ -158,10 +158,15 @@
                 <i class="bi bi-trash"></i>
               </button>
             </div>
+            <div class="all-loaded" *ngIf="!post.comments || post.comments.length == 0">
+              <div class="empty-comments-icon">📝</div>
+              <br>
+              <p class="empty-comments-text">No comments!</p>
+            </div>
             <div class="loading-more" *ngIf="loadingMore">
               Loading comments...
             </div>
-            <div class="all-loaded" *ngIf="allLoaded">
+            <div class="all-loaded" *ngIf="allLoaded && post.comments.length != 0">
               <div class="empty-comments-icon">📝</div>
               <br>
               <p class="empty-comments-text">No more comments!</p>
@@ -230,7 +235,12 @@
           <div class="loading-more" *ngIf="loadingMore">
             Loading comments...
           </div>
-          <div class="all-loaded" *ngIf="allLoaded">
+          <div class="no-comment" *ngIf="allLoaded && (!post.comments || post.comments.length == 0)">
+            <div class="empty-comments-icon">📝</div>
+            <br>
+            <p class="empty-comments-text">No comments!</p>
+          </div>
+          <div class="all-loaded" *ngIf="allLoaded && post.comments.length != 0">
             <div class="empty-comments-icon">📝</div>
             <br>
             <p class="empty-comments-text">No more comments!</p>

@@ -1,6 +1,7 @@
 package com.example.blog.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,16 @@ public class CommentsController {
     public List<Comment> getPostComment(@PathVariable Long postid,
             @RequestParam(required = false) Long lastId,
             @RequestParam(defaultValue = "10") int pageSize) {
-        return commentService.getCommentsByPostId(postid, lastId, pageSize);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        List<Comment> comms = commentService.getCommentsByPostId(postid, lastId, pageSize);
+        comms.forEach(com -> {
+            com.setOwner(Objects.equals(com.getUser().getId(), loggedUserId));
+        });
+
+        return comms;
+
     }
 
 }

@@ -89,6 +89,9 @@
   color: var(--text);
   line-height: 1.2;
   margin-bottom: 1.5rem;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .badge-custom {
@@ -196,7 +199,8 @@
 }
 
 .comments-list {
-  max-height: 400px;
+  max-height: 500px;
+  min-height: 100px;
   overflow-y: auto;
 
   /* Firefox scrollbar */
@@ -659,6 +663,18 @@ textarea {
   background: #f74141;
 }
 
+.no-comment {
+  margin-top: 20px;
+  grid-column: 1 / -1;
+  height: fit-content;
+  text-align: center;
+  /* padding: 3rem 2rem; */
+  background: var(--card-bg);
+  border-radius: 16px;
+  /* border: 2px dashed #cbd5e1; */
+  margin-top: -40px;
+}
+
 
 .loading-more {
   width: 100%;
@@ -666,7 +682,7 @@ textarea {
   padding: 12px;
   color: gray;
   font-style: italic;
-  margin-top: -40px;
+  margin-top: 40px;
 }
 
 .all-loaded {

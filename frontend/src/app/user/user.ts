@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth';
 import { EditprofileComponent } from '../editprofile/editprofile';
 import { PostsService } from '../services/posts-service';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-user',
@@ -27,7 +28,7 @@ export class UserComponent {
   showPopup = false;
   reason = '';
 
-  constructor(private postsService: PostsService, private http: HttpClient, private route: ActivatedRoute, private auth: AuthService, public router: Router) { }
+  constructor(private postsService: PostsService, private http: HttpClient, private route: ActivatedRoute, private auth: AuthService, public router: Router, private location: Location) { }
 
   ngOnInit(): void {
     let userId = this.route.snapshot.paramMap.get('id');
@@ -51,6 +52,7 @@ export class UserComponent {
           if (data.id == this.auth.loggedId()) {
             this.user.owner = true;
           }
+          this.location.go('/users/' + this.user?.id.toString());
         },
         error: (err) => {
           // this.error = err.error.message;
