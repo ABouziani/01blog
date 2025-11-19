@@ -3,9 +3,11 @@ package com.example.blog.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,20 +37,28 @@ public class ReportPostsService {
         return reportPostsRepository.findAll();
     }
 
-    public ReportPosts addReport(NewReportPostRequest newReportPostRequest, Long creatorId) {
+    public ResponseEntity<?> addReport(NewReportPostRequest newReportPostRequest, Long creatorId) {
 
         if (reportPostsRepository.existsByReporterIdAndReportedpostId(creatorId, newReportPostRequest.getReportedPostId())) {
-            throw new DuplicateReportException();
+            return new ResponseEntity<>("You already reported this post!", HttpStatus.BAD_REQUEST);
         }
 
-        User reporter = userService.findById(creatorId)
-                .orElseThrow(() -> new RuntimeException("Reporter user not found"));
+        Optional<User> reporterOpt = userService.findById(creatorId);
+        if (reporterOpt.isEmpty()) {
+            return new ResponseEntity<>("Reporter user not found", HttpStatus.BAD_REQUEST);
+        }
 
-        Post reportedPost = postRepository.findById(newReportPostRequest.getReportedPostId())
-                .orElseThrow(() -> new RuntimeException("Reported Post not found"));
+        User reporter = reporterOpt.get();
+
+        Optional<Post> reportedPostOpt = postRepository.findById(newReportPostRequest.getReportedPostId());
+         if (reportedPostOpt.isEmpty()) {
+            return new ResponseEntity<>("Reported Post not found", HttpStatus.BAD_REQUEST);
+        }
+
+        Post reportedPost = reportedPostOpt.get();
 
         if (Objects.equals(reportedPost.getCreator().getId(), creatorId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot report your posts!");
+            return new ResponseEntity<>("You cannot report your posts!", HttpStatus.BAD_REQUEST);
         }
 
         ReportPosts newReport = new ReportPosts();
@@ -56,6 +66,6 @@ public class ReportPostsService {
         newReport.setReportedPost(reportedPost);
         newReport.setReason(newReportPostRequest.getReason());
         newReport.setCreatedAt(LocalDateTime.now());
-        return reportPostsRepository.save(newReport);
+        return ResponseEntity.ok(reportPostsRepository.save(newReport));
     }
 }

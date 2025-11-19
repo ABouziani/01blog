@@ -42,12 +42,12 @@ public class ReportsController {
     }
 
     @PostMapping("/addpostreport")
-    public ResponseEntity<ReportPosts> addReportPost(@Valid @RequestBody NewReportPostRequest postReportReq) {
+    public ResponseEntity<?> addReportPost(@Valid @RequestBody NewReportPostRequest postReportReq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        ReportPosts savedReport = reportPostsService.addReport(postReportReq, loggedUserId);
-        return ResponseEntity.ok(savedReport);
+        ResponseEntity<?> savedReport = reportPostsService.addReport(postReportReq, loggedUserId);
+        return savedReport;
     }
 
     @GetMapping("/getalluserreport")

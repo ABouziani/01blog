@@ -406,7 +406,10 @@ export class PostComponent {
         },
         error: (err) => {
           console.error('Error reporting this post:', err);
-          // this.error = 'Failed to report this user!';
+          this.reporterror = err.error;
+          setTimeout(() => {
+            this.reporterror = '';
+          }, 2500);
           setTimeout(() => {
             // this.error = '';
           }, 1500);
