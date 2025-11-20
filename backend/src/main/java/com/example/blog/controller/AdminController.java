@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.blog.dtoresponses.adminDtos.PostDto;
 import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
+import com.example.blog.dtoresponses.adminDtos.ResolvePostReportRequest;
 import com.example.blog.dtoresponses.adminDtos.ResolveReportRequest;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.service.AdminService;
@@ -107,8 +108,8 @@ public class AdminController {
         List<PostReportDto> postReports = adminService.getAllPostsReports();
         List<ReportDto> userReports = adminService.getAllUsersReports();
         return ResponseEntity.ok(Map.of(
-            "postReports",postReports,
-            "userReports",userReports
+                "postReports", postReports,
+                "userReports", userReports
         ));
     }
 
@@ -118,6 +119,18 @@ public class AdminController {
             @RequestBody ResolveReportRequest request
     ) {
         adminService.resolveReport(id, request.action());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/postreports/{id}/resolve")
+    public ResponseEntity<Void> resolvePostReport(
+            @PathVariable Long id,
+            @RequestBody ResolvePostReportRequest request,
+            Authentication authentication
+    ) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        adminService.resolvePostReport(id, request.action(), loggedUserId);
         return ResponseEntity.ok().build();
     }
 }

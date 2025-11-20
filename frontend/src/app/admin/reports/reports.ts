@@ -89,7 +89,7 @@ export class AdminReportsComponent {
           if (action === 'delete_post') {
             this.postReports = this.postReports.filter(r => r.id !== report.id);
           } else if (action === 'hide_post') {
-            const existing = this.userReports.find(r => r.id === report.id);
+            const existing = this.postReports.find(r => r.id === report.id);
             if (existing) {
               existing.status = 'resolved';
             }
@@ -97,7 +97,7 @@ export class AdminReportsComponent {
           } else if (action === 'delete_report') {
             this.postReports = this.postReports.filter(r => r.id !== report.id);
           } else {
-            const existing = this.userReports.find(r => r.id === report.id);
+            const existing = this.postReports.find(r => r.id === report.id);
             if (existing) {
               existing.status = 'resolved';
             }

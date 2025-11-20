@@ -45,7 +45,7 @@
           <button class="btn-action btn-secondary-action"
             (click)="resolveWithAction(report, 'dismiss')">Dismiss</button>
           } @else {
-          <button class="btn-action btn-primary-action" (click)="resolveWithAction(report, 'delete')">Delete</button>
+          <button class="btn-action btn-primary-action" (click)="resolveWithAction(report, 'delete')">Delete report</button>
           }
         </td>
       </tr>
@@ -95,13 +95,12 @@
         <td>
           @if (report.status === 'pending') {
           <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report, 'delete_post')">Delete post</button>
-          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report, 'hide_post')">Delete
-            post</button>
+          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report, 'hide_post')">Hide post</button>
           <button class="btn-action btn-secondary-action"
             (click)="resolvePostReportWithAction(report, 'dismiss')">Dismiss</button>
           } @else {
           <button class="btn-action btn-primary-action"
-            (click)="resolvePostReportWithAction(report, 'delete_report')">Delete</button>
+            (click)="resolvePostReportWithAction(report, 'delete_report')">Delete report</button>
           }
         </td>
       </tr>

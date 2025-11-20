@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,7 @@ import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
+import com.example.blog.model.ReportPosts;
 import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostAdminRepo;
@@ -27,14 +30,16 @@ public class AdminService {
     private final PostAdminRepo postRepository;
     private final ReportUserRepository reportUserRepository;
     private final ReportPostsRepository reportPostsRepository;
+    private final PostService postService;
 
     public AdminService(UserRepository userRepository,
             PostAdminRepo postRepository,
-            ReportUserRepository reportUserRepository,ReportPostsRepository reportPostsRepository ) {
+            ReportUserRepository reportUserRepository, ReportPostsRepository reportPostsRepository, PostService postService) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.reportUserRepository = reportUserRepository;
         this.reportPostsRepository = reportPostsRepository;
+        this.postService = postService;
     }
 
     // === USERS ===
@@ -159,7 +164,7 @@ public class AdminService {
             }
             case "delete" -> {
                 reportUserRepository.deleteById(reportId);
-                return ;
+                return;
             }
             case "dismiss" -> {
                 // No action needed beyond deleting report
@@ -172,5 +177,43 @@ public class AdminService {
         // reportUserRepository.deleteById(reportId);
         report.setStatus("resolved");
         reportUserRepository.save(report);
+    }
+
+    public ResponseEntity<?> resolvePostReport(Long reportId, String action, Long loggedUserId) {
+        Optional<ReportPosts> reportOpt = reportPostsRepository.findById(reportId);
+        if (reportOpt.isEmpty()) {
+            return new ResponseEntity<>("Report not found!", HttpStatus.BAD_REQUEST);
+        }
+
+        ReportPosts report = reportOpt.get();
+
+        Post reportedPost = report.getReportedPost();
+
+        switch (action) {
+            case "hide_post" -> {
+                reportedPost.setHidden(true);
+                postRepository.save(reportedPost);
+                break;
+            }
+            case "delete_post" -> {
+                postRepository.delete(reportedPost);
+                reportPostsRepository.deleteById(reportId);
+                // postService.deletePost(reportedPost.getId(), loggedUserId);
+                return ResponseEntity.ok().build();
+            }
+            case "delete_report" -> {
+                reportPostsRepository.deleteById(reportId);
+                return ResponseEntity.ok().build();
+            }
+            case "dismiss" -> {
+                // No action needed beyond deleting report
+            }
+            default ->
+                throw new IllegalArgumentException("Invalid action: " + action);
+        }
+
+        report.setStatus("resolved");
+        reportPostsRepository.save(report);
+        return ResponseEntity.ok().build();
     }
 }
