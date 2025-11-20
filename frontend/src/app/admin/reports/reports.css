@@ -1,11 +1,66 @@
-/* .reportlink {
-    color: rgb(61, 58, 238);
+.close-btn {
+    margin-top: 8px;
+    /* padding: 4px 8px; */
+    width: fit-content;
+    height: fit-content;
+    background-color: #ff4d4d;
+    color: var(--text);
+    border: none;
+    border-radius: 20px;
     cursor: pointer;
+    /* margin-left: -50%; */
 }
 
-.reportlink:hover {
-    font-weight: bold;
+.close-btn:hover {
+    background-color: #e60000;
+}
+
+
+/* Backdrop */
+.popup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 101;
+}
+
+/* Popup box */
+.popup-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    z-index: 102;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Textarea */
+/* textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 14px;
 } */
+
+.selectedpost-title {
+    margin-bottom: 20px;
+    margin-top: -15px;
+}
 
 .posts-reports,
 .users-reports {
@@ -35,5 +90,17 @@
 
     .content-title {
         font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .popup-backdrop {
+        display: none;
+    }
+
+    .popup-box {
+        width: 100px !important;
+        margin-left: 5px;
     }
 }

@@ -10,6 +10,18 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 
+interface GroupedPostReport {
+  postId: number;
+  postTitle: string;
+
+  reporters: {
+    id: number;
+    username: string;
+    reason: string;
+  }[];
+  status: string;
+}
+
 @Component({
   selector: 'app-admin-reports',
   standalone: true,
@@ -29,6 +41,8 @@ export class AdminReportsComponent {
 
   userReports: Report[] = [];
   postReports: PostReport[] = [];
+  groupedReports: GroupedPostReport[] = [];
+  selectedReport: GroupedPostReport | null = null;
   displayedColumns = ['reporter', 'reported', 'reason', 'status', 'actions'];
 
   ngOnInit() {
@@ -36,6 +50,7 @@ export class AdminReportsComponent {
       console.log(data);
       this.userReports = data.userReports;
       this.postReports = data.postReports;
+      this.groupedReports = this.groupReportsByPost(this.postReports);
     });
   }
 
@@ -70,7 +85,7 @@ export class AdminReportsComponent {
     });
   }
 
-  resolvePostReportWithAction(report: Report, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report') {
+  resolvePostReportWithAction(report: GroupedPostReport, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report') {
     const messages = {
       'delete_post': `Are you sure you want to delete this post?`,
       'hide_post': `Are you sure you want to hide this post?`,
@@ -80,30 +95,84 @@ export class AdminReportsComponent {
 
     const message = messages[action] || `Unknown action!.`;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message, action, reportId: report.id }
+      data: { message, action, reportId: report.postId }
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.reportAdminService.resolvePostReport(report.id, action).subscribe(() => {
-          if (action === 'delete_post') {
-            this.postReports = this.postReports.filter(r => r.id !== report.id);
-          } else if (action === 'hide_post') {
-            const existing = this.postReports.find(r => r.id === report.id);
-            if (existing) {
-              existing.status = 'resolved';
-            }
-            alert("Post hidded successfully");
-          } else if (action === 'delete_report') {
-            this.postReports = this.postReports.filter(r => r.id !== report.id);
-          } else {
-            const existing = this.postReports.find(r => r.id === report.id);
-            if (existing) {
-              existing.status = 'resolved';
-            }
-          }
+        this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe(() => {
+
+          // if (action === 'delete_post') {
+          //   this.postReports = this.postReports.filter(r => r.id !== report.id);
+          // } else if (action === 'hide_post') {
+          //   const existing = this.postReports.find(r => r.id === report.id);
+          //   if (existing) {
+          //     existing.status = 'resolved';
+          //   }
+          //   alert("Post hidded successfully");
+          // } else if (action === 'delete_report') {
+          //   this.postReports = this.postReports.filter(r => r.id !== report.id);
+          // } else {
+          //   const existing = this.postReports.find(r => r.id === report.id);
+          //   if (existing) {
+          //     existing.status = 'resolved';
+          //   }
+          // }
         });
+      } else {
+        this.groupedReports = this.groupedReports.filter(r => r.postId !== report.postId);
       }
     });
+  }
+
+  groupReportsByPost(reports: any[]): GroupedPostReport[] {
+    const map = new Map<number, GroupedPostReport>();
+
+    reports.forEach(report => {
+      const postId = report.reportedPost.id;
+
+      if (!map.has(postId)) {
+        map.set(postId, {
+          postId,
+          postTitle: report.reportedPost.title,
+          reporters: [],
+          status: "pending"
+        });
+      }
+
+      const entry = map.get(postId);
+
+      entry!.reporters.push({
+        id: report.reporterId,
+        username: report.reporterUsername,
+        reason: report.reason
+      });
+    });
+
+    return Array.from(map.values());
+  }
+
+
+  // Example: status = 'pending' if ANY pending exists
+  computeStatus(statuses: string[]) {
+    return statuses.includes('pending')
+      ? 'pending'
+      : statuses.includes('resolved')
+        ? 'resolved'
+        : 'dismissed';
+  }
+
+  isLast(item: any, array: any[]) {
+    return array[array.length - 1] === item;
+  }
+
+  showPopup = false
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.selectedReport = null;
   }
 }
