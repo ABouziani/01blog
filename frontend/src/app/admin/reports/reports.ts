@@ -101,7 +101,8 @@ export class AdminReportsComponent {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe(() => {
-
+          alert("Report resolved successfully!")
+          this.groupedReports = this.groupedReports.filter(r => r.postId !== report.postId);
           // if (action === 'delete_post') {
           //   this.postReports = this.postReports.filter(r => r.id !== report.id);
           // } else if (action === 'hide_post') {
@@ -119,8 +120,6 @@ export class AdminReportsComponent {
           //   }
           // }
         });
-      } else {
-        this.groupedReports = this.groupedReports.filter(r => r.postId !== report.postId);
       }
     });
   }

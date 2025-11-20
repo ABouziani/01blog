@@ -122,15 +122,15 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/postreports/{id}/resolve")
+    @PostMapping("/postreports/{postId}/resolve")
     public ResponseEntity<Void> resolvePostReport(
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @RequestBody ResolvePostReportRequest request,
             Authentication authentication
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        adminService.resolvePostReport(id, request.action(), loggedUserId);
+        adminService.resolvePostReport(postId, request.action(), loggedUserId);
         return ResponseEntity.ok().build();
     }
 }

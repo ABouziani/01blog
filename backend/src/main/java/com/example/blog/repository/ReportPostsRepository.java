@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.example.blog.model.Post;
 import com.example.blog.model.ReportPosts;
 
 public interface ReportPostsRepository extends JpaRepository<ReportPosts, Long> {
@@ -14,6 +15,8 @@ public interface ReportPostsRepository extends JpaRepository<ReportPosts, Long> 
     Optional<List<ReportPosts>> findByReportedpostId(Long reportedpostId);
     @Override
     List<ReportPosts> findAll();
+
+    void deleteByReportedpost(Post reportedPost);
 
     boolean existsByReporterIdAndReportedpostId(Long reporterId, Long reportedpostId);
 }

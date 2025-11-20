@@ -179,41 +179,41 @@ public class AdminService {
         reportUserRepository.save(report);
     }
 
-    public ResponseEntity<?> resolvePostReport(Long reportId, String action, Long loggedUserId) {
-        Optional<ReportPosts> reportOpt = reportPostsRepository.findById(reportId);
-        if (reportOpt.isEmpty()) {
+    public ResponseEntity<?> resolvePostReport(Long postId, String action, Long loggedUserId) {
+        Optional<Post> postOpt = postService.getPostById(postId);
+        if (postOpt.isEmpty()) {
             return new ResponseEntity<>("Report not found!", HttpStatus.BAD_REQUEST);
         }
 
-        ReportPosts report = reportOpt.get();
-
-        Post reportedPost = report.getReportedPost();
+        Post reportedPost = postOpt.get();
 
         switch (action) {
             case "hide_post" -> {
                 reportedPost.setHidden(true);
                 postRepository.save(reportedPost);
-                break;
+                reportPostsRepository.deleteByReportedpost(reportedPost);
+                return ResponseEntity.ok().build();
             }
             case "delete_post" -> {
                 postRepository.delete(reportedPost);
-                reportPostsRepository.deleteById(reportId);
+                reportPostsRepository.deleteByReportedpost(reportedPost);
                 // postService.deletePost(reportedPost.getId(), loggedUserId);
                 return ResponseEntity.ok().build();
             }
             case "delete_report" -> {
-                reportPostsRepository.deleteById(reportId);
+                reportPostsRepository.deleteByReportedpost(reportedPost);
                 return ResponseEntity.ok().build();
             }
             case "dismiss" -> {
-                // No action needed beyond deleting report
+                reportPostsRepository.deleteByReportedpost(reportedPost);
+                return ResponseEntity.ok().build();
             }
             default ->
                 throw new IllegalArgumentException("Invalid action: " + action);
         }
 
-        report.setStatus("resolved");
-        reportPostsRepository.save(report);
-        return ResponseEntity.ok().build();
+        // report.setStatus("resolved");
+        // reportPostsRepository.save(report);
+        // return ResponseEntity.ok().build();
     }
 }

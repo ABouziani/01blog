@@ -18,7 +18,7 @@ export class ReportAdminService {
     return this.http.post<void>(`${this.apiUrl}/${id}/resolve`, { action });
   }
 
-  resolvePostReport(id: string, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report'): Observable<void> {
-    return this.http.post<void>(`${this.apipostUrl}/${id}/resolve`, { action });
+  resolvePostReport(postId: string, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report'): Observable<void> {
+    return this.http.post<void>(`${this.apipostUrl}/${postId}/resolve`, { action });
   }
 }

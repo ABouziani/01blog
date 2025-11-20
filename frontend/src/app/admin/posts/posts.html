@@ -15,8 +15,8 @@
     <tbody>
       <tr *ngFor="let post of posts">
         <td>{{ post.authorName }}</td>
-        <td>{{ post.description && post.description.length > 50 ? (post.description.substring(0, 47) + '...') :
-          post.description }}</td>
+        <td>{{ post.title && post.title.length > 50 ? (post.title.substring(0, 47) + '...') :
+          post.title }}</td>
         <td>
           <span class="status-badge" [class.status-active]="!post.isHidden" [class.status-hidden]="post.isHidden">
             {{ post.isHidden ? 'Hidden' : 'Visible' }}

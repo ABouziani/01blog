@@ -132,15 +132,15 @@
             Delete post
           </button>
 
-          <button class="btn-action btn-danger-action">
+          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report,'hide_post')">
             Hide post
           </button>
 
-          <button class="btn-action btn-secondary-action">
+          <button class="btn-action btn-secondary-action" (click)="resolvePostReportWithAction(report,'dismiss')">
             Dismiss
           </button>
           } @else {
-          <button class="btn-action btn-primary-action">
+          <button class="btn-action btn-primary-action" (click)="resolvePostReportWithAction(report,'dismiss')">
             Delete reports
           </button>
           }
