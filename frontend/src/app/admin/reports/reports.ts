@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
+import { AlertService } from '../../services/alert-service';
 
 
 interface GroupedUserReport {
@@ -51,6 +52,7 @@ interface GroupedPostReport {
 export class AdminReportsComponent {
   private reportAdminService = inject(ReportAdminService);
   private dialog = inject(MatDialog);
+  private myAlert = inject(AlertService);
 
   showPRPopup = false
   showURPopup = false
@@ -83,21 +85,8 @@ export class AdminReportsComponent {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), action).subscribe(() => {
+          this.myAlert.showAlert("Success", "Report resolved successfully!");
           this.groupedUserReports = this.groupedUserReports.filter(r => r.reportedUserId !== report.reportedUserId);
-          // if (action === 'delete') {
-          //   this.userReports = this.userReports.filter(r => r.id !== report.id);
-          // } else if (action === 'ban_user') {
-          //   const existing = this.userReports.find(r => r.id === report.id);
-          //   if (existing) {
-          //     existing.status = 'resolved';
-          //   }
-          //   alert("User banned successfully");
-          // } else {
-          //   const existing = this.userReports.find(r => r.id === report.id);
-          //   if (existing) {
-          //     existing.status = 'resolved';
-          //   }
-          // }
         });
       }
     });
@@ -119,24 +108,8 @@ export class AdminReportsComponent {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe(() => {
-          alert("Report resolved successfully!")
+          this.myAlert.showAlert("Success", "Report resolved successfully!");
           this.groupedPostReports = this.groupedPostReports.filter(r => r.postId !== report.postId);
-          // if (action === 'delete_post') {
-          //   this.postReports = this.postReports.filter(r => r.id !== report.id);
-          // } else if (action === 'hide_post') {
-          //   const existing = this.postReports.find(r => r.id === report.id);
-          //   if (existing) {
-          //     existing.status = 'resolved';
-          //   }
-          //   alert("Post hidded successfully");
-          // } else if (action === 'delete_report') {
-          //   this.postReports = this.postReports.filter(r => r.id !== report.id);
-          // } else {
-          //   const existing = this.postReports.find(r => r.id === report.id);
-          //   if (existing) {
-          //     existing.status = 'resolved';
-          //   }
-          // }
         });
       }
     });

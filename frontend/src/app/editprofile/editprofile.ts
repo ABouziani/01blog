@@ -4,6 +4,7 @@ import { UserDto } from '../models/userDto';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-editprofile',
@@ -42,7 +43,8 @@ export class EditprofileComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    public router: Router
+    public router: Router,
+    private myAlert: AlertService
   ) {
     this.userForm = this.fb.group({
       bio: [''],
@@ -120,7 +122,7 @@ export class EditprofileComponent {
     this.http.put<UserDto>(`http://localhost:8080/api/users/edit`, formData, { headers })
       .subscribe({
         next: (data) => {
-          alert("User updated successfully!")
+          this.myAlert.showAlert("Success", "User updated successfully!");
           this.updateEvent.emit(data);
         },
         error: (error) => {

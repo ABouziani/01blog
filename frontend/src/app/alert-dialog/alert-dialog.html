@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<div class="dialog-body">
+  <mat-dialog-content class="dialog-message">
+    {{ data.message }}
+  </mat-dialog-content>
+
+  <img class="dialog-image" src="/valide.gif" *ngIf="data.title === 'Success'" alt="Status">
+  <img class="dialog-image" src="/error.gif" *ngIf="data.title != 'Success'" alt="Status">
+</div>
+
+<mat-dialog-actions class="footer" align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

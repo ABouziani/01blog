@@ -4,6 +4,7 @@ import { PostDto } from '../models/postDto';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-posts',
@@ -28,7 +29,8 @@ export class PostsComponent implements OnInit {
   constructor(
     public postsService: PostsService,
     private cdr: ChangeDetectorRef,
-    private zone: NgZone
+    private zone: NgZone,
+    private myAlert : AlertService
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +70,8 @@ export class PostsComponent implements OnInit {
       }),
       catchError(error => {
         console.error('Reaction error:', error);
-        alert('Failed to react. Please try again.');
+        this.myAlert.showAlert("Error", "Failed to react. Please try again!");
+
         return of(null);
       }),
       finalize(() => {
@@ -173,27 +176,27 @@ export class PostsComponent implements OnInit {
 
     setTimeout(() => {
       this.postsService.getPosts(this.lastPostId, this.pageSize).subscribe({
-      next: (data) => {
-        
-        if (data.length == 0) {
-          this.allLoaded = true;
+        next: (data) => {
+
+          if (data.length == 0) {
+            this.allLoaded = true;
+            this.loadingMore = false;
+            return;
+          }
+          this.generateThumbnails(data);
+          this.internalPosts = [...this.internalPosts, ...data];
+          const oldestPost = this.internalPosts.reduce((min, p) => p.id < min.id ? p : min, this.internalPosts[0]);
+          this.lastPostId = oldestPost.id;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching posts:', err);
+          this.loading = false;
+        },
+        complete: () => {
           this.loadingMore = false;
-          return;
         }
-        this.generateThumbnails(data);
-        this.internalPosts = [...this.internalPosts, ...data];
-        const oldestPost = this.internalPosts.reduce((min, p) => p.id < min.id ? p : min, this.internalPosts[0]);
-        this.lastPostId = oldestPost.id;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching posts:', err);
-        this.loading = false;
-      },
-      complete: () => {
-        this.loadingMore = false;
-      }
-    });
+      });
     }, 1000);
   }
 

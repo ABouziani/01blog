@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'; // Remove HttpCl
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Post } from '../post/post-model';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-create-post',
@@ -43,7 +44,8 @@ export class CreatePostComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    public router: Router
+    public router: Router,
+    private myAlert: AlertService
   ) {
     this.postForm = this.fb.group({
       title: [this.editing?.title || '', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
@@ -157,7 +159,7 @@ export class CreatePostComponent {
     this.http.put<Post>(`http://localhost:8080/api/posts/edit/${this.editing?.id}`, formData, { headers })
       .subscribe({
         next: (data) => {
-          alert("Post updated successfully!")
+          this.myAlert.showAlert("Success", "Post updated successfully!");
           this.updateEvent.emit(data);
         },
         error: (error) => {

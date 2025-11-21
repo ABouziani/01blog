@@ -1,0 +1,41 @@
+.dialog-body {
+  background-color: var(--card-bg);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dialog-message {
+  background-color: var(--card-bg);
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.4;
+  flex: 1;
+  border-bottom: none !important;
+}
+
+.dialog-image {
+  width: 140px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+h2[mat-dialog-title] {
+  background-color: var(--card-bg);
+  font-size: 20px;
+  font-weight: 600;
+    color: var(--text);
+
+  border: none;
+}
+
+button[mat-button] {
+  background-color: rgb(214, 212, 212);
+  font-weight: 600;
+  padding: 6px 20px;
+}
+
+.footer {
+  background-color: var(--card-bg);
+}

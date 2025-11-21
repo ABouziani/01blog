@@ -8,10 +8,17 @@ import { EditprofileComponent } from '../editprofile/editprofile';
 import { PostsService } from '../services/posts-service';
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../alert-dialog/alert-dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { AlertService } from '../services/alert-service';
+
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule, FormsModule, EditprofileComponent],
+  imports: [CommonModule, FormsModule, EditprofileComponent, MatDialogModule,
+    MatButtonModule],
   templateUrl: './user.html',
   styleUrl: './user.css'
 })
@@ -28,7 +35,11 @@ export class UserComponent {
   showPopup = false;
   reason = '';
 
-  constructor(private postsService: PostsService, private http: HttpClient, private route: ActivatedRoute, private auth: AuthService, public router: Router, private location: Location) { }
+  constructor(private postsService: PostsService, private http: HttpClient,
+    private route: ActivatedRoute, private auth: AuthService,
+    public router: Router, private location: Location, private snack: MatSnackBar,
+    private dialog: MatDialog,
+    private myAlert: AlertService) { }
 
   ngOnInit(): void {
     let userId = this.route.snapshot.paramMap.get('id');
@@ -72,7 +83,7 @@ export class UserComponent {
       .subscribe({
         next: (data) => {
           console.log(data);
-          alert(data.message)
+          this.myAlert.showAlert("Success", data.message);
           if (this.user) {
             this.user.alreadyFollowed = true;
             this.user.followers.length++
@@ -100,7 +111,7 @@ export class UserComponent {
       .subscribe({
         next: (data) => {
           console.log(data);
-          alert(data.message)
+          this.myAlert.showAlert("Success", data.message);
           if (this.user) {
             this.user.alreadyFollowed = false;
             this.user.followers.length--;
@@ -128,7 +139,10 @@ export class UserComponent {
   reportUser() {
 
     if (!this.reason.trim()) {
-      alert('Please provide a reason.');
+      this.error = 'Please, provide a reason!';
+      setTimeout(() => {
+        this.error = '';
+      }, 1500);
       return;
     }
 
@@ -142,7 +156,7 @@ export class UserComponent {
         next: (data) => {
           console.log(data)
           this.closePopup();
-          alert("User reported to admins successfully!")
+          this.myAlert.showAlert("Success", "User reported to admins successfully!");
           if (this.user) this.user.alreadyReported = true;
         },
         error: (err) => {
@@ -164,6 +178,15 @@ export class UserComponent {
       this.user.owner = true;
     }
     this.isEditing = false;
+  }
+
+  showAlert(type: string, msg: string) {
+    this.dialog.open(AlertDialogComponent, {
+      data: {
+        title: type,
+        message: msg
+      }
+    });
   }
 
   cancelEdit(event: string) {

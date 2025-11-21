@@ -9,6 +9,7 @@ import { CommentDto } from '../models/comment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreatePostComponent } from '../createpost/createpost';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-post',
@@ -40,7 +41,7 @@ export class PostComponent {
   selectedFile: File | null = null;
   previewUrl: string | null = null; // For image/video preview
 
-  constructor(private fb: FormBuilder, private http: HttpClient, public postService: PostService, private route: ActivatedRoute, public router: Router, private cd: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private http: HttpClient, public postService: PostService, private route: ActivatedRoute, public router: Router, private cd: ChangeDetectorRef, private myAlert: AlertService) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
@@ -91,7 +92,7 @@ export class PostComponent {
       catchError(error => {
         console.error('Reaction error:', error);
         // Optional: show error message
-        alert('Failed to react. Please try again.');
+        this.myAlert.showAlert("Error", "Failed to react. Please try again.");
         return of(null);
       }),
       finalize(() => {
@@ -120,11 +121,11 @@ export class PostComponent {
       this.postService.deletePost(this.postId).subscribe({
         next: (data) => {
           console.log(data);
-          alert(data.message)
+          this.myAlert.showAlert("Success", data.message);
           this.router.navigate(['/']);
         },
         error: (err) => {
-          alert('Error deleting this posts:');
+          this.myAlert.showAlert("Error", "Error deleting this posts!");
           console.log(err);
         }
       });
@@ -211,7 +212,7 @@ export class PostComponent {
       .subscribe({
         next: (data) => {
           this.isEditing = false;
-          alert("Post updated successfully!")
+          this.myAlert.showAlert("Success", "Post updated successfully!");
           // this.successMessage = 'Post updated successfully!';
           this.post = data;
           if (this.post) {
@@ -269,7 +270,7 @@ export class PostComponent {
 
     const token = localStorage.getItem('access_token');
     if (!token) {
-      alert("You must be logged in to delete a comment.");
+      this.myAlert.showAlert("Error", "You must be logged in to delete a comment!");
       return;
     }
 
@@ -284,17 +285,16 @@ export class PostComponent {
           if (this.post && this.post.comments) {
             this.post.comments = this.post.comments.filter(c => c.id !== commentId);
           }
-
-          alert('Comment deleted successfully!');
+          this.myAlert.showAlert("Success", "Comment deleted successfully!");
         },
         error: (error) => {
           console.error('Error deleting comment:', error);
           if (error.status === 403) {
-            alert('You are not authorized to delete this comment.');
+            this.myAlert.showAlert("Error", "You are not authorized to delete this comment!");
           } else if (error.status === 404) {
-            alert('Comment not found.');
+            this.myAlert.showAlert("Error", "Comment not found!");
           } else {
-            alert('An error occurred while deleting the comment.');
+            this.myAlert.showAlert("Error", "An error occurred while deleting the comment!");
           }
         }
       });
@@ -401,7 +401,7 @@ export class PostComponent {
         next: (data) => {
           console.log(data)
           this.closePopup();
-          alert("Post reported to admins successfully!")
+          this.myAlert.showAlert("Success", "Post reported to admins successfully!");
           // if (this.user) this.user.alreadyReported = true;
         },
         error: (err) => {

@@ -51,23 +51,5 @@ export class PostsService {
     };
 
     return this.http.post('http://localhost:8080/api/reactions/add', body, { headers });
-    // .pipe(
-    //   tap(response => {
-    //     // // ✅ Optimistically update the UI
-    //     // this.updatePostReaction(postId, type);
-    //     console.log(response);
-    //   }),
-    //   catchError(error => {
-    //     console.error('Reaction error:', error);
-    //     // Optional: show error message
-    //     alert('Failed to react. Please try again.');
-    //     return of(null);
-    //   }),
-    //   finalize(() => {
-    //     // Re-enable button
-    //     this.loadingReaction[postId] = null;
-    //   })
-    // )
-    // .subscribe();
   }
 }

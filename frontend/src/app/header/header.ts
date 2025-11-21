@@ -12,6 +12,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { HttpParams } from '@angular/common/http';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-header',
@@ -42,7 +43,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private myAlert : AlertService
   ) { }
 
   ngOnInit(): void {
@@ -118,7 +120,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.dropdownOpen) {
       this.notificationService.markAllAsReadFromDropDown().subscribe(res => {
         if (!res || !res.success) {
-          alert("Cannot mark all notifications as read, try again later!");
+          this.myAlert.showAlert("Error", "Cannot mark all notifications as read, try again later!");
+
           return;
         }
         this.unreadCount = 0;
@@ -156,7 +159,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   markAllRead(): void {
     this.notificationService.markAllAsRead().subscribe(res => {
       if (!res || !res.success) {
-        alert("Cannot mark all notifications as read, try again later!");
+        this.myAlert.showAlert("Error", "Cannot mark all notifications as read, try again later!");
         return;
       }
       this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
@@ -207,14 +210,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.notificationService.markAsRead(id).subscribe(res => {
       if (!res || !res.success) {
-        alert("Cannot mark notification as read, try again later!");
+        this.myAlert.showAlert("Error", "Cannot mark notification as read, try again later!");
         return;
       }
       this.notifications.forEach(n => {
         if (n.id == id) n.unread = false;
       });
       this.unreadCount = this.unreadCount - 1;
-      alert("success");
+      this.myAlert.showAlert("Success", "");
     });
   }
 
@@ -222,14 +225,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.notificationService.markAsUnRead(id).subscribe(res => {
       if (!res || !res.success) {
-        alert("Cannot mark notification as unread, try again later!");
+        this.myAlert.showAlert("Error", "Cannot mark notification as read, try again later!");
         return;
       }
       this.notifications.forEach(n => {
         if (n.id == id) n.unread = true;
       });
       this.unreadCount = this.unreadCount + 1;
-      alert("success");
+      this.myAlert.showAlert("Success", "");
     });
   }
 
