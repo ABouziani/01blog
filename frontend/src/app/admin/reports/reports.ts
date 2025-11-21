@@ -83,7 +83,7 @@ export class AdminReportsComponent {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), action).subscribe(() => {
-            this.groupedUserReports = this.groupedUserReports.filter(r => r.reportedUserId !== report.reportedUserId);
+          this.groupedUserReports = this.groupedUserReports.filter(r => r.reportedUserId !== report.reportedUserId);
           // if (action === 'delete') {
           //   this.userReports = this.userReports.filter(r => r.id !== report.id);
           // } else if (action === 'ban_user') {
@@ -150,7 +150,7 @@ export class AdminReportsComponent {
 
       if (!map.has(userId)) {
         map.set(userId, {
-          reportedUserId:report.reportedUserId,
+          reportedUserId: report.reportedUserId,
           reportedUserUsername: report.reportedUserUsername,
           reporters: [],
           status: "pending"
