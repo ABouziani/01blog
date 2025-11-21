@@ -113,24 +113,21 @@ public class AdminController {
         ));
     }
 
-    @PostMapping("/reports/{id}/resolve")
+    @PostMapping("/userreports/{userid}/resolve")
     public ResponseEntity<Void> resolveReport(
-            @PathVariable Long id,
+            @PathVariable Long userid,
             @RequestBody ResolveReportRequest request
     ) {
-        adminService.resolveReport(id, request.action());
+        adminService.resolveReport(userid, request.action());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/postreports/{postId}/resolve")
     public ResponseEntity<Void> resolvePostReport(
             @PathVariable Long postId,
-            @RequestBody ResolvePostReportRequest request,
-            Authentication authentication
+            @RequestBody ResolvePostReportRequest request
     ) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Long loggedUserId = userDetails.getId();
-        adminService.resolvePostReport(postId, request.action(), loggedUserId);
+        adminService.resolvePostReport(postId, request.action());
         return ResponseEntity.ok().build();
     }
 }

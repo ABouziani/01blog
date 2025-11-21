@@ -9,29 +9,30 @@
   <table class="data-table">
     <thead>
       <tr>
-        <th>Reporter</th>
         <th>Reported User</th>
-        <th>Reason</th>
+        <th>Reporters</th>
+        <th>Reasons</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="tr-tr" *ngFor="let report of userReports">
+      <tr class="tr-tr" *ngFor="let report of groupedUserReports">
         <td>
-          <span class="reportlink" [routerLink]="[`/users/${report.reporterId}`]">{{ report.reporterUsername }}</span>
-        </td>
-        <td>
-          @if (report.reportedUserId) {
           <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername
             }}</span>
-          } @else if (report.reportedPostId) {
-          <span>Post {{ report.reportedPostId }}</span>
-          } @else {
-          <span>Unknown</span>
-          }
         </td>
-        <td>{{ report.reason }}</td>
+        <!-- Reporters -->
+        <td>
+          <div class="reporter-count">
+            {{ report.reporters.length }} reporter {{ report.reporters.length > 1 ? 's' : '' }}
+          </div>
+        </td>
+        <!-- Reasons -->
+        <td>
+          <button class="btn-action btn-secondary-action" (click)="showURPopup = true; selectedUserReport = report">
+            show details</button>
+        </td>
         <td>
           <span class="status-badge" [class.status-pending]="report.status === 'pending'"
             [class.status-resolved]="report.status === 'resolved'"
@@ -41,18 +42,19 @@
         </td>
         <td>
           @if (report.status === 'pending') {
-          <button class="btn-action btn-danger-action" (click)="resolveWithAction(report, 'ban_user')">Ban User</button>
+          <button class="btn-action btn-danger-action" (click)="resolveUserReportWithAction(report, 'ban_user')">Ban
+            User</button>
           <button class="btn-action btn-secondary-action"
-            (click)="resolveWithAction(report, 'dismiss')">Dismiss</button>
+            (click)="resolveUserReportWithAction(report, 'dismiss')">Dismiss</button>
           } @else {
-          <button class="btn-action btn-primary-action" (click)="resolveWithAction(report, 'delete')">Delete
+          <button class="btn-action btn-primary-action" (click)="resolveUserReportWithAction(report, 'delete')">Delete
             report</button>
           }
         </td>
       </tr>
     </tbody>
   </table>
-  @if (userReports && userReports.length == 0) {
+  @if (groupedUserReports && groupedUserReports.length == 0) {
   <div class="empty-state">
     <div class="empty-icon">🚩</div>
     <div class="empty-text">No reports to show!</div>
@@ -76,7 +78,7 @@
     </thead>
 
     <tbody>
-      <tr class="tr-tr" *ngFor="let report of groupedReports">
+      <tr class="tr-tr" *ngFor="let report of groupedPostReports">
 
         <!-- Post -->
         <td>
@@ -112,7 +114,8 @@
               {{ reason }}
             </li>
           </ul> -->
-          <button (click)="showPopup = true; selectedReport = report">show details</button>
+          <button class="btn-action btn-secondary-action" (click)="showPRPopup = true; selectedPostReport = report">show
+            details</button>
 
         </td>
 
@@ -149,25 +152,26 @@
       </tr>
     </tbody>
   </table>
-  <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
-  <div class="popup-box" *ngIf="showPopup && selectedReport">
-    <!-- details table -->
-     <div style="display: flex;">
-       <div class="selectedpost-title"><span style="font-weight: bold; color: Black;"> Selected post : </span> <br> {{ selectedReport.postTitle }}</div>
-       <button type="button" (click)="closePopup()" class="close-btn" style="margin-left: 20px;">
-         X
-       </button>
-     </div>
-    <table class="data-table" >
+  <!-- details tables -->
+  <div class="postreport-popup-backdrop" *ngIf="showPRPopup" (click)="closePRPopup()"></div>
+  <div class="postreport-popup-box" *ngIf="showPRPopup && selectedPostReport">
+    <div style="display: flex;">
+      <div class="selectedpost-title"><span style="font-weight: bold; color: Black;"> Selected post : </span> <br> {{
+        selectedPostReport.postTitle }}</div>
+      <button type="button" (click)="closePRPopup()" class="close-btn" style="margin-left: auto;">
+        X
+      </button>
+    </div>
+    <table class="data-table">
       <thead>
         <tr>
-          <!-- <th>Details for selected post: <br> <span style="color: var(--text);">"{{ selectedReport.postTitle }}"</span></th> -->
+          <!-- <th>Details for selected post: <br> <span style="color: var(--text);">"{{ selectedPostReport.postTitle }}"</span></th> -->
           <th>Reporter</th>
           <th>Reason</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="tr-tr" *ngFor="let r of selectedReport.reporters">
+        <tr class="tr-tr" *ngFor="let r of selectedPostReport.reporters">
           <td>
             <a class="reportlink" [routerLink]="['/users', r.id]">
               {{ r.username }}
@@ -180,13 +184,46 @@
         </tr>
       </tbody>
     </table>
-    <!-- details table -->
-  </div>
 
-  @if (groupedReports && groupedReports.length === 0) {
-  <div class="empty-state">
-    <div class="empty-icon">🚩</div>
-    <div class="empty-text">No reports to show!</div>
+    <!-- -------------------------------- -->
+    <div class="popup-backdrop" *ngIf="showURPopup" (click)="closeURPopup()"></div>
+    <div class="popup-box" *ngIf="showURPopup && selectedUserReport">
+      <div style="display: flex;">
+        <div class="selectedpost-title"><span style="font-weight: bold; color: Black;"> Selected User : </span> <br> {{
+          selectedUserReport.reportedUserUsername }}</div>
+        <button type="button" (click)="closeURPopup()" class="close-btn" style="margin-left: auto;">
+          X
+        </button>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <!-- <th>Details for selected post: <br> <span style="color: var(--text);">"{{ selectedPostReport.postTitle }}"</span></th> -->
+            <th>Reporter</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tr-tr" *ngFor="let r of selectedUserReport.reporters">
+            <td>
+              <a class="reportlink" [routerLink]="['/users', r.id]">
+                {{ r.username }}
+              </a>
+            </td>
+            <td>
+              <span class="reportreason">{{ r.reason }}</span>
+            </td>
+            <!-- <td>{{ report.reason }}</td> -->
+          </tr>
+        </tbody>
+      </table>
+      <!-- details table -->
+    </div>
+
+    @if (groupedPostReports && groupedPostReports.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🚩</div>
+      <div class="empty-text">No reports to show!</div>
+    </div>
+    }
   </div>
-  }
-</div>

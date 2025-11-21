@@ -14,7 +14,6 @@ import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
-import com.example.blog.model.ReportPosts;
 import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostAdminRepo;
@@ -149,40 +148,41 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public void resolveReport(Long reportId, String action) {
-        ReportUsers report = reportUserRepository.findById(reportId)
-                .orElseThrow(() -> new RuntimeException("Report not found"));
+    public ResponseEntity<?> resolveReport(Long reportedUserId, String action) {
 
-        Long reportedUserId = report.getReported().getId();
+        Optional<User> reportedUserOpt = userRepository.findById(reportedUserId);
+
+        if (reportedUserOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found!", HttpStatus.BAD_REQUEST);
+        }
+        
+        User reportedUser = reportedUserOpt.get();
 
         switch (action) {
             case "ban_user" -> {
-                User user = userRepository.findById(reportedUserId)
-                        .orElseThrow(() -> new RuntimeException("Reported user not found"));
-                user.setBanned(true);
-                userRepository.save(user);
+                reportedUser.setBanned(true);
+                userRepository.save(reportedUser);
+                reportUserRepository.deleteByReported(reportedUser);
+                return ResponseEntity.ok().build();
             }
             case "delete" -> {
-                reportUserRepository.deleteById(reportId);
-                return;
+                reportUserRepository.deleteByReported(reportedUser);
+                return ResponseEntity.ok().build();
             }
             case "dismiss" -> {
-                // No action needed beyond deleting report
+                reportUserRepository.deleteByReported(reportedUser);
+                return ResponseEntity.ok().build();
             }
             default ->
                 throw new IllegalArgumentException("Invalid action: " + action);
         }
 
-        // ✅ Delete the report after handling (as you requested)
-        // reportUserRepository.deleteById(reportId);
-        report.setStatus("resolved");
-        reportUserRepository.save(report);
     }
 
-    public ResponseEntity<?> resolvePostReport(Long postId, String action, Long loggedUserId) {
+    public ResponseEntity<?> resolvePostReport(Long postId, String action) {
         Optional<Post> postOpt = postService.getPostById(postId);
         if (postOpt.isEmpty()) {
-            return new ResponseEntity<>("Report not found!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Post not found!", HttpStatus.BAD_REQUEST);
         }
 
         Post reportedPost = postOpt.get();

@@ -5,20 +5,19 @@ import { PostReport, Report } from '../models/report';
 
 @Injectable({ providedIn: 'root' })
 export class ReportAdminService {
-  private apiUrl = 'http://localhost:8080/api/admin/reports';
-  private apipostUrl = 'http://localhost:8080/api/admin/postreports';
+  private apiUrl = 'http://localhost:8080/api/admin';
 
   constructor(private http: HttpClient) {}
 
   getReports(): Observable<{userReports:Report[],postReports:PostReport[]}> {
-    return this.http.get<{userReports:Report[],postReports:PostReport[]}>(this.apiUrl);
+    return this.http.get<{userReports:Report[],postReports:PostReport[]}>(`${this.apiUrl}/reports`);
   }
 
-  resolveReport(id: string, action: 'ban_user' | 'delete' | 'dismiss'): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/resolve`, { action });
+  resolveUserReport(userId: string, action: 'ban_user' | 'delete' | 'dismiss'): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/userreports/${userId}/resolve`, { action });
   }
 
   resolvePostReport(postId: string, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report'): Observable<void> {
-    return this.http.post<void>(`${this.apipostUrl}/${postId}/resolve`, { action });
+    return this.http.post<void>(`${this.apiUrl}/postreports/${postId}/resolve`, { action });
   }
 }

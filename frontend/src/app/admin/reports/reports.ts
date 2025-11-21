@@ -10,6 +10,18 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 
+
+interface GroupedUserReport {
+  reportedUserId: number;
+  reportedUserUsername: string;
+  reporters: {
+    id: number;
+    username: string;
+    reason: string;
+  }[];
+  status: string;
+}
+
 interface GroupedPostReport {
   postId: number;
   postTitle: string;
@@ -21,6 +33,7 @@ interface GroupedPostReport {
   }[];
   status: string;
 }
+
 
 @Component({
   selector: 'app-admin-reports',
@@ -39,47 +52,52 @@ export class AdminReportsComponent {
   private reportAdminService = inject(ReportAdminService);
   private dialog = inject(MatDialog);
 
+  showPRPopup = false
+  showURPopup = false
+
   userReports: Report[] = [];
   postReports: PostReport[] = [];
-  groupedReports: GroupedPostReport[] = [];
-  selectedReport: GroupedPostReport | null = null;
+  groupedPostReports: GroupedPostReport[] = [];
+  selectedPostReport: GroupedPostReport | null = null;
+  groupedUserReports: GroupedUserReport[] = [];
+  selectedUserReport: GroupedUserReport | null = null;
   displayedColumns = ['reporter', 'reported', 'reason', 'status', 'actions'];
 
   ngOnInit() {
     this.reportAdminService.getReports().subscribe(data => {
-      console.log(data);
-      this.userReports = data.userReports;
-      this.postReports = data.postReports;
-      this.groupedReports = this.groupReportsByPost(this.postReports);
+      // console.log(data);
+      this.groupedUserReports = this.groupReportsByUser(data.userReports);
+      this.groupedPostReports = this.groupReportsByPost(data.postReports);
     });
   }
 
-  resolveWithAction(report: Report, action: 'ban_user' | 'dismiss' | 'delete') {
+  resolveUserReportWithAction(report: GroupedUserReport, action: 'ban_user' | 'dismiss' | 'delete') {
     const message = action === 'ban_user'
       ? `Ban the reported user "${report.reportedUserId}"?`
       : action === 'delete' ? `Are you sure you want to delete this report ?` : `Dismiss this report without action?`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message, action, reportId: report.id }
+      data: { message, action, reportId: report.reportedUserId }
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.reportAdminService.resolveReport(report.id, action).subscribe(() => {
-          if (action === 'delete') {
-            this.userReports = this.userReports.filter(r => r.id !== report.id);
-          } else if (action === 'ban_user') {
-            const existing = this.userReports.find(r => r.id === report.id);
-            if (existing) {
-              existing.status = 'resolved';
-            }
-            alert("User banned successfully");
-          } else {
-            const existing = this.userReports.find(r => r.id === report.id);
-            if (existing) {
-              existing.status = 'resolved';
-            }
-          }
+        this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), action).subscribe(() => {
+            this.groupedUserReports = this.groupedUserReports.filter(r => r.reportedUserId !== report.reportedUserId);
+          // if (action === 'delete') {
+          //   this.userReports = this.userReports.filter(r => r.id !== report.id);
+          // } else if (action === 'ban_user') {
+          //   const existing = this.userReports.find(r => r.id === report.id);
+          //   if (existing) {
+          //     existing.status = 'resolved';
+          //   }
+          //   alert("User banned successfully");
+          // } else {
+          //   const existing = this.userReports.find(r => r.id === report.id);
+          //   if (existing) {
+          //     existing.status = 'resolved';
+          //   }
+          // }
         });
       }
     });
@@ -102,7 +120,7 @@ export class AdminReportsComponent {
       if (confirmed) {
         this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe(() => {
           alert("Report resolved successfully!")
-          this.groupedReports = this.groupedReports.filter(r => r.postId !== report.postId);
+          this.groupedPostReports = this.groupedPostReports.filter(r => r.postId !== report.postId);
           // if (action === 'delete_post') {
           //   this.postReports = this.postReports.filter(r => r.id !== report.id);
           // } else if (action === 'hide_post') {
@@ -122,6 +140,33 @@ export class AdminReportsComponent {
         });
       }
     });
+  }
+
+  groupReportsByUser(reports: any[]): GroupedUserReport[] {
+    const map = new Map<number, GroupedUserReport>();
+
+    reports.forEach(report => {
+      const userId = report.reportedUserId;
+
+      if (!map.has(userId)) {
+        map.set(userId, {
+          reportedUserId:report.reportedUserId,
+          reportedUserUsername: report.reportedUserUsername,
+          reporters: [],
+          status: "pending"
+        });
+      }
+
+      const entry = map.get(userId);
+
+      entry!.reporters.push({
+        id: report.reporterId,
+        username: report.reporterUsername,
+        reason: report.reason
+      });
+    });
+
+    return Array.from(map.values());
   }
 
   groupReportsByPost(reports: any[]): GroupedPostReport[] {
@@ -152,7 +197,6 @@ export class AdminReportsComponent {
   }
 
 
-  // Example: status = 'pending' if ANY pending exists
   computeStatus(statuses: string[]) {
     return statuses.includes('pending')
       ? 'pending'
@@ -165,13 +209,21 @@ export class AdminReportsComponent {
     return array[array.length - 1] === item;
   }
 
-  showPopup = false
-  openPopup() {
-    this.showPopup = true;
+  openPRPopup() {
+    this.showPRPopup = true;
   }
 
-  closePopup() {
-    this.showPopup = false;
-    this.selectedReport = null;
+  closePRPopup() {
+    this.showPRPopup = false;
+    this.selectedPostReport = null;
+  }
+
+  openURPopup() {
+    this.showURPopup = true;
+  }
+
+  closeURPopup() {
+    this.showURPopup = false;
+    this.selectedUserReport = null;
   }
 }
