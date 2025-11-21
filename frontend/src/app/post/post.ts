@@ -313,7 +313,7 @@ export class PostComponent {
       this.http.get<CommentDto[]>(this.apiUrlPostComment + this.postId, { params }).subscribe({
         next: (data) => {
           if (this.post) {
-            data.reverse();
+            // data.reverse();
             this.post.comments = [...this.post.comments, ...data];
             const oldestComment = this.post.comments.reduce((min, p) => p.id < min.id ? p : min, this.post.comments[0]);
             this.lastCommentId = oldestComment.id;
