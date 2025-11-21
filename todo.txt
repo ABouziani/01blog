@@ -1,2 +1,4 @@
 search
 backend errors
+check user when banned
+check post when hided
