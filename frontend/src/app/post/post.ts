@@ -67,7 +67,9 @@ export class PostComponent {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching posts:', err);
+        console.log(err);
+        
+        this.errorMessage = err.error;
         this.loading = false;
       }
     });
@@ -121,7 +123,7 @@ export class PostComponent {
       this.postService.deletePost(this.postId).subscribe({
         next: (data) => {
           console.log(data);
-          this.myAlert.showAlert("Success", data.message);
+          this.myAlert.showAlert("Success", "Post deleted successfully!");
           this.router.navigate(['/']);
         },
         error: (err) => {
@@ -316,7 +318,7 @@ export class PostComponent {
             // data.reverse();
             this.post.comments = [...this.post.comments, ...data];
             const oldestComment = this.post.comments.reduce((min, p) => p.id < min.id ? p : min, this.post.comments[0]);
-            this.lastCommentId = oldestComment.id;
+            if (oldestComment) this.lastCommentId = oldestComment.id;
           }
           this.loading = false;
           if (data.length < this.pageSize) {

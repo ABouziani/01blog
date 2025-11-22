@@ -63,17 +63,20 @@ public class PostsController {
     }
 
     @GetMapping("/getpost/{postid}")
-    public ResponseEntity<?> getPost(@PathVariable Long postid, Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Long loggedUserId = userDetails.getId();
+    public ResponseEntity<?> getPost(@PathVariable String postid, Authentication authentication) {
+        try {
+            Long pid = Long.parseLong(postid);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            Long loggedUserId = userDetails.getId();
 
-        return postService.getPost(postid, loggedUserId);
+            return postService.getPost(pid, loggedUserId);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("Invalid post ID format");
+        }
     }
 
-    // ***************
-
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Post> createPost(
+    public ResponseEntity<?> createPost(
             @RequestParam("title") @NotBlank @Size(min = 6, max = 100) String title,
             @RequestParam("description") @NotBlank @Size(min = 20) String description,
             @RequestParam(value = "media", required = false) MultipartFile media,
@@ -82,19 +85,13 @@ public class PostsController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
 
-        User creator = userService.findById(loggedUserId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        ResponseEntity<?> savedPost = postService.createPost(title, description, media, loggedUserId);
 
-        Post savedPost = postService.createPost(title, description, media, creator); // update service to accept MultipartFile
-
-        //Notify Followers
-        notificationService.createNotificationForNewPost(savedPost);
-
-        return ResponseEntity.ok(savedPost);
+        return savedPost;
     }
 
     @PutMapping(value = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Post> updatePost(
+    public ResponseEntity<?> updatePost(
             @PathVariable Long id,
             @RequestParam("title") @NotBlank @Size(min = 3, max = 100) String title,
             @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
@@ -102,20 +99,12 @@ public class PostsController {
             Authentication authentication
     ) {
 
-        // Get current user ID
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long requesterId = userDetails.getId();
 
-        // Update post (service checks ownership)
-        Post updatedPost = postService.updatePost(id, title, description, media, requesterId);
+        ResponseEntity<?> updatedPost = postService.updatePost(id, title, description, media, requesterId);
 
-        User loggedUser = userRepository.findById(requesterId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
-        if (Objects.equals(updatedPost.getCreator().getId(), requesterId) || loggedUser.getRole().equals("ADMIN")) {
-            updatedPost.setIsOwner(true);
-        }
-
-        return ResponseEntity.ok(updatedPost);
+        return updatedPost;
     }
 
     @DeleteMapping("/delete/{id}")
@@ -126,9 +115,10 @@ public class PostsController {
         Long requesterId = userDetails.getId();
 
         // Update post (service checks ownership)
-        postService.deletePost(id, requesterId);
+        ResponseEntity<?> deletedPostResp = postService.deletePost(id, requesterId);
 
-        return ResponseEntity.ok(Map.of("message", "Post deleted successfully!"));
+        return deletedPostResp;
+        // return ResponseEntity.ok(Map.of("message", "Post deleted successfully!"));
     }
 
 }

@@ -52,6 +52,9 @@ public class PostService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public List<Post> getPostsByUserId(Long userId, Long lastId, int pageSize) {
         Pageable limit = PageRequest.of(0, pageSize);
         if (lastId == 0) {
@@ -96,7 +99,13 @@ public class PostService {
         return postRepository.findByIdAndIsHiddenFalse(postId);
     }
 
-    public Post createPost(String title, String description, MultipartFile media, User creator) {
+    public ResponseEntity<?> createPost(String title, String description, MultipartFile media, Long loggedUserId) {
+        Optional<User> userOpt = userService.findById(loggedUserId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
+        User creator = userOpt.get();
+
         String mediaUrl = null;
         if (media != null && !media.isEmpty()) {
             mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
@@ -110,26 +119,35 @@ public class PostService {
         post.setCreatedAt(LocalDateTime.now());
         Post savedPost = postRepository.save(post);
 
-        return savedPost;
+        notificationService.createNotificationForNewPost(savedPost);
+
+        return ResponseEntity.ok(savedPost);
     }
 
-    public Post updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId) {
+    public ResponseEntity<?> updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId) {
         String mediaUrl = null;
         if (media != null && !media.isEmpty()) {
-            mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
+            mediaUrl = fileStorageService.storeFile(media); // returns "/uploads/abc.jpg"
         }
-        // 1. Find post
-        Post post = postRepository.findByIdAndIsHiddenFalse(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-        User loggedUser = userRepository.findById(requesterId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
+
+        Optional<Post> postOpt = postRepository.findByIdAndIsHiddenFalse(postId);
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request: post not found", HttpStatus.BAD_REQUEST);
+        }
+        Post post = postOpt.get();
+
+        Optional<User> userOpt = userRepository.findById(requesterId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request: user not found", HttpStatus.BAD_REQUEST);
+        }
+        User loggedUser = userOpt.get();
+
         String requesterRole = loggedUser.getRole();
 
         if (!post.getCreator().getId().equals(requesterId) && !requesterRole.equals("ADMIN")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only modify your own posts");
+            return new ResponseEntity<>("You can only modify your own posts", HttpStatus.FORBIDDEN);
         }
 
-        //delete old post
         try {
             String uploadDir = System.getProperty("user.dir") + "/uploads/";
             Path filePath;
@@ -139,38 +157,35 @@ public class PostService {
             e.printStackTrace();
         }
 
-        // 3. Update fields
         post.setTitle(title);
         post.setDescription(description);
         post.setMedia(mediaUrl);
+        postRepository.save(post);
 
-        try {
-            return postRepository.save(post);
-        } catch (Exception e) {
-            logger.error("Error saving post: ", e);
-
-            // 👇 Unwrap and log root cause
-            Throwable cause = e;
-            while (cause.getCause() != null) {
-                cause = cause.getCause();
-            }
-            logger.error("Root cause: {}", cause.getMessage());
-
-            throw e;
+        if (Objects.equals(post.getCreator().getId(), requesterId) || loggedUser.getRole().equals("ADMIN")) {
+            post.setIsOwner(true);
         }
+
+        return ResponseEntity.ok(post);
     }
 
     @Transactional
-    public void deletePost(Long postId, Long requesterId) {
-        Post post = postRepository.findByIdAndIsHiddenFalse(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+    public ResponseEntity<?> deletePost(Long postId, Long requesterId) {
+        Optional<Post> postOpt = postRepository.findByIdAndIsHiddenFalse(postId);
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request: post not found", HttpStatus.BAD_REQUEST);
+        }
+        Post post = postOpt.get();
 
-        User user = userRepository.findById(requesterId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
+        Optional<User> userOpt = userRepository.findById(requesterId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request: user not found", HttpStatus.BAD_REQUEST);
+        }
+        User user = userOpt.get();
 
         if (!user.getRole().equals("ADMIN")) {
             if (!post.getCreator().getId().equals(requesterId)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own posts");
+                return new ResponseEntity<>("You can only delete your own posts", HttpStatus.FORBIDDEN);
             }
         }
 
@@ -190,6 +205,8 @@ public class PostService {
         customNotificationRepository.deleteByNotificationId(n.getId());
 
         postRepository.delete(post);
+        
+        return ResponseEntity.ok().build();
     }
 
     public List<HomePostDto> getRecentPostsForHome(Long userId, int number) {

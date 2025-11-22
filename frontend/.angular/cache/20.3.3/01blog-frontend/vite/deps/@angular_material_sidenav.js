@@ -1,3 +1,8 @@
+import "./chunk-PFNM5TTJ.js";
+import "./chunk-VENV3F3G.js";
+import {
+  coerceBooleanProperty
+} from "./chunk-46HAYV32.js";
 import {
   CdkScrollable,
   CdkScrollableModule,
@@ -5,11 +10,6 @@ import {
   ViewportRuler
 } from "./chunk-AEXRWMMC.js";
 import "./chunk-6TU72PAN.js";
-import "./chunk-PFNM5TTJ.js";
-import "./chunk-VENV3F3G.js";
-import {
-  coerceBooleanProperty
-} from "./chunk-46HAYV32.js";
 import "./chunk-5EG33CFQ.js";
 import {
   _animationsDisabled
@@ -80,11 +80,11 @@ import {
   ɵɵstyleProp,
   ɵɵviewQuery
 } from "./chunk-YO6GPXUM.js";
+import "./chunk-JRFR6BLO.js";
 import {
   fromEvent,
   merge
 } from "./chunk-HWYXSU2G.js";
-import "./chunk-JRFR6BLO.js";
 import {
   Subject,
   debounceTime,

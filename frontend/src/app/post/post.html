@@ -1,4 +1,7 @@
 <div class="container-fluid px-lg-4 py-4 py-lg-5" style="max-width: 1800px;">
+
+  <div class="error-message" *ngIf="!post && errorMessage">{{ errorMessage }}</div>
+
   <div class="row g-4 justify-content-center" *ngIf="!isEditing && post">
 
     <!-- Left Sidebar (Author) - 15% -->
