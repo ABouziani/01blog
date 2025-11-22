@@ -14,7 +14,6 @@ import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
-import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostAdminRepo;
 import com.example.blog.repository.ReportPostsRepository;
@@ -48,18 +47,28 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public void banUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<?> banUser(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
+        User user = userOpt.get();
         user.setBanned(true);
         userRepository.save(user);
+        return ResponseEntity.ok().build();
     }
 
-    public void activateUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<?> activateUser(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userOpt.get();
+                
         user.setBanned(false);
         userRepository.save(user);
+        return ResponseEntity.ok().build();
     }
 
     public void makeAdmin(Long userId) {
@@ -81,8 +90,13 @@ public class AdminService {
         return Optional.empty();
     }
 
-    public void deleteUser(Long userId) {
+    public ResponseEntity<?> deleteUser(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
         userRepository.deleteById(userId);
+        return ResponseEntity.ok().build();
     }
 
     // === POSTS ===
@@ -99,22 +113,37 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public void hidePost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+    public ResponseEntity<?> hidePost(Long postId) {
+        Optional<Post> postOpt = postRepository.findById(postId);
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Post not found", HttpStatus.BAD_REQUEST);
+        }
+
+        Post post = postOpt.get();
         post.setHidden(true);
         postRepository.save(post);
+        return ResponseEntity.ok().build();
     }
 
-    public void unhidePost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+    public ResponseEntity<?> unhidePost(Long postId) {
+        Optional<Post> postOpt = postRepository.findById(postId);
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Post not found", HttpStatus.BAD_REQUEST);
+        }
+
+        Post post = postOpt.get();
         post.setHidden(false);
         postRepository.save(post);
+        return ResponseEntity.ok().build();
     }
 
-    public void deletePost(Long postId) {
+    public ResponseEntity<?> deletePost(Long postId) {
+         Optional<Post> postOpt = postRepository.findById(postId);
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Post not found", HttpStatus.BAD_REQUEST);
+        }
         postRepository.deleteById(postId);
+        return ResponseEntity.ok().build();
     }
 
     // === REPORTS ===
@@ -155,7 +184,7 @@ public class AdminService {
         if (reportedUserOpt.isEmpty()) {
             return new ResponseEntity<>("User not found!", HttpStatus.BAD_REQUEST);
         }
-        
+
         User reportedUser = reportedUserOpt.get();
 
         switch (action) {

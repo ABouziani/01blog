@@ -39,20 +39,26 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
-    public Comment addComment(NewCommentRequest newCommentRequest, Long creatorId) {
+    public ResponseEntity<?> addComment(NewCommentRequest newCommentRequest, Long creatorId) {
 
-        User commentor = userService.findById(creatorId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Optional<User> userOpt = userService.findById(creatorId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
+        User commentor = userOpt.get();
 
-        Post post = postService.getPostById(newCommentRequest.getPostId())
-                .orElseThrow(() -> new RuntimeException("post not found"));
+        Optional<Post> postOpt = postService.getPostById(newCommentRequest.getPostId());
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Post not found", HttpStatus.BAD_REQUEST);
+        }
+        Post post = postOpt.get();
 
         Comment newComment = new Comment();
         newComment.setUser(commentor);
         newComment.setPost(post);
         newComment.setContent(newCommentRequest.getContent());
         newComment.setCreatedAt(LocalDateTime.now());
-        return commentRepository.save(newComment);
+        return ResponseEntity.ok(commentRepository.save(newComment));
     }
 
     public ResponseEntity<?> deleteComment(Long commentId, Long loggedUserId) {
@@ -61,9 +67,7 @@ public class CommentService {
 
         if (commentOpt.isPresent() && loggedUserOpt.isPresent()) {
             if (!Objects.equals(commentOpt.get().getUser().getId(), loggedUserOpt.get().getId())) {
-                return ResponseEntity
-                        .status(HttpStatus.FORBIDDEN)
-                        .body("You can delete only your comments");
+                return new ResponseEntity<>("You can delete only your comments", HttpStatus.FORBIDDEN);
             }
             commentRepository.delete(commentOpt.get());
         }

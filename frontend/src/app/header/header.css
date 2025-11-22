@@ -1,6 +1,6 @@
 /* Header */
 .app-header {
-  background: var(--bg);
+  background-color: var(--card-bg) !important;
   /* border-bottom: 1px solid #ff0000; */
   padding: 0.3rem 1.5rem;
   display: flex;
@@ -9,7 +9,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 4px 20px rgba(89, 52, 253, 0.3); /* bluish glow */
+  /* box-shadow: 0 4px 20px rgba(89, 52, 253, 0.3); */
 }
 
 /* Logo */

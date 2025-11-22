@@ -46,15 +46,13 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}/ban")
-    public ResponseEntity<Void> banUser(@PathVariable Long id) {
-        adminService.banUser(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> banUser(@PathVariable Long id) {
+        return adminService.banUser(id);
     }
 
     @PutMapping("/users/{id}/activate")
-    public ResponseEntity<Void> activateUser(@PathVariable Long id) {
-        adminService.activateUser(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> activateUser(@PathVariable Long id) {;
+        return adminService.activateUser(id);
     }
 
     @PutMapping("/users/{id}/make-admin")
@@ -73,9 +71,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        adminService.deleteUser(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        return adminService.deleteUser(id);
     }
 
     // === POSTS ===
@@ -85,21 +82,18 @@ public class AdminController {
     }
 
     @PostMapping("/posts/{id}/hide")
-    public ResponseEntity<Void> hidePost(@PathVariable Long id) {
-        adminService.hidePost(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> hidePost(@PathVariable Long id) {
+        return adminService.hidePost(id);
     }
 
     @PutMapping("/posts/{id}/unhide")
-    public ResponseEntity<Void> unhidePost(@PathVariable Long id) {
-        adminService.unhidePost(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> unhidePost(@PathVariable Long id) {
+        return adminService.unhidePost(id);
     }
 
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        adminService.deletePost(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deletePost(@PathVariable Long id) {
+        return adminService.deletePost(id);
     }
 
     // === REPORTS ===
@@ -114,20 +108,18 @@ public class AdminController {
     }
 
     @PostMapping("/userreports/{userid}/resolve")
-    public ResponseEntity<Void> resolveReport(
+    public ResponseEntity<?> resolveReport(
             @PathVariable Long userid,
             @RequestBody ResolveReportRequest request
     ) {
-        adminService.resolveReport(userid, request.action());
-        return ResponseEntity.ok().build();
+        return adminService.resolveReport(userid, request.action());
     }
 
     @PostMapping("/postreports/{postId}/resolve")
-    public ResponseEntity<Void> resolvePostReport(
+    public ResponseEntity<?> resolvePostReport(
             @PathVariable Long postId,
             @RequestBody ResolvePostReportRequest request
     ) {
-        adminService.resolvePostReport(postId, request.action());
-        return ResponseEntity.ok().build();
+        return adminService.resolvePostReport(postId, request.action());
     }
 }

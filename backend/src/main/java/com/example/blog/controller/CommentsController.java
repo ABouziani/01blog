@@ -35,12 +35,11 @@ public class CommentsController {
     private UserRepository userRepository;
 
     @PostMapping("/add")
-    public ResponseEntity<Comment> addComment(@Valid @RequestBody NewCommentRequest commentReq) {
+    public ResponseEntity<?> addComment(@Valid @RequestBody NewCommentRequest commentReq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        Comment savedComment = commentService.addComment(commentReq, loggedUserId);
-        return ResponseEntity.ok(savedComment);
+        return commentService.addComment(commentReq, loggedUserId);
     }
 
     @DeleteMapping("/delete/{commentId}")
@@ -64,7 +63,6 @@ public class CommentsController {
         });
 
         return comms;
-
     }
 
 }

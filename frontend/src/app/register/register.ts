@@ -24,7 +24,7 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private http: HttpClient, public router: Router) {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       passverif: ['', [Validators.required, Validators.minLength(6)]],
@@ -75,6 +75,7 @@ export class RegisterComponent {
       return
     }
     if (this.registerForm.invalid) {
+      this.errorMessage = "Please fix the errors above.";
       return;
     }
 

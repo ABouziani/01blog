@@ -2,3 +2,6 @@ search
 backend errors
 check user when banned
 check post when hided
+fix notifs
+remove media on post edit
+handling all confirmation dialog

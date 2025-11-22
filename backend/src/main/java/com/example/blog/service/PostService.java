@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -66,6 +68,28 @@ public class PostService {
         } else {
             return postRepository.findAllPostsWithReactionsCount(lastId, pageSize);
         }
+    }
+
+    public ResponseEntity<?> getPost(Long postid, Long loggedUserId) {
+
+        Optional<Post> postOpt = postRepository.findByIdAndIsHiddenFalse(postid);
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("Post not found", HttpStatus.NOT_FOUND);
+        }
+        Post post = postOpt.get();
+
+        Optional<User> loggedUserOpt = userRepository.findById(loggedUserId);
+        if (loggedUserOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+        }
+        User loggedUser = loggedUserOpt.get();
+
+        if (Objects.equals(post.getCreator().getId(), loggedUserId) || loggedUser.getRole().equals("ADMIN")) {
+            post.setIsOwner(true);
+        }
+
+        return ResponseEntity.ok(post);
+
     }
 
     public Optional<Post> getPostById(Long postId) {

@@ -1,7 +1,6 @@
 package com.example.blog.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,8 +63,11 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Fetch user for JWT (optional — you could get username from authentication)
-        User user = userService.findByUsernameOrEmail(request.getIdentifier())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Optional<User> userOpt = userService.findByUsernameOrEmail(request.getIdentifier());
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        User user = userOpt.get();
 
         if (user.isBanned()) {
             return new ResponseEntity<>("You are banned!", HttpStatus.FORBIDDEN);
@@ -82,7 +84,8 @@ public class AuthController {
     public ResponseEntity<?> isLogged(HttpServletRequest request, Authentication authentication) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
+            return new ResponseEntity<>("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
+
         }
 
         String token = authHeader.substring(7);
@@ -90,8 +93,11 @@ public class AuthController {
         if (jwtUtil.validateToken(token)) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             Long loggedUserId = userDetails.getId();
-            User loggedUser = userService.findById(loggedUserId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Optional<User> loggedUserOpt = userService.findById(loggedUserId);
+            if (loggedUserOpt.isEmpty()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            User loggedUser = loggedUserOpt.get();
             if (loggedUser.isBanned()) {
                 return ResponseEntity.status(401).body("User BANNED!");
             }
@@ -114,6 +120,6 @@ public class AuthController {
                     String newJwt = jwtUtil.generateToken(user.getUsername(), user.getRole());
                     return ResponseEntity.ok(new JwtResponse(newJwt, token, user.getRole().equals("ADMIN")));
                 })
-                .orElseThrow(() -> new RefreshTokenNotFoundException(token)); // ← triggers global handler
+                .orElseThrow(() -> new RefreshTokenNotFoundException(token)); 
     }
 }

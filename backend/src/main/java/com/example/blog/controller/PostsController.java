@@ -63,22 +63,14 @@ public class PostsController {
     }
 
     @GetMapping("/getpost/{postid}")
-    public Post getPost(@PathVariable Long postid, Authentication authentication) {
-        Post post = postService.getPostById(postid).orElse(null);
+    public ResponseEntity<?> getPost(@PathVariable Long postid, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        User loggedUser = userRepository.findById(loggedUserId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
-        if (Objects.equals(post.getCreator().getId(), loggedUserId) || loggedUser.getRole().equals("ADMIN")) {
-            post.setIsOwner(true);
-        }
-        // post.getComments().forEach(comment -> {
-        //     if (Objects.equals(comment.getUser().getId(), loggedUserId)) {
-        //         comment.setOwner(true);
-        //     }
-        // });
-        return post;
+
+        return postService.getPost(postid, loggedUserId);
     }
+
+    // ***************
 
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Post> createPost(

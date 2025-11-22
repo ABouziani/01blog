@@ -84,9 +84,17 @@ export class AdminReportsComponent {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), action).subscribe(() => {
-          this.myAlert.showAlert("Success", "Report resolved successfully!");
-          this.groupedUserReports = this.groupedUserReports.filter(r => r.reportedUserId !== report.reportedUserId);
+        this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), action).subscribe({
+          next: () => {
+            this.myAlert.showAlert("Success", "Report resolved successfully!");
+            this.groupedUserReports = this.groupedUserReports.filter(
+              r => r.reportedUserId !== report.reportedUserId
+            );
+          },
+          error: (err) => {
+            console.error("Error resolving report:", err);
+            this.myAlert.showAlert("Error", "Failed to resolve report. Please try again.");
+          }
         });
       }
     });
@@ -107,9 +115,17 @@ export class AdminReportsComponent {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe(() => {
-          this.myAlert.showAlert("Success", "Report resolved successfully!");
-          this.groupedPostReports = this.groupedPostReports.filter(r => r.postId !== report.postId);
+        this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe({
+          next: () => {
+            this.myAlert.showAlert("Success", "Report resolved successfully!");
+            this.groupedPostReports = this.groupedPostReports.filter(
+              r => r.postId !== report.postId
+            );
+          },
+          error: (err) => {
+            console.error("Error resolving post report:", err);
+            this.myAlert.showAlert("Error", "Failed to resolve report. Please try again.");
+          }
         });
       }
     });

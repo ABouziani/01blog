@@ -1,17 +1,28 @@
 package com.example.blog.service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.blog.dtoresponses.NotificationResponseDto;
-import com.example.blog.model.*;
-import com.example.blog.repository.*;
+import com.example.blog.model.CustomUnreadNotif;
+import com.example.blog.model.Notification;
+import com.example.blog.model.Post;
+import com.example.blog.model.User;
+import com.example.blog.repository.CustomUnreadNotifRepository;
+import com.example.blog.repository.NotifRepository;
+import com.example.blog.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,19 +32,18 @@ public class NotificationService {
 
     private final NotifRepository notificationRepository;
     private final CustomUnreadNotifRepository customUnreadNotifRepository;
-    private final UserRepository userRepository; // needed to refresh user's following list if not loaded
+    private final UserRepository userRepository; 
 
-    // --- 1. Create notification when a post is published ---
+
     @Transactional
     public void createNotificationForNewPost(Post post) {
         Notification notification = new Notification();
         notification.setAuthor(post.getCreator());
         notification.setPost(post);
-        notification.setCreatedAt(post.getCreatedAt()); // as per your requirement
+        notification.setCreatedAt(post.getCreatedAt());
         notificationRepository.save(notification);
     }
 
-    // --- 2. Get notifications for a viewer (follower) ---
     @Transactional(readOnly = true)
     public List<NotificationResponseDto> getNotificationsForUser(User viewer, Long lastId, int pageSize) {
 
@@ -70,7 +80,7 @@ public class NotificationService {
                             author.getId(),
                             author.getUsername(),
                             author.getPhoto(),
-                            notif.getCreatedAt(), // same as post.createdAt
+                            notif.getCreatedAt(), 
                             isUnread
                     );
                 })
@@ -78,16 +88,18 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    // --- 3. Mark a notification as unread (after it was read) ---
     @Transactional
-    public void markNotificationAsUnread(User user, Long notificationId
+    public ResponseEntity<?> markNotificationAsUnread(User user, Long notificationId
     ) {
         // Verify the notification exists and belongs to someone the user follows
-        Notification notif = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
+        Optional<Notification> notifOpt = notificationRepository.findById(notificationId);
+        if (notifOpt.isEmpty()) {
+            return new ResponseEntity<>("Notification not found", HttpStatus.BAD_REQUEST);
+        }
+        Notification notif = notifOpt.get();
 
         if (!user.getFollowing().contains(notif.getAuthor())) {
-            throw new RuntimeException("You cannot mark this notification as unread");
+            return new ResponseEntity<>("You cannot mark this notification as unread", HttpStatus.BAD_REQUEST);
         }
 
         // Save to custom unread table
@@ -95,23 +107,24 @@ public class NotificationService {
         entry.setUser(user);
         entry.setNotification(notif);
         customUnreadNotifRepository.save(entry);
+        return ResponseEntity.ok().build();
     }
 
-    // --- 4. Mark a notification as read (removes from custom unread) ---
     @Transactional
-    public void markNotificationAsRead(User user, Long notificationId
-    ) {
+    public ResponseEntity<?> markNotificationAsRead(User user, Long notificationId) {
+        Optional<Notification> notifOpt = notificationRepository.findById(notificationId);
+        if (notifOpt.isEmpty()) {
+            return new ResponseEntity<>("Notification not found", HttpStatus.BAD_REQUEST);
+        }
         customUnreadNotifRepository.deleteByUserIdAndNotificationId(user.getId(), notificationId);
+        return ResponseEntity.ok().build();
     }
 
     // --- 5. Mark all notifications as read ---
     @Transactional
-    public void markAllNotificationsAsRead(User user
-    ) {
+    public void markAllNotificationsAsRead(User user) {
         user.setLastNotifCheck(LocalDateTime.now());
-        userRepository.save(user); // or use a dedicated update method
-
-        // Clear all custom unread markers
+        userRepository.save(user); 
         customUnreadNotifRepository.deleteByUserId(user.getId());
     }
 

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,17 +27,15 @@ public class FollowController {
         this.followService = followService;
     }
 
-    // ✅ FOLLOW a user
     @PostMapping("/{userId}")
     public ResponseEntity<?> followUser(@PathVariable @Positive Long userId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
         followService.followUser(loggedUserId, userId);
-        // return ResponseEntity.ok().build();
         return ResponseEntity.ok(Map.of("message","You successfully followed this user!"));
     }
 
-    // ✅ UNFOLLOW a user
+    
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> unfollowUser(@PathVariable @Positive Long userId,Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -47,12 +44,11 @@ public class FollowController {
         return ResponseEntity.ok(Map.of("message","You successfully unfollowed this user!"));
     }
 
-    // ✅ CHECK if current user follows a user
+    
     @GetMapping("/check/{userId}")
-    public ResponseEntity<Boolean> isFollowing(@PathVariable @Positive Long userId, Authentication authentication) {
+    public ResponseEntity<?> isFollowing(@PathVariable @Positive Long userId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        boolean isFollowing = followService.isFollowing(loggedUserId, userId);
-        return ResponseEntity.ok(isFollowing);
+        return followService.isFollowing(loggedUserId, userId);
     }
 }

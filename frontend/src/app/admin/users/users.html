@@ -16,7 +16,7 @@
     <tbody>
       <tr *ngFor="let user of users">
         <td>
-          <span class="table-username" [routerLink]="[`/users/${user.id}`]">{{ user.username }}</span>
+          <span class="table-username" target="_blank" [routerLink]="[`/users/${user.id}`]">{{ user.username }}</span>
           @if (user.isAdmin) {
           <span class="admin-badge">(Admin)</span>
           }

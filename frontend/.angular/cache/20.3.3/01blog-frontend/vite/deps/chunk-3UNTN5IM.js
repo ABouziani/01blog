@@ -2,7 +2,7 @@ import {
   Platform,
   coerceElement,
   coerceNumberProperty
-} from "./chunk-7UIXWPLT.js";
+} from "./chunk-I6DXRCPU.js";
 import {
   BidiModule
 } from "./chunk-BRGVXSCV.js";
@@ -3185,4 +3185,4 @@ export {
   AriaDescriber,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-HRF7GLAU.js.map
+//# sourceMappingURL=chunk-3UNTN5IM.js.map

@@ -1,13 +1,15 @@
 // FollowService.java
 package com.example.blog.service;
 
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional
@@ -19,42 +21,63 @@ public class FollowService {
         this.userRepository = userRepository;
     }
 
-    public void followUser(Long followerId, Long followedId) {
+    public ResponseEntity<?> followUser(Long followerId, Long followedId) {
         if (followerId.equals(followedId)) {
-            throw new IllegalArgumentException("You cannot follow yourself.");
+            return new ResponseEntity<>("You cannot follow yourself.", HttpStatus.BAD_REQUEST);
         }
 
-        User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new EntityNotFoundException("Follower user not found"));
-        User followed = userRepository.findById(followedId)
-                .orElseThrow(() -> new EntityNotFoundException("User to follow not found"));
+        Optional<User> followerOpt = userRepository.findById(followerId);
+        if (followerOpt.isEmpty()) {
+            return new ResponseEntity<>("Follower user not found", HttpStatus.BAD_REQUEST);
+        }
+        User follower = followerOpt.get();
 
-        // Avoid duplicate follows
+        Optional<User> followedOpt = userRepository.findById(followedId);
+        if (followedOpt.isEmpty()) {
+            return new ResponseEntity<>("Follower user not found", HttpStatus.BAD_REQUEST);
+        }
+        User followed = followedOpt.get();
+
         if (!follower.getFollowing().contains(followed)) {
-            follower.follow(followed); // This updates both sides
+            follower.follow(followed);
             userRepository.save(follower);
-            // Note: followed is automatically updated via relationship, but saving follower is enough
         }
+        return ResponseEntity.ok().build();
     }
 
-    public void unfollowUser(Long followerId, Long followedId) {
-        User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new EntityNotFoundException("Follower user not found"));
-        User followed = userRepository.findById(followedId)
-                .orElseThrow(() -> new EntityNotFoundException("User to unfollow not found"));
+    public ResponseEntity<?> unfollowUser(Long followerId, Long followedId) {
+        Optional<User> followerOpt = userRepository.findById(followerId);
+        if (followerOpt.isEmpty()) {
+            return new ResponseEntity<>("Follower user not found", HttpStatus.BAD_REQUEST);
+        }
+        User follower = followerOpt.get();
+
+        Optional<User> followedOpt = userRepository.findById(followedId);
+        if (followedOpt.isEmpty()) {
+            return new ResponseEntity<>("Follower user not found", HttpStatus.BAD_REQUEST);
+        }
+        User followed = followedOpt.get();
 
         if (follower.getFollowing().contains(followed)) {
             follower.unfollow(followed);
             userRepository.save(follower);
         }
+        return ResponseEntity.ok().build();
     }
 
-    public boolean isFollowing(Long followerId, Long followedId) {
-        User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new EntityNotFoundException("Follower not found"));
-        User followed = userRepository.findById(followedId)
-                .orElseThrow(() -> new EntityNotFoundException("Followed user not found"));
+    public ResponseEntity<?> isFollowing(Long followerId, Long followedId) {
+        Optional<User> followerOpt = userRepository.findById(followerId);
+        if (followerOpt.isEmpty()) {
+            return new ResponseEntity<>("Follower user not found", HttpStatus.BAD_REQUEST);
+        }
+        User follower = followerOpt.get();
 
-        return follower.getFollowing().contains(followed);
+        Optional<User> followedOpt = userRepository.findById(followedId);
+        if (followedOpt.isEmpty()) {
+            return new ResponseEntity<>("Follower user not found", HttpStatus.BAD_REQUEST);
+        }
+        User followed = followedOpt.get();
+
+        return ResponseEntity.ok(follower.getFollowing().contains(followed));
     }
 }

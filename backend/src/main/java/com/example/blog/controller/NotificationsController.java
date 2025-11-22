@@ -32,7 +32,6 @@ public class NotificationsController {
 
     private final NotificationService notificationService;
 
-    // Utility: get current user (you’ll replace this with your auth method)
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -42,7 +41,6 @@ public class NotificationsController {
         return user;
     }
 
-    // --- 1. Get current user's notifications ---
     @GetMapping
     public ResponseEntity<List<NotificationResponseDto>> getNotifications(
             @RequestParam(required = false) Long lastId,
@@ -52,20 +50,17 @@ public class NotificationsController {
         return ResponseEntity.ok(notifications);
     }
 
-    // --- 2. Mark a specific notification as unread ---
     @PostMapping("/{notificationId}/mark-unread")
-    public ResponseEntity<Void> markAsUnread(@PathVariable Long notificationId) {
+    public ResponseEntity<?> markAsUnread(@PathVariable Long notificationId) {
         User user = getCurrentUser();
-        notificationService.markNotificationAsUnread(user, notificationId);
-        return ResponseEntity.ok().build();
+        
+        return notificationService.markNotificationAsUnread(user, notificationId);
     }
 
-    // --- 3. Mark a specific notification as read ---
     @PostMapping("/{notificationId}/mark-read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Long notificationId) {
+    public ResponseEntity<?> markAsRead(@PathVariable Long notificationId) {
         User user = getCurrentUser();
-        notificationService.markNotificationAsRead(user, notificationId);
-        return ResponseEntity.ok().build();
+        return notificationService.markNotificationAsRead(user, notificationId);
     }
 
     // --- 4. Mark all notifications as read ---
