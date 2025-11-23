@@ -5,18 +5,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.blog.dtoresponses.ActiveUsersDto;
-import com.example.blog.exceptions.ResourceNotFoundException;
+import com.example.blog.dtoresponses.EntityDtoMapper;
 import com.example.blog.model.User;
+import com.example.blog.repository.ReportUserRepository;
 import com.example.blog.repository.UserRepository;
 
 @Service
@@ -29,6 +33,9 @@ public class UserService {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private ReportUserRepository reportUserRepository;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -99,14 +106,14 @@ public class UserService {
         return userRepository.getActiveUsersForHome(number);
     }
 
-    public User updatePost(Long loggedUserId, String bio, String email, MultipartFile media, boolean noPhoto) {
-        String mediaUrl = null;
-        if (media != null && !media.isEmpty()) {
-            mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
+    public ResponseEntity<?> updatePost(Long loggedUserId, String bio, String email, MultipartFile media, boolean noPhoto) {
+        System.out.println("------------------------------");
+        System.out.println(noPhoto);
+        Optional<User> userOpt = userRepository.findById(loggedUserId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
         }
-
-        User loggedUser = userRepository.findById(loggedUserId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bad request"));
+        User loggedUser = userOpt.get();
 
         //delete old profile photo
         if ((media != null && !media.isEmpty()) || noPhoto) {
@@ -120,24 +127,59 @@ public class UserService {
             }
         }
 
+        String mediaUrl = null;
+        boolean addMedia = false;
+        if (media != null && !media.isEmpty()) {
+            addMedia = true;
+            mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
+        }
+
         // 3. Update fields
         loggedUser.setEmail(email);
         loggedUser.setBio(bio);
-        loggedUser.setPhoto(mediaUrl);
+        if (mediaUrl != null) {
+            loggedUser.setPhoto(mediaUrl);
+        } else if (noPhoto) {
+            loggedUser.setPhoto(null);
+        }
 
         try {
-            return userRepository.save(loggedUser);
+            userRepository.save(loggedUser);
+            return ResponseEntity.ok(EntityDtoMapper.toUserDto(loggedUser));
         } catch (Exception e) {
-            logger.error("Error saving profile: ", e);
-
-            // 👇 Unwrap and log root cause
-            Throwable cause = e;
-            while (cause.getCause() != null) {
-                cause = cause.getCause();
-            }
-            logger.error("Root cause: {}", cause.getMessage());
-
-            throw e;
+            return new ResponseEntity<>("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public ResponseEntity<?> getUser(Long id, Long loggedUserId) {
+        Optional<User> userOpt = findById(id);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
+        User user = userOpt.get();
+
+        Optional<User> loggedUserOpt = findById(loggedUserId);
+        if (loggedUserOpt.isEmpty()) {
+            return new ResponseEntity<>("Bad request!", HttpStatus.BAD_REQUEST);
+        }
+        User loggedUser = loggedUserOpt.get();
+
+        if (reportUserRepository.existsByReporterIdAndReportedId(loggedUserId, user.getId())) {
+            user.setIsAlreadyReported(true);
+        }
+
+        if (loggedUser.getFollowing().contains(user)) {
+            user.setIsAlreadyFollowed(true);
+        }
+
+        if (Objects.equals(loggedUser.getId(), user.getId())) {
+            user.setOwner(true);
+        }
+
+        // Hibernate.initialize(user.getPosts());
+        //Mark notifs from this user as read
+        // loggedUser.markAuthorNotificationsAsRead(user.getId());
+        // userRepository.save(loggedUser);
+        return ResponseEntity.ok(EntityDtoMapper.toUserDto(user));
     }
 }

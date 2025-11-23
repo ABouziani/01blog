@@ -1,7 +1,5 @@
 package com.example.blog.controller;
 
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.blog.dtoresponses.EntityDtoMapper;
-import com.example.blog.dtoresponses.UserDto;
 import com.example.blog.model.User;
 import com.example.blog.repository.ReportUserRepository;
 import com.example.blog.repository.UserRepository;
@@ -73,45 +69,22 @@ public class UsersController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<?> getUser(@PathVariable Long id, Authentication authentication) {
         if (id == 0) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             id = userDetails.getId();
         }
-        User user = userService.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        // Ensure posts are fetched (avoid LazyInitializationException)
 
-        // Get current user ID
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
 
-        User loggedUser = userService.findById(loggedUserId)
-                .orElseThrow(() -> new RuntimeException("Bad request!"));
-        // Ensure posts are fetched (avoid LazyInitializationException)
+        ResponseEntity<?> resp = userService.getUser(id, loggedUserId);
 
-        if (reportUserRepository.existsByReporterIdAndReportedId(loggedUserId, user.getId())) {
-            user.setIsAlreadyReported(true);
-        }
-
-        if (loggedUser.getFollowing().contains(user)) {
-            user.setIsAlreadyFollowed(true);
-        }
-
-        if (Objects.equals(loggedUser.getId(), user.getId())) {
-            user.setOwner(true);
-        }
-
-        // Hibernate.initialize(user.getPosts());
-
-        //Mark notifs from this user as read
-        // loggedUser.markAuthorNotificationsAsRead(user.getId());
-        // userRepository.save(loggedUser);
-        return ResponseEntity.ok(EntityDtoMapper.toUserDto(user));
+        return resp;
     }
 
     @PutMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserDto> updateUser(
+    public ResponseEntity<?> updateUser(
             @RequestParam("bio") @Size(max = 500) String bio,
             @RequestParam("email") @NotBlank @Size(min = 10, max = 1000) String email,
             @RequestParam("noPhoto") @NotBlank String noPhoto,
@@ -120,37 +93,8 @@ public class UsersController {
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
+        ResponseEntity<?> updatedUser = userService.updatePost(loggedUserId, bio, email, media, noPhoto.equals("true"));
 
-        User updatedUser = userService.updatePost(loggedUserId, bio, email, media, noPhoto == "true");
-
-        return ResponseEntity.ok(EntityDtoMapper.toUserDto(updatedUser));
+        return updatedUser;
     }
-
-    // // POST /api/users/register
-    // @PostMapping("/follow")
-    // public ResponseEntity<User> FollowUser(@Valid @RequestBody User user) {
-    //     // System.out.println("Received password: " + user.getPassword());
-    //     User savedUser = userService.registerUser(user);
-    //     return ResponseEntity.ok(savedUser); // returns 200 + JSON of saved user
-    // }
-    // // POST /api/users/login
-    // @PostMapping("/login")
-    // public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
-    //     String identifier = body.get("identifier"); // username or email
-    //     String password = body.get("password");
-    //     Optional<User> userOpt = userService.findByUsernameOrEmail(identifier);
-    //     if (userOpt.isPresent() && userService.checkPassword(userOpt.get(), password)) {
-    //         return ResponseEntity.ok("Login successful!");
-    //     }
-    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials\n");
-    // }
-    // @GetMapping("/notifs")
-    // public ResponseEntity<?> getNotifs(Authentication authentication) {
-    //     // Get current user ID
-    //     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    //     Long loggedUserId = userDetails.getId();
-    //     User loggedUser = userService.findById(loggedUserId)
-    //             .orElseThrow(() -> new RuntimeException("Bad request!"));
-    //     return ResponseEntity.ok(loggedUser.getUnReadNotifs());
-    // }
 }

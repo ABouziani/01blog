@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.blog.dto.NewReportPostRequest;
 import com.example.blog.dto.NewReportRequest;
-import com.example.blog.model.ReportPosts;
 import com.example.blog.model.ReportUsers;
 import com.example.blog.service.ReportPostsService;
 import com.example.blog.service.ReportUsersService;
@@ -33,12 +32,12 @@ public class ReportsController {
     private ReportPostsService reportPostsService;
 
     @PostMapping("/adduserreport")
-    public ResponseEntity<ReportUsers> addReportUser(@Valid @RequestBody NewReportRequest reportReq) {
+    public ResponseEntity<?> addReportUser(@Valid @RequestBody NewReportRequest reportReq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        ReportUsers savedReport = reportUsersService.addReport(reportReq, loggedUserId);
-        return ResponseEntity.ok(savedReport);
+        ResponseEntity<?> savedReportResp = reportUsersService.addReport(reportReq, loggedUserId);
+        return savedReportResp;
     }
 
     @PostMapping("/addpostreport")

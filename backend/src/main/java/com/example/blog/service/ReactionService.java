@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.blog.dto.NewReactionRequest;
@@ -29,7 +31,7 @@ public class ReactionService {
         return reactionRepository.findByUserId(userId);
     }
 
-     public List<Reaction> getAll() {
+    public List<Reaction> getAll() {
         return reactionRepository.findAll();
     }
 
@@ -39,13 +41,18 @@ public class ReactionService {
         return reactionRepository.findByPostId(postId);
     }
 
-    public Reaction addorupdateReaction(NewReactionRequest newReactionRequest, Long creatorId) {
+    public ResponseEntity<?> addorupdateReaction(NewReactionRequest newReactionRequest, Long creatorId) {
+        Optional<User> userOpt = userService.findById(creatorId);
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+        }
+        User reactor = userOpt.get();
 
-        User reactor = userService.findById(creatorId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Post post = postService.getPostById(newReactionRequest.getPostId())
-                .orElseThrow(() -> new RuntimeException("post not found"));
+        Optional<Post> postOpt = postService.getPostById(newReactionRequest.getPostId());
+        if (postOpt.isEmpty()) {
+            return new ResponseEntity<>("post not found", HttpStatus.BAD_REQUEST);
+        }
+        Post post = postOpt.get();
 
         String newType = newReactionRequest.getType().toLowerCase();
         // Check if reaction already exists
@@ -58,21 +65,21 @@ public class ReactionService {
             if (existingType.equals(newType)) {
                 // Same reaction: remove it (toggle off)
                 reactionRepository.delete(existing);
-                return existing; // or throw exception, or return a "deleted" response
+                return ResponseEntity.ok(existing); 
             } else {
-                // Different reaction: update type
                 existing.setType(newType);
-                existing.setCreatedAt(LocalDateTime.now()); // optional: update timestamp
-                return reactionRepository.save(existing);
+                existing.setCreatedAt(LocalDateTime.now()); 
+                reactionRepository.save(existing);
+                return ResponseEntity.ok().build();
             }
         } else {
-            // No existing reaction: create new one
             Reaction newReaction = new Reaction();
             newReaction.setUser(reactor);
             newReaction.setPost(post);
             newReaction.setType(newType);
             newReaction.setCreatedAt(LocalDateTime.now());
-            return reactionRepository.save(newReaction);
+            reactionRepository.save(newReaction);
+            return ResponseEntity.ok().build();
         }
     }
 }

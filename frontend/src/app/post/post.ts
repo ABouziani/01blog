@@ -92,7 +92,7 @@ export class PostComponent {
         }
       }),
       catchError(error => {
-        console.error('Reaction error:', error);
+        console.error('Reaction error:', error.error);
         // Optional: show error message
         this.myAlert.showAlert("Error", "Failed to react. Please try again.");
         return of(null);
