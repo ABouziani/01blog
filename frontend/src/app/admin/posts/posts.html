@@ -14,9 +14,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let post of posts">
-        <td>{{ post.authorName }}</td>
-        <td>{{ post.title && post.title.length > 50 ? (post.title.substring(0, 47) + '...') :
-          post.title }}</td>
+        <td><span class="clickable" (click)="router.navigate(['/users/' + post.authorId])">{{ post.authorName }}</span></td>
+        <td><span class="clickable" (click)="router.navigate(['/posts/' + post.id])">{{ post.title && post.title.length > 50 ? (post.title.substring(0, 47) + '...') :
+          post.title }} </span></td>
         <td>
           <span class="status-badge" [class.status-active]="!post.isHidden" [class.status-hidden]="post.isHidden">
             {{ post.isHidden ? 'Hidden' : 'Visible' }}

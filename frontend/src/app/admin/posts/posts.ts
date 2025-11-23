@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AlertService } from '../../services/alert-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-posts',
@@ -26,12 +27,15 @@ export class AdminPostsComponent {
   private postAdminService = inject(PostAdminService);
   private dialog = inject(MatDialog);
   private myAlert = inject(AlertService);
+  public router = inject(Router);
 
   posts: Post[] = [];
   displayedColumns = ['author', 'preview', 'status', 'actions'];
 
   ngOnInit() {
     this.postAdminService.getPosts().subscribe(posts => {
+      console.log("//////////////////////",posts);
+      
       this.posts = posts;
     });
   }

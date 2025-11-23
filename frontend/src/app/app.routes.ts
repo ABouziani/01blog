@@ -13,6 +13,7 @@ import { AdminReportsComponent } from './admin/reports/reports';
 import { WelcomeComponent } from './welcome/welcome';
 import { PostsComponent } from './posts/posts';
 import { RegisterComponent } from './register/register';
+import { NotfoundComponent } from './notfound/notfound';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent , canActivate: [unAuthGuard]},
@@ -32,6 +33,7 @@ export const routes: Routes = [
             { path: '', redirectTo: 'users', pathMatch: 'full' } // default tab
         ]
     },
+    { path: '**', component: NotfoundComponent },
 
 ];
 

@@ -1,7 +1,5 @@
 search
-check user when banned
-check post when hided
+
 fix notifs
 remove media on post edit
 handling all confirmation dialog
-add 404 page

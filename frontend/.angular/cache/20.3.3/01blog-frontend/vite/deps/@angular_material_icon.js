@@ -8,8 +8,8 @@ import {
   MatCommonModule
 } from "./chunk-3UNTN5IM.js";
 import "./chunk-I6DXRCPU.js";
-import "./chunk-BRGVXSCV.js";
 import "./chunk-YG47VFKR.js";
+import "./chunk-BRGVXSCV.js";
 import "./chunk-4X6VR2I6.js";
 import {
   ChangeDetectionStrategy,

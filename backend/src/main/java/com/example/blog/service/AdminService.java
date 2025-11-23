@@ -106,6 +106,7 @@ public class AdminService {
                 p.getId(),
                 p.getTitle(),
                 p.getDescription(),
+                p.getCreator().getId(),
                 p.getCreator().getUsername(),
                 p.getCreatedAt(),
                 p.isHidden()

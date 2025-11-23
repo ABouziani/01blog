@@ -79,6 +79,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             FROM user_followers uf
             WHERE uf.follower_id = :userId
         )
+        AND p.is_hidden = false
         ORDER BY p.created_at DESC
         LIMIT :n;
     """, nativeQuery = true)
@@ -94,6 +95,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     FROM posts p
     JOIN users u ON p.user_id = u.id
     LEFT JOIN reactions r ON p.id = r.post_id
+    WHERE p.is_hidden = false
     GROUP BY p.id, p.title, u.id, u.username, p.media
     ORDER BY COUNT(r.id) DESC
     LIMIT :n

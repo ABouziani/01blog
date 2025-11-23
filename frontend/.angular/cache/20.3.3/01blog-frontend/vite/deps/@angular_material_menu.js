@@ -1,4 +1,10 @@
 import {
+  MatRipple,
+  MatRippleModule,
+  _StructuralStylesLoader
+} from "./chunk-Q7ROCYAG.js";
+import "./chunk-PFNM5TTJ.js";
+import {
   DomPortalOutlet,
   OverlayConfig,
   OverlayModule,
@@ -6,21 +12,15 @@ import {
   createFlexibleConnectedPositionStrategy,
   createOverlayRef,
   createRepositionScrollStrategy
-} from "./chunk-HZD5LAO4.js";
+} from "./chunk-BFBSGSFO.js";
+import "./chunk-46HAYV32.js";
+import "./chunk-VENV3F3G.js";
 import {
   CdkScrollableModule,
   ScrollDispatcher,
   ViewportRuler
 } from "./chunk-AEXRWMMC.js";
 import "./chunk-6TU72PAN.js";
-import {
-  MatRipple,
-  MatRippleModule,
-  _StructuralStylesLoader
-} from "./chunk-Q7ROCYAG.js";
-import "./chunk-PFNM5TTJ.js";
-import "./chunk-VENV3F3G.js";
-import "./chunk-46HAYV32.js";
 import "./chunk-5EG33CFQ.js";
 import {
   _animationsDisabled
@@ -45,10 +45,10 @@ import {
   isFakeTouchstartFromScreenReader
 } from "./chunk-3UNTN5IM.js";
 import "./chunk-I6DXRCPU.js";
+import "./chunk-YG47VFKR.js";
 import {
   Directionality
 } from "./chunk-BRGVXSCV.js";
-import "./chunk-YG47VFKR.js";
 import "./chunk-4X6VR2I6.js";
 import {
   ApplicationRef,

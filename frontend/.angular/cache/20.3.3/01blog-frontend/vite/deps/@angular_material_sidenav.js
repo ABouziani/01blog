@@ -1,3 +1,8 @@
+import "./chunk-PFNM5TTJ.js";
+import {
+  coerceBooleanProperty
+} from "./chunk-46HAYV32.js";
+import "./chunk-VENV3F3G.js";
 import {
   CdkScrollable,
   CdkScrollableModule,
@@ -5,11 +10,6 @@ import {
   ViewportRuler
 } from "./chunk-AEXRWMMC.js";
 import "./chunk-6TU72PAN.js";
-import "./chunk-PFNM5TTJ.js";
-import "./chunk-VENV3F3G.js";
-import {
-  coerceBooleanProperty
-} from "./chunk-46HAYV32.js";
 import "./chunk-5EG33CFQ.js";
 import {
   _animationsDisabled
@@ -26,10 +26,10 @@ import {
   Platform,
   coerceNumberProperty
 } from "./chunk-I6DXRCPU.js";
+import "./chunk-YG47VFKR.js";
 import {
   Directionality
 } from "./chunk-BRGVXSCV.js";
-import "./chunk-YG47VFKR.js";
 import "./chunk-4X6VR2I6.js";
 import {
   ChangeDetectionStrategy,

@@ -35,7 +35,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     SELECT 
         u.id,
         u.username AS name, 
-        COUNT(p.id) AS posts, 
+        COUNT(p.id) FILTER (WHERE p.is_hidden = FALSE) AS posts,
         u.photo AS avatar
         FROM users u
         LEFT JOIN posts p ON u.id = p.user_id

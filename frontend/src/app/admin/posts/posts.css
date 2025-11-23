@@ -18,3 +18,7 @@ th {
     overflow: hidden;
     text-overflow: ellipsis;
 } */
+
+.clickable {
+    cursor: pointer;
+}

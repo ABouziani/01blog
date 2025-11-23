@@ -5,6 +5,7 @@ public record PostDto(
     Long id,
     String title,
     String description,
+    Long authorId,
     String authorName,
     LocalDateTime createdAt,
     boolean isHidden
