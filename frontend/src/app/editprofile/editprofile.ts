@@ -123,6 +123,7 @@ export class EditprofileComponent {
       .subscribe({
         next: (data) => {
           this.myAlert.showAlert("Success", "User updated successfully!");
+          this.noPhoto = false;
           this.updateEvent.emit(data);
         },
         error: (error) => {

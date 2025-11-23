@@ -18,11 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.PostsWithReactionsCountDto;
 import com.example.blog.dtoresponses.HomePostDto;
-import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Notification;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
@@ -124,11 +122,7 @@ public class PostService {
         return ResponseEntity.ok(savedPost);
     }
 
-    public ResponseEntity<?> updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId) {
-        String mediaUrl = null;
-        if (media != null && !media.isEmpty()) {
-            mediaUrl = fileStorageService.storeFile(media); // returns "/uploads/abc.jpg"
-        }
+    public ResponseEntity<?> updatePost(Long postId, String title, String description, MultipartFile media, Long requesterId, boolean noPhoto) {
 
         Optional<Post> postOpt = postRepository.findByIdAndIsHiddenFalse(postId);
         if (postOpt.isEmpty()) {
@@ -148,18 +142,29 @@ public class PostService {
             return new ResponseEntity<>("You can only modify your own posts", HttpStatus.FORBIDDEN);
         }
 
-        try {
-            String uploadDir = System.getProperty("user.dir") + "/uploads/";
-            Path filePath;
-            filePath = Paths.get(uploadDir, post.getMedia().replace("/api/files/", ""));
-            boolean deleted = Files.deleteIfExists(filePath);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if ((media != null && !media.isEmpty()) || noPhoto) {
+            try {
+                String uploadDir = System.getProperty("user.dir") + "/uploads/";
+                Path filePath;
+                filePath = Paths.get(uploadDir, post.getMedia().replace("/api/files/", ""));
+                boolean deleted = Files.deleteIfExists(filePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String mediaUrl = null;
+        if (media != null && !media.isEmpty()) {
+            mediaUrl = fileStorageService.storeFile(media); // returns "/uploads/abc.jpg"
         }
 
         post.setTitle(title);
         post.setDescription(description);
-        post.setMedia(mediaUrl);
+        if (mediaUrl != null) {
+            post.setMedia(mediaUrl);
+        } else if (noPhoto) {
+            post.setMedia(null);
+        }
         postRepository.save(post);
 
         if (Objects.equals(post.getCreator().getId(), requesterId) || loggedUser.getRole().equals("ADMIN")) {
@@ -205,7 +210,7 @@ public class PostService {
         customNotificationRepository.deleteByNotificationId(n.getId());
 
         postRepository.delete(post);
-        
+
         return ResponseEntity.ok().build();
     }
 

@@ -257,7 +257,7 @@
   </div>
 
   <!-- Edit Mode -->
-  <app-create-post *ngIf="isEditing && post" [editing]="{id:post.id,title:post.title,description:post.description}"
+  <app-create-post *ngIf="isEditing && post" [editing]="{id:post.id,title:post.title,description:post.description,media:post.media}"
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">
   </app-create-post>
 </div>

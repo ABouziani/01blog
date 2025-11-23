@@ -20,16 +20,19 @@ export class CreatePostComponent {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
+  noPhoto = false;
+
   selectedFile: File | null = null;
   previewUrl: string | null = null; // For image/video preview
 
   @Input() posttoedit: Post | null = null;
-  
-  
+
+
   @Input() editing: {
-    id:number;
+    id: number;
     title: String;
     description: String;
+    media: String;
   } | null = null;
 
 
@@ -53,17 +56,19 @@ export class CreatePostComponent {
       // media: [null, Validators.required]
     });
   }
-  
+
   ngOnChanges() {
     if (this.editing) {
       this.postForm.patchValue({
         title: this.editing.title,
-        description: this.editing.description
+        description: this.editing.description,
+        media: this.editing.media,
       });
     }
   }
 
   onFileSelected(event: Event): void {
+    this.previewUrl = null;
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -125,6 +130,7 @@ export class CreatePostComponent {
       .subscribe({
         next: (response) => {
           this.successMessage = 'Post created successfully!';
+          this.noPhoto = false;
           this.isSubmitting = false;
           setTimeout(() => {
             this.router.navigate(['/']);
@@ -146,6 +152,7 @@ export class CreatePostComponent {
     const formData = new FormData();
     formData.append('title', this.postForm.get('title')?.value);
     formData.append('description', this.postForm.get('description')?.value);
+    formData.append('noPhoto', this.noPhoto ? "true" : "false");
     if (this.selectedFile) {
       formData.append('media', this.selectedFile); // 'media' should match your backend field name
     }
@@ -160,6 +167,7 @@ export class CreatePostComponent {
       .subscribe({
         next: (data) => {
           this.myAlert.showAlert("Success", "Post updated successfully!");
+          this.isSubmitting = false;
           this.updateEvent.emit(data);
         },
         error: (error) => {
@@ -205,5 +213,18 @@ export class CreatePostComponent {
 
   get isVideo(): boolean {
     return this.selectedFile !== null && this.selectedFile.type.startsWith('video/');
+  }
+
+  removePhoto() {
+    this.noPhoto = true;
+    if (this.editing) this.editing.media = '';
+  }
+
+  isMediaPhoto(url: string): boolean {
+    return /\.(jpe?g|png|gif|webp)$/i.test(url);
+  }
+
+  isMediaVideo(url: string): boolean {
+    return /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url);
   }
 }

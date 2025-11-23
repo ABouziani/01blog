@@ -1,8 +1,6 @@
 package com.example.blog.controller;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.blog.dto.PostsWithReactionsCountDto;
-import com.example.blog.exceptions.ResourceNotFoundException;
 import com.example.blog.model.Post;
-import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
 import com.example.blog.service.NotificationService;
 import com.example.blog.service.PostService;
@@ -95,6 +91,7 @@ public class PostsController {
             @PathVariable Long id,
             @RequestParam("title") @NotBlank @Size(min = 3, max = 100) String title,
             @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
+            @RequestParam("noPhoto") @NotBlank String noPhoto,
             @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication
     ) {
@@ -102,7 +99,7 @@ public class PostsController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long requesterId = userDetails.getId();
 
-        ResponseEntity<?> updatedPost = postService.updatePost(id, title, description, media, requesterId);
+        ResponseEntity<?> updatedPost = postService.updatePost(id, title, description, media, requesterId, noPhoto.equals("true"));
 
         return updatedPost;
     }

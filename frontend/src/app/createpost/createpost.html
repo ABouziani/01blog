@@ -9,7 +9,7 @@
       <div class="form-group">
         <label for="title">Title *</label>
         <input type="text" id="title" formControlName="title" [class.error]="title?.invalid && title?.touched"
-          placeholder="Enter post title" >
+          placeholder="Enter post title">
 
         <div class="error-message" *ngIf="title?.invalid && title?.touched">
           <span *ngIf="title?.errors?.['required']">Title is required</span>
@@ -32,6 +32,22 @@
         </div>
       </div>
 
+      <div class="form-group" *ngIf="editing">
+        <label for="photo">Post media preview</label>
+        <div class="postmediaprev-wrapper">
+          <div *ngIf="isMediaPhoto(editing.media.toString())" class="postmediaprev"
+            [style.background-image]="'url(http://localhost:8080' + editing.media + ')'">
+          </div>
+          <video class="postmediaprev" *ngIf="isMediaVideo(editing.media.toString())" [src]="'http://localhost:8080'+editing.media"
+            controls muted preload="metadata"></video>
+
+          <button class="remove-btn" *ngIf="editing.media" type="button" (click)="removePhoto()">
+            ✕
+          </button>
+        </div>
+        <div class="postmediaprev" [style.background-image]="'url(' + editing.media + ')'"></div>
+      </div>
+
       <!-- Media Upload Field -->
       <div class="form-group">
         <label for="media">Upload Media (optional)</label>
@@ -46,7 +62,7 @@
           <div *ngIf="isVideo">
             <video [src]="previewUrl" controls class="media-preview"></video>
           </div>
-          <button type="button" (click)="selectedFile = null; previewUrl = null;" class="remove-btn">
+          <button type="button" (click)="selectedFile = null; previewUrl = null;" class="remove-preview-btn">
             Remove
           </button>
         </div>
@@ -75,7 +91,7 @@
         </button>
 
         <button type="button" *ngIf="editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn"
-        (click)="updatePost()">
+          (click)="updatePost()">
           <span *ngIf="!isSubmitting">Update Post</span>
           <span *ngIf="isSubmitting">updating...</span>
         </button>
