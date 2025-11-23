@@ -93,7 +93,7 @@ public class UsersController {
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
-        ResponseEntity<?> updatedUser = userService.updatePost(loggedUserId, bio, email, media, noPhoto.equals("true"));
+        ResponseEntity<?> updatedUser = userService.updateUser(loggedUserId, bio, email, media, noPhoto.equals("true"));
 
         return updatedUser;
     }

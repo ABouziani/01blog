@@ -14,6 +14,7 @@ export interface UserDto {
   owner: boolean;
   followers: User[];
   following: User[];
+  banned:boolean;
 }
 
 interface User {

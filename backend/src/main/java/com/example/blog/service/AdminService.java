@@ -79,7 +79,7 @@ public class AdminService {
     }
 
     public Optional<String> removeAdmin(Long userId) {
-        Long count = userRepository.countByRole("ADMIN");
+        Long count = userRepository.countByRoleAndIsBannedFalse("ADMIN");
         if (count == 1) {
             return Optional.of("one admin left");
         }

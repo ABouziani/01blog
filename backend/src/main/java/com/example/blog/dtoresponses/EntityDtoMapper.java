@@ -22,6 +22,7 @@ public class EntityDtoMapper {
         dto.setOwner(user.getOwner());
         dto.setFollowers(user.getFollowers());
         dto.setFollowing(user.getFollowing());
+        dto.setBanned(user.isBanned());
 
         // Map posts (without including creator's posts again to avoid deep nesting)
         // if (user.getPosts() != null) {

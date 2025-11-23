@@ -20,6 +20,7 @@ public class UserDto {
     private boolean owner;
     private List<User> followers;
     private List<User> following;
+    private boolean isBanned;
 
     // Constructors
     public UserDto() {
@@ -128,5 +129,13 @@ public class UserDto {
 
     public void setFollowing(List<User> following) {
         this.following = following;
+    }
+
+    public boolean isBanned() {
+        return this.isBanned;
+    }
+
+    public void setBanned(boolean isBanned) {
+        this.isBanned = isBanned;
     }
 }

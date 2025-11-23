@@ -40,11 +40,11 @@ public class UserService {
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByUsernameAndIsBannedFalse(username);
     }
 
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByEmailAndIsBannedFalse(email);
     }
 
     public User registerUser(String username, String email, String password, String bio, MultipartFile photo) {
@@ -65,13 +65,16 @@ public class UserService {
     }
 
     public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+        return userRepository.findByIdAndIsBannedFalse(id);
     }
 
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmailAndIsBannedFalse(email);
     }
 
+    // public Optional<User> findByUsernameAndIsBannedFalse(String username) {
+    //     return userRepository.findByUsernameAndIsBannedFalse(username);
+    // }
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -91,7 +94,7 @@ public class UserService {
 
     // Login
     public Optional<User> loginUser(String email, String rawPassword) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
+        Optional<User> userOpt = userRepository.findByEmailAndIsBannedFalse(email);
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -106,9 +109,8 @@ public class UserService {
         return userRepository.getActiveUsersForHome(number);
     }
 
-    public ResponseEntity<?> updatePost(Long loggedUserId, String bio, String email, MultipartFile media, boolean noPhoto) {
-        System.out.println("------------------------------");
-        System.out.println(noPhoto);
+    public ResponseEntity<?> updateUser(Long loggedUserId, String bio, String email, MultipartFile media, boolean noPhoto) {
+
         Optional<User> userOpt = userRepository.findById(loggedUserId);
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
@@ -152,7 +154,7 @@ public class UserService {
     }
 
     public ResponseEntity<?> getUser(Long id, Long loggedUserId) {
-        Optional<User> userOpt = findById(id);
+        Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
         }
@@ -163,6 +165,10 @@ public class UserService {
             return new ResponseEntity<>("Bad request!", HttpStatus.BAD_REQUEST);
         }
         User loggedUser = loggedUserOpt.get();
+
+        if (user.isBanned() && !loggedUser.getRole().equals("ADMIN")) {
+            return new ResponseEntity<>("User is BANNED!", HttpStatus.BAD_REQUEST);
+        }
 
         if (reportUserRepository.existsByReporterIdAndReportedId(loggedUserId, user.getId())) {
             user.setIsAlreadyReported(true);

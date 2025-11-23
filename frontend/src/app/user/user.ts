@@ -67,7 +67,7 @@ export class UserComponent {
         },
         error: (err) => {
           // this.error = err.error.message;
-          this.error = 'Bad request!';
+          this.error = err.error;
         }
       });
   }

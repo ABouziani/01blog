@@ -1,6 +1,7 @@
 <main class="container py-4 py-lg-5">
   <div class="no-user">
     <div class="error" *ngIf="error != '' && error != null && !user"> {{ error }} </div>
+    <div class="errorbanned" *ngIf="user?.banned"> This user is BANNED </div>
     <div class="empty"></div>
   </div>
   <div class="row justify-content-center" *ngIf="user && !isEditing">

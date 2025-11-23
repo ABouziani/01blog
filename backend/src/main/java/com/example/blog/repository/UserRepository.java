@@ -12,19 +12,24 @@ import com.example.blog.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Override
-    Optional<User> findById(Long id);
+    Optional<User> findByIdAndIsBannedFalse(Long id);
+
+    List<User> findAllByIdNotAndIsBannedFalse(Long id);
 
     List<User> findAllByIdNot(Long id);
 
+    Optional<User> findByEmailAndIsBannedFalse(String email);
     Optional<User> findByEmail(String email);
 
+    // Optional<User> findByUsernameAndIsBannedFalse(String username);
     Optional<User> findByUsername(String username);
 
-    boolean existsByUsername(String username);
-    boolean existsByEmail(String email);
+    boolean existsByUsernameAndIsBannedFalse(String username);
 
-    Long countByRole(String role);
+    Long countByRoleAndIsBannedFalse(String role);
+
+    boolean existsByEmailAndIsBannedFalse(String email);
+
 
     @Query(value = """
     SELECT 
@@ -34,6 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
         u.photo AS avatar
         FROM users u
         LEFT JOIN posts p ON u.id = p.user_id
+        WHERE u.is_banned = FALSE
         GROUP BY u.id, u.username, u.photo
         ORDER BY posts DESC
         LIMIT :n;
