@@ -6,9 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,9 +16,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -83,20 +77,13 @@ public class User {
     private List<Reaction> reactions = new ArrayList<>();
 
     // --- FOLLOWERS / FOLLOWING ---
+    @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "user_followers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id")
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<User> followers = new ArrayList<>();
+    private List<UserFollow> followers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    @ManyToMany(mappedBy = "followers")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<User> following = new ArrayList<>();
+    private List<UserFollow> following = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -117,16 +104,32 @@ public class User {
 
     // --- Helper Methods for Following ---
     public void follow(User userToFollow) {
-        if (!following.contains(userToFollow)) {
-            following.add(userToFollow);
-            userToFollow.getFollowers().add(this);
+        // Check if already following
+        boolean alreadyFollowing = this.following.stream()
+                .anyMatch(uf -> uf.getFollowed().equals(userToFollow));
+        if (alreadyFollowing) {
+            return;
         }
+
+        UserFollow uf = new UserFollow();
+        uf.setFollower(this);             // me
+        uf.setFollowed(userToFollow);     // user being followed
+        uf.setFollowedAt(LocalDateTime.now());
+
+        this.following.add(uf);
+        userToFollow.getFollowers().add(uf); // keep both sides in sync
     }
 
     public void unfollow(User userToUnfollow) {
-        if (following.contains(userToUnfollow)) {
-            following.remove(userToUnfollow);
-            userToUnfollow.getFollowers().remove(this);
+        // Find the UserFollow object
+        UserFollow uf = this.following.stream()
+                .filter(f -> f.getFollowed().equals(userToUnfollow))
+                .findFirst()
+                .orElse(null);
+
+        if (uf != null) {
+            this.following.remove(uf);        // remove from my following list
+            userToUnfollow.getFollowers().remove(uf); // remove from their followers list
         }
     }
 
@@ -240,19 +243,19 @@ public class User {
         this.reactions = reactions;
     }
 
-    public List<User> getFollowers() {
+    public List<UserFollow> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(List<User> followers) {
+    public void setFollowers(List<UserFollow> followers) {
         this.followers = followers;
     }
 
-    public List<User> getFollowing() {
+    public List<UserFollow> getFollowing() {
         return following;
     }
 
-    public void setFollowing(List<User> following) {
+    public void setFollowing(List<UserFollow> following) {
         this.following = following;
     }
 

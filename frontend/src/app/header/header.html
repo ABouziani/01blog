@@ -16,7 +16,7 @@
     <!-- Notifications (only when logged in) -->
     <ng-container *ngIf="authService.isLoggedIn()">
       <div class="dropdown notif-dropdown-container">
-        <button class="btn btn-link position-relative p-0" type="button" id="notifDropdown" data-bs-toggle="dropdown"
+        <button class="btn btn-link position-relative p-0" type="button" (click)="toggleDropdown()"  id="notifDropdown" data-bs-toggle="dropdown"
           aria-expanded="false" aria-label="Notifications">
           <a class="link">
             <i class="bi bi-bell link-icon"></i>

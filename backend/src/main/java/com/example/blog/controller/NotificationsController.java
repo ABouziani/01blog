@@ -44,7 +44,7 @@ public class NotificationsController {
     @GetMapping
     public ResponseEntity<List<NotificationResponseDto>> getNotifications(
             @RequestParam(required = false) Long lastId,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "100") int pageSize) {
         User viewer = getCurrentUser();
         List<NotificationResponseDto> notifications = notificationService.getNotificationsForUser(viewer, lastId, pageSize);
         return ResponseEntity.ok(notifications);

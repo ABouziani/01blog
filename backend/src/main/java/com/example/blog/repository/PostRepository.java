@@ -75,7 +75,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         FROM posts p
         JOIN users u ON p.user_id = u.id
         WHERE p.user_id IN (
-            SELECT uf.user_id
+            SELECT uf.followed_id
             FROM user_followers uf
             WHERE uf.follower_id = :userId
         )

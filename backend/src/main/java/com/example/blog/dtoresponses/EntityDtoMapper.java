@@ -1,7 +1,10 @@
 package com.example.blog.dtoresponses;
 
+import java.util.stream.Collectors;
+
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
+import com.example.blog.model.UserFollow;
 
 public class EntityDtoMapper {
 
@@ -20,8 +23,13 @@ public class EntityDtoMapper {
         dto.setIsAlreadyReported(user.isAlreadyReported());
         dto.setIsAlreadyFollowed(user.isAlreadyFollowed());
         dto.setOwner(user.getOwner());
-        dto.setFollowers(user.getFollowers());
-        dto.setFollowing(user.getFollowing());
+        dto.setFollowers(user.getFollowers().stream()
+        .map(UserFollow::getFollower) // follower is the user who follows
+        .collect(Collectors.toList()));
+
+dto.setFollowing(user.getFollowing().stream()
+        .map(UserFollow::getFollowed) // user is the person being followed
+        .collect(Collectors.toList()));
         dto.setBanned(user.isBanned());
 
         // Map posts (without including creator's posts again to avoid deep nesting)

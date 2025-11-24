@@ -1,14 +1,14 @@
 import {
-  coerceCssPixelValue
-} from "./chunk-46HAYV32.js";
-import {
-  _isTestEnvironment
-} from "./chunk-VENV3F3G.js";
-import {
   ScrollDispatcher,
   ScrollingModule,
   ViewportRuler
 } from "./chunk-AEXRWMMC.js";
+import {
+  _isTestEnvironment
+} from "./chunk-VENV3F3G.js";
+import {
+  coerceCssPixelValue
+} from "./chunk-46HAYV32.js";
 import {
   supportsScrollBehavior
 } from "./chunk-5EG33CFQ.js";
@@ -24,12 +24,12 @@ import {
   Platform
 } from "./chunk-I6DXRCPU.js";
 import {
-  Location
-} from "./chunk-YG47VFKR.js";
-import {
   BidiModule,
   Directionality
 } from "./chunk-BRGVXSCV.js";
+import {
+  Location
+} from "./chunk-YG47VFKR.js";
 import {
   ANIMATION_MODULE_TYPE,
   ApplicationRef,
@@ -3449,4 +3449,4 @@ export {
   createOverlayRef,
   OverlayModule
 };
-//# sourceMappingURL=chunk-BFBSGSFO.js.map
+//# sourceMappingURL=chunk-HZD5LAO4.js.map

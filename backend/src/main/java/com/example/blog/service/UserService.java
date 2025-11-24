@@ -174,7 +174,10 @@ public class UserService {
             user.setIsAlreadyReported(true);
         }
 
-        if (loggedUser.getFollowing().contains(user)) {
+        boolean isFollowing = loggedUser.getFollowing().stream()
+                .anyMatch(uf -> uf.getFollowed().equals(user));
+
+        if (isFollowing) {
             user.setIsAlreadyFollowed(true);
         }
 

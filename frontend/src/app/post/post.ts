@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from './post-model';
 import { PostService } from '../services/post-service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-post',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, AddCommentComponent, RouterLink, CreatePostComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, AddCommentComponent, CreatePostComponent],
   templateUrl: './post.html',
   styleUrl: './post.css'
 })

@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Start polling only if user is logged in
     // if (this.authService.isLoggedIn()) {
-    this.startPolling();
+    this.loadNotifs()
     // }
     console.log("*********************", this.authService.isAdmin());
 
@@ -76,21 +76,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   startPolling(): void {
     // ensure previous subscription stopped
     this.stopPolling();
-    this.lastNotifId = 0;
 
     // Start immediately, then every 30s
-    this.pollingSub = timer(0, 1000000000).pipe(
+    this.pollingSub = timer(0, 5000).pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
         if (!this.authService.isLoggedIn()) return of([] as NotificationItem[]);
-        return this.notificationService.getNotifications(this.lastNotifId, this.pageSize)
+        return this.notificationService.getNotifications(100, this.pageSize)
           .pipe(catchError(err => {
             console.error('Polling error', err);
             return of([] as NotificationItem[]);
           }));
       })
     ).subscribe(notifs => {
-      console.log("notifs:", notifs);
+      console.log(notifs.map(n => n.id));
+
       if (notifs.length > 0) {
         const oldestNotif = notifs.reduce((min, p) => p.id < min.id ? p : min, notifs[0]);
         this.lastNotifId = oldestNotif.id;
@@ -117,7 +117,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
-    if (this.dropdownOpen) {
+    if (this.dropdownOpen) {      
       this.notificationService.markAllAsReadFromDropDown().subscribe(res => {
         if (!res || !res.success) {
           this.myAlert.showAlert("Error", "Cannot mark all notifications as read, try again later!");
@@ -268,7 +268,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.loadingMore = false;
           }
         });
-    }, 1000);
+    }, 500);
   }
 
   onScroll(event: Event) {

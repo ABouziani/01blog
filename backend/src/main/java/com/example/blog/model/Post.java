@@ -46,8 +46,8 @@ public class Post {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
-    private String media; // can store file path or URL
+    @Column
+    private String media;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

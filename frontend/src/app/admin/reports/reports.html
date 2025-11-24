@@ -152,6 +152,12 @@
       </tr>
     </tbody>
   </table>
+   @if (groupedPostReports && groupedPostReports.length == 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🚩</div>
+        <div class="empty-text">No reports to show!</div>
+      </div>
+      }
   <!-- details tables -->
   <div class="postreport-popup-backdrop" *ngIf="showPRPopup" (click)="closePRPopup()"></div>
   <div class="postreport-popup-box" *ngIf="showPRPopup && selectedPostReport">
@@ -219,13 +225,7 @@
         </tr>
       </tbody>
     </table>
-    <div>
+    
       <!-- details table -->
 
-      @if (groupedPostReports && groupedPostReports.length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon">🚩</div>
-        <div class="empty-text">No reports to show!</div>
-      </div>
-      }
-    </div>
+  </div>

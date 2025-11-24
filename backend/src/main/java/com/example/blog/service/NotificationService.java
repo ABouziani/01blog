@@ -1,7 +1,6 @@
 package com.example.blog.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +19,7 @@ import com.example.blog.model.CustomUnreadNotif;
 import com.example.blog.model.Notification;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
+import com.example.blog.model.UserFollow;
 import com.example.blog.repository.CustomUnreadNotifRepository;
 import com.example.blog.repository.NotifRepository;
 import com.example.blog.repository.UserRepository;
@@ -32,8 +32,7 @@ public class NotificationService {
 
     private final NotifRepository notificationRepository;
     private final CustomUnreadNotifRepository customUnreadNotifRepository;
-    private final UserRepository userRepository; 
-
+    private final UserRepository userRepository;
 
     @Transactional
     public void createNotificationForNewPost(Post post) {
@@ -45,60 +44,71 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<NotificationResponseDto> getNotificationsForUser(User viewer, Long lastId, int pageSize) {
+    public List<NotificationResponseDto> getNotificationsForUser(
+            User viewer, Long lastId, int pageSize) {
 
         User managedViewer = userRepository.findById(viewer.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<User> followingAuthors = new ArrayList<>(managedViewer.getFollowing());
+        // Extract authors the user follows
+        List<User> followingAuthors = managedViewer.getFollowing().stream()
+                .map(UserFollow::getFollowed)
+                .collect(Collectors.toList());
 
         if (followingAuthors.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<Notification> notifications;
         Pageable limit = PageRequest.of(0, pageSize);
-        if (lastId == 0) {
-            notifications = notificationRepository.findByAuthorIn(followingAuthors, null, limit);
-        } else {
-            notifications = notificationRepository.findByAuthorIn(followingAuthors, lastId, limit);
-        }
-        Set<Long> customUnreadIds = customUnreadNotifRepository.findNotificationIdsMarkedUnreadByUser(viewer.getId());
+
+        List<Notification> notifications
+                = (lastId == 0)
+                        ? notificationRepository.findByAuthorIn(followingAuthors, null, limit)
+                        : notificationRepository.findByAuthorIn(followingAuthors, lastId, limit);
+
+        // Fetch all unread custom IDs
+        Set<Long> unreadCustomIds
+                = customUnreadNotifRepository.findNotificationIdsMarkedUnreadByUser(viewer.getId());
+
+        LocalDateTime lastCheck = viewer.getLastNotifCheck();
 
         return notifications.stream()
                 .map(notif -> {
-                    Post post = notif.getPost();
-                    User author = notif.getAuthor();
 
-                    boolean isUnread = notif.getCreatedAt().isAfter(viewer.getLastNotifCheck())
-                            || customUnreadIds.contains(notif.getId());
+                    boolean isUnread
+                            = notif.getCreatedAt().isAfter(lastCheck)
+                            || unreadCustomIds.contains(notif.getId());
 
                     return new NotificationResponseDto(
                             notif.getId(),
-                            post.getId(),
-                            post.getTitle(),
-                            author.getId(),
-                            author.getUsername(),
-                            author.getPhoto(),
-                            notif.getCreatedAt(), 
+                            notif.getPost().getId(),
+                            notif.getPost().getTitle(),
+                            notif.getAuthor().getId(),
+                            notif.getAuthor().getUsername(),
+                            notif.getAuthor().getPhoto(),
+                            notif.getCreatedAt(),
                             isUnread
                     );
                 })
-                .sorted((a, b) -> b.getPostCreatedAt().compareTo(a.getPostCreatedAt()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); // no sorting needed
     }
 
     @Transactional
-    public ResponseEntity<?> markNotificationAsUnread(User user, Long notificationId
-    ) {
-        // Verify the notification exists and belongs to someone the user follows
+    public ResponseEntity<?> markNotificationAsUnread(User user, Long notificationId) {
+        // Verify the notification exists
         Optional<Notification> notifOpt = notificationRepository.findById(notificationId);
+
         if (notifOpt.isEmpty()) {
             return new ResponseEntity<>("Notification not found", HttpStatus.BAD_REQUEST);
         }
+
         Notification notif = notifOpt.get();
 
-        if (!user.getFollowing().contains(notif.getAuthor())) {
+        // Check if user is following the author
+        boolean isFollowingAuthor = user.getFollowing().stream()
+                .anyMatch(uf -> uf.getFollowed().equals(notif.getAuthor()));
+
+        if (!isFollowingAuthor) {
             return new ResponseEntity<>("You cannot mark this notification as unread", HttpStatus.BAD_REQUEST);
         }
 
@@ -107,6 +117,7 @@ public class NotificationService {
         entry.setUser(user);
         entry.setNotification(notif);
         customUnreadNotifRepository.save(entry);
+
         return ResponseEntity.ok().build();
     }
 
@@ -116,6 +127,7 @@ public class NotificationService {
         if (notifOpt.isEmpty()) {
             return new ResponseEntity<>("Notification not found", HttpStatus.BAD_REQUEST);
         }
+        user.setLastNotifCheck(LocalDateTime.now());
         customUnreadNotifRepository.deleteByUserIdAndNotificationId(user.getId(), notificationId);
         return ResponseEntity.ok().build();
     }
@@ -124,7 +136,7 @@ public class NotificationService {
     @Transactional
     public void markAllNotificationsAsRead(User user) {
         user.setLastNotifCheck(LocalDateTime.now());
-        userRepository.save(user); 
+        userRepository.save(user);
         customUnreadNotifRepository.deleteByUserId(user.getId());
     }
 
