@@ -16,7 +16,6 @@ export class AddCommentComponent {
 
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
-  i  =0;
   isLoading = false;
 
   commentForm = this.fb.group({
@@ -29,11 +28,7 @@ export class AddCommentComponent {
     this.isLoading = true;
     const { content } = this.commentForm.value;
     
-    while(true){
-      if (this.i==30){
-        break;
-      }
-      this.i++;
+      
     this.http
       .post('http://localhost:8080/api/comments/add', {
         postId: this.postId,
@@ -52,6 +47,6 @@ export class AddCommentComponent {
           // Optional: show user-friendly error message
         }
       });
-  }
+  
   }
 }
