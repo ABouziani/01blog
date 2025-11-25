@@ -67,7 +67,7 @@ public class CommentService {
 
         if (commentOpt.isPresent() && loggedUserOpt.isPresent()) {
             if (!Objects.equals(commentOpt.get().getUser().getId(), loggedUserOpt.get().getId())) {
-                return new ResponseEntity<>("You can delete only your comments", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("You can delete only your comments", HttpStatus.BAD_REQUEST);
             }
             commentRepository.delete(commentOpt.get());
         }

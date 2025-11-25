@@ -66,6 +66,8 @@ export class UserComponent {
           this.location.go('/users/' + this.user?.id.toString());
         },
         error: (err) => {
+          console.log(err);
+          
           // this.error = err.error.message;
           this.error = err.error;
         }

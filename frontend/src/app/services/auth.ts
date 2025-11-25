@@ -18,42 +18,47 @@ export class AuthService {
   private readonly TOKEN_KEY = 'access_token';
   private readonly REFRESH_KEY = 'refresh_token';
 
-  public loggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
+  loggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('access_token'));
+
   private isadmin = signal<boolean>(false);
   public loggedId = signal<number>(0);
 
   constructor(private http: HttpClient, public router: Router) {
     // On app start: check if we have a token AND if it's valid on backend
-    this.checkAuthStatus();
+    // this.checkAuthStatus();
   }
 
-  private checkAuthStatus(): void {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    if (!token) {
-      this.loggedIn.next(false);
-      return;
-    }
-    // Send token to backend to verify
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this.http.get<{ id: number, owner: boolean, role: string }>('http://localhost:8080/api/auth/islogged', { headers })
-      .pipe(
-        map(response => {
-          console.log("oninit : ", response)
-          this.isadmin.set(response.role == "ADMIN");
-          this.loggedId.set(response.id);
-          return true;
-        }), // 200 → valid
-        catchError((err) => {
-          console.log(err);
-          this.clearTokens(); // 401 or error → invalid
-          return of(false);
-        })
-      )
-      .subscribe(isValid => {
-        this.loggedIn.next(isValid);
-      });
+  public checkAuthStatus(): void {
+  const token = localStorage.getItem(this.TOKEN_KEY);
+  if (!token) {
+    // No token, but do NOT modify loggedIn here
+    console.log('No token found. Skipping backend validation.');
+    return;
   }
+
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  this.http.get<{ id: number; owner: boolean; role: string }>(
+    'http://localhost:8080/api/auth/islogged',
+    { headers }
+  ).pipe(
+    map(response => {
+      console.log(response);
+      
+      // Update user info safely
+      this.isadmin.set(response.role === 'ADMIN');
+      this.loggedId.set(response.id);
+      console.log('Backend validation success:', response);
+    }),
+    catchError(err => {
+      console.log(err);
+      
+      console.warn('Backend validation failed, keeping local login state:', err);
+      // DO NOT call clearTokens() or set loggedIn=false
+      return of(null); 
+    })
+  ).subscribe();
+}
 
   login(identifier: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('http://localhost:8080/api/auth/login', { identifier, password }).pipe(
@@ -78,7 +83,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.loggedIn.value;
   }
-  setLoggedIn(b:boolean): void {
+  setLoggedIn(b: boolean): void {
     this.loggedIn.next(false);
   }
   isAdmin(): boolean {

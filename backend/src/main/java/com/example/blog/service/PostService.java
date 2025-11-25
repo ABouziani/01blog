@@ -139,7 +139,7 @@ public class PostService {
         String requesterRole = loggedUser.getRole();
 
         if (!post.getCreator().getId().equals(requesterId) && !requesterRole.equals("ADMIN")) {
-            return new ResponseEntity<>("You can only modify your own posts", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("You can only modify your own posts", HttpStatus.BAD_REQUEST);
         }
 
         if ((media != null && !media.isEmpty()) || noPhoto) {

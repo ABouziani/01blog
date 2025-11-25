@@ -70,6 +70,10 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+
+        }
         if (id == 0) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             id = userDetails.getId();

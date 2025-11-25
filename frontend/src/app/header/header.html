@@ -71,7 +71,7 @@
           <div class="loading-more" *ngIf="loadingMore">
             Loading notifications...
           </div>
-          <div class="all-loaded" *ngIf="allLoaded">
+          <div class="all-loaded" *ngIf="allLoaded && notifications?.length">
             <div class="empty-comments-icon">📝</div>
             <br>
             <p class="empty-comments-text">No more notifications!</p>

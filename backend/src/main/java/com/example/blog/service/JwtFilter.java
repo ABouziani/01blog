@@ -82,7 +82,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 User user = userOpt.get();
                 if (user.isBanned()) {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account banned");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Account banned");
                     return;
                 }
 

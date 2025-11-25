@@ -10,9 +10,6 @@ fix notifs
 handling all confirmation dialog
 
 handel user last notif check
-redirect 401
-delet user
-
-
 
 notifs after follow
+rite limit
