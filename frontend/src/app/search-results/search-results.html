@@ -1,0 +1,75 @@
+<div class="results-container">
+      <!-- Back Button -->
+      <button mat-stroked-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon> Back
+      </button>
+
+      <!-- Loading -->
+      @if (state.loading) {
+        <div class="loading">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Searching for "{{ currentQuery }}" in {{ currentType === 'users' ? 'users' : 'posts' }}...</p>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (state.error) {
+        <div class="error">
+          <mat-icon>error</mat-icon>
+          <p>{{ state.error }}</p>
+          <button mat-stroked-button color="primary" (click)="retry()">Retry</button>
+        </div>
+      }
+
+      <!-- Results: Users -->
+      @if (!state.loading && !state.error && state.users.length) {
+        <h2>Users ({{ state.users.length }})</h2>
+        <div class="results-grid">
+          @for (user of state.users; track user.id) {
+            <mat-card class="result-card user-card">
+              @if (user.photo) {
+                <img [src]="user.photo" alt="{{ user.username }}" class="avatar" />
+              } @else {
+                <div class="avatar-placeholder">
+                  <mat-icon>person</mat-icon>
+                </div>
+              }
+              <div class="card-content">
+                <h3>{{ user.username }}</h3>
+                @if (user.bio) {
+                  <p class="bio">{{ user.bio | slice:0:100 }}...</p>
+                }
+              </div>
+            </mat-card>
+          }
+        </div>
+      }
+
+      <!-- Results: Posts -->
+      @if (!state.loading && !state.error && state.posts.length) {
+        <h2>Posts ({{ state.posts.length }})</h2>
+        <div class="results-grid">
+          @for (post of state.posts; track post.id) {
+            <mat-card class="result-card post-card">
+              <div class="card-content">
+                <h3>{{ post.title }}</h3>
+                <p class="excerpt">{{ post.description | slice:0:150 }}...</p>
+                <div class="meta">
+                  <span>by {{ post.creatorUsername }}</span>
+                  <span>{{ post.createdAt | date:'medium' }}</span>
+                </div>
+              </div>
+            </mat-card>
+          }
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (!state.loading && !state.error && !state.users.length && !state.posts.length) {
+        <div class="no-results">
+          <mat-icon>search_off</mat-icon>
+          <h3>No {{ currentType === 'users' ? 'users' : 'posts' }} found</h3>
+          <p>Try different keywords.</p>
+        </div>
+      }
+    </div>

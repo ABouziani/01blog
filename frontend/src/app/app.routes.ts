@@ -14,6 +14,7 @@ import { WelcomeComponent } from './welcome/welcome';
 import { PostsComponent } from './posts/posts';
 import { RegisterComponent } from './register/register';
 import { NotfoundComponent } from './notfound/notfound';
+import { SearchResultsComponent } from './search-results/search-results';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent , canActivate: [unAuthGuard]},
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'posts/:id', component: PostComponent, canActivate: [authGuard] },
     { path: 'users/:id', component: UserComponent, canActivate: [authGuard] },
     { path: 'myprofile', component: UserComponent, canActivate: [authGuard] },
+    { path: 'searchresults', component: SearchResultsComponent, title: 'Search Results'},
     {
         path: 'adminpanel', component: AdminPanel, canActivate: [authGuard], children: [
             { path: 'users', component: AdminUsersComponent },

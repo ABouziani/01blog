@@ -101,4 +101,30 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     LIMIT :n
     """, nativeQuery = true)
     List<HomePostDto> getTopPostsForHome(@Param("n") int n);
+
+    @Query("SELECT p FROM Post p WHERE " +
+           "LOWER(p.title) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+           "LOWER(p.description) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Post> searchPosts(@Param("term") String term);
+
+    @Query("""
+        SELECT 
+            p.id AS id,
+            p.title AS title,
+            p.description AS description,
+            p.media AS media,
+            p.createdAt AS createdAt,
+            COALESCE(SUM(CASE WHEN r.type = 'LIKE' THEN 1 ELSE 0 END), 0) AS likes,
+            COALESCE(SUM(CASE WHEN r.type = 'DISLIKE' THEN 1 ELSE 0 END), 0) AS dislikes,
+            p.creator.id AS creatorId,
+            p.creator.username AS creatorUsername
+        FROM Post p
+        LEFT JOIN p.reactions r
+        WHERE 
+            LOWER(p.title) LIKE LOWER(CONCAT('%', :term, '%')) 
+            OR LOWER(p.description) LIKE LOWER(CONCAT('%', :term, '%'))
+        GROUP BY 
+            p.id, p.title, p.description, p.media, p.createdAt, p.creator.id, p.creator.username
+        """)
+    List<PostsWithReactionsCountDto> searchPostsProjected(@Param("term") String term);
 }

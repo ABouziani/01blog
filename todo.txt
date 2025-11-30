@@ -1,23 +1,14 @@
 search
 
-fix notifs
+
 remove media on post edit
 handling all confirmation dialog
 
 search
 
-fix notifs
-handling all confirmation dialog
-
-handel user last notif check
 
 notifs after follow
+
 rite limit
-ban admin
-
-hide a hidded post
-
-
-no more posts
 
 handle 401 logout

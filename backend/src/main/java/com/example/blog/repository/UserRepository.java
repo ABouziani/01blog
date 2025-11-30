@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.blog.dtoresponses.ActiveUsersDto;
+import com.example.blog.dtoresponses.UserSearchDto;
 import com.example.blog.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,6 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByIdNot(Long id);
 
     Optional<User> findByEmailAndIsBannedFalse(String email);
+
     Optional<User> findByEmail(String email);
 
     // Optional<User> findByUsernameAndIsBannedFalse(String username);
@@ -29,7 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Long countByRoleAndIsBannedFalse(String role);
 
     boolean existsByEmailAndIsBannedFalse(String email);
-
 
     @Query(value = """
     SELECT 
@@ -45,4 +46,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
         LIMIT :n;
     """, nativeQuery = true)
     List<ActiveUsersDto> getActiveUsersForHome(@Param("n") int n);
+
+    @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<User> searchUsers(@Param("term") String term);
+
+    @Query("""
+    SELECT 
+        u.id AS id,
+        u.username AS username,
+        u.photo AS photo,
+        u.bio AS bio
+    FROM User u
+    WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :term, '%'))
+    """)
+List<UserSearchDto> searchUsersProjected(@Param("term") String term);
 }

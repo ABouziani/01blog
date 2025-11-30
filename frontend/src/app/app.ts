@@ -5,10 +5,12 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FooterComponent } from './footer/footer';
 import { AuthService } from './services/auth';
+import { SearchBarComponent } from './search/search';
+import { SearchResultsComponent } from './search-results/search-results';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,HeaderComponent,RouterModule,HttpClientModule, FooterComponent],
+  imports: [RouterOutlet,HeaderComponent,RouterModule,HttpClientModule, FooterComponent, SearchBarComponent, SearchResultsComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
