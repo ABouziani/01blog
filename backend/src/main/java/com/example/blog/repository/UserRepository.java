@@ -55,7 +55,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
         u.id AS id,
         u.username AS username,
         u.photo AS photo,
-        u.bio AS bio
+        u.bio AS bio,
+        u.createdAt AS createdAt,
+        SIZE(u.followers) AS followersCount,
+        SIZE(u.following) AS followingCount,
+        SIZE(u.posts) AS postsCount
     FROM User u
     WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :term, '%'))
     """)

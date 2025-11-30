@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { SearchBarComponent } from '../search/search';
 
 interface recentPosts { id:number; title: string; creatorId: number; creatorUsername: string; media: string; }
 interface activeUsers { id:number; name: string; posts: number; avatar: string; }
@@ -10,7 +11,7 @@ interface topPosts { id:number; title: string; creatorId: number; creatorUsernam
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, SearchBarComponent],
   standalone: true,
   templateUrl: './home.html',
   styleUrls: ['./home.css']

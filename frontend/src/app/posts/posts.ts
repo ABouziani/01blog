@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { AlertService } from '../services/alert-service';
+import { SearchBarComponent } from '../search/search';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.html',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SearchBarComponent],
   styleUrls: ['./posts.css', '../user/user.css'],
   encapsulation: ViewEncapsulation.None
 })

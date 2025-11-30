@@ -1,75 +1,106 @@
+<app-search-bar></app-search-bar>
 <div class="results-container">
-      <!-- Back Button -->
-      <button mat-stroked-button (click)="goBack()" class="back-button">
-        <mat-icon>arrow_back</mat-icon> Back
-      </button>
 
-      <!-- Loading -->
-      @if (state.loading) {
-        <div class="loading">
-          <mat-spinner diameter="40"></mat-spinner>
-          <p>Searching for "{{ currentQuery }}" in {{ currentType === 'users' ? 'users' : 'posts' }}...</p>
-        </div>
-      }
+  <!-- Loading -->
+  <div class="loading" *ngIf="state.loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
 
-      <!-- Error -->
-      @if (state.error) {
-        <div class="error">
-          <mat-icon>error</mat-icon>
-          <p>{{ state.error }}</p>
-          <button mat-stroked-button color="primary" (click)="retry()">Retry</button>
-        </div>
-      }
+  <!-- Error -->
+  <div class="error-box" *ngIf="state.error">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ state.error }}</p>
+    <button mat-raised-button color="primary">Retry</button>
+  </div>
 
-      <!-- Results: Users -->
-      @if (!state.loading && !state.error && state.users.length) {
-        <h2>Users ({{ state.users.length }})</h2>
-        <div class="results-grid">
-          @for (user of state.users; track user.id) {
-            <mat-card class="result-card user-card">
-              @if (user.photo) {
-                <img [src]="user.photo" alt="{{ user.username }}" class="avatar" />
-              } @else {
-                <div class="avatar-placeholder">
-                  <mat-icon>person</mat-icon>
-                </div>
-              }
-              <div class="card-content">
-                <h3>{{ user.username }}</h3>
-                @if (user.bio) {
-                  <p class="bio">{{ user.bio | slice:0:100 }}...</p>
-                }
-              </div>
-            </mat-card>
-          }
-        </div>
-      }
+  <!-- No Query -->
+  <div class="no-query" *ngIf="!state.loading && !currentQuery">
+    <mat-icon>search</mat-icon>
+    <p>Type something to start searching...</p>
+  </div>
 
-      <!-- Results: Posts -->
-      @if (!state.loading && !state.error && state.posts.length) {
-        <h2>Posts ({{ state.posts.length }})</h2>
-        <div class="results-grid">
-          @for (post of state.posts; track post.id) {
-            <mat-card class="result-card post-card">
-              <div class="card-content">
-                <h3>{{ post.title }}</h3>
-                <p class="excerpt">{{ post.description | slice:0:150 }}...</p>
-                <div class="meta">
-                  <span>by {{ post.creatorUsername }}</span>
-                  <span>{{ post.createdAt | date:'medium' }}</span>
-                </div>
-              </div>
-            </mat-card>
-          }
-        </div>
-      }
+  <!-- No Results: Users -->
+  <div class="no-results" *ngIf="!state.loading && currentQuery && currentType === 'users' && state.users.length === 0">
+    <mat-icon>person_search</mat-icon>
+    <p>No users found for "{{ currentQuery }}"</p>
+  </div>
 
-      <!-- No Results -->
-      @if (!state.loading && !state.error && !state.users.length && !state.posts.length) {
-        <div class="no-results">
-          <mat-icon>search_off</mat-icon>
-          <h3>No {{ currentType === 'users' ? 'users' : 'posts' }} found</h3>
-          <p>Try different keywords.</p>
+  <!-- No Results: Posts -->
+  <div class="no-results" *ngIf="!state.loading && currentQuery && currentType === 'posts' && state.posts.length === 0">
+    <mat-icon>article</mat-icon>
+    <p>No posts found for "{{ currentQuery }}"</p>
+  </div>
+
+  <!-- RESULTS: USERS -->
+  <div class="users-list" *ngIf="currentType === 'users' && state.users.length > 0">
+    <h2>Users</h2>
+
+    <div class="users-grid">
+      <mat-card class="user-card" *ngFor="let user of state.users">
+        <div class="user-header">
+          <img (click)="router.navigate(['/users/' + user.id])"
+            [src]="user.photo ? 'http://localhost:8080' + user.photo : 'user_avatar.png'" alt="User photo"
+            class="clickable avatar" />
+
+          <div class="header-text">
+            <h3 class="clickable" (click)="router.navigate(['/users/' + user.id])">
+              {{ user.username }}
+            </h3>
+            <span class="meta">{{ user.role }}</span>
+            <span class="meta">Joined: {{ user.createdAt | date:'mediumDate' }}</span>
+          </div>
         </div>
-      }
+
+        <p class="bio" *ngIf="user.bio; else noBio">
+          {{ user.bio }}
+        </p>
+        <ng-template #noBio>
+          <p class="bio muted">No bio available.</p>
+        </ng-template>
+
+        <div class="stats">
+          <div>
+            <strong>{{ user.followersCount || 0 }}</strong>
+            <small>Followers</small>
+          </div>
+          <div>
+            <strong>{{ user.followingCount || 0 }}</strong>
+            <small>Following</small>
+          </div>
+          <div>
+            <strong>{{ user.postsCount || 0 }}</strong>
+            <small>Posts</small>
+          </div>
+        </div>
+      </mat-card>
     </div>
+  </div>
+
+  <div class="users-list" *ngIf="currentType === 'posts' && state.posts.length > 0">
+    <h2 class="posts-section-title">Posts</h2>
+    <div class="posts-grid" >
+      <div class="post-card" *ngFor="let post of state.posts" (click)="router.navigate(['/posts/' + post.id])">
+        <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
+        </div>
+        <div class="post-meta">
+          <span class="post-author" (click)="router.navigate(['/users/', post.creatorId])">
+            {{ post.creatorUsername }}
+          </span>
+          <time class="post-date" [attr.datetime]="post.createdAt">
+            {{ post.createdAt | date:'mediumDate' }}
+          </time>
+        </div>
+        <div class="post-body">
+          <h3 class="post-title">{{ post.title }}</h3>
+          <p class="post-description">
+            {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+          </p>
+        </div>
+
+        <div #scrollSentinel class="scroll-sentinel"></div>
+
+      </div>
+
+      
+
+  </div>

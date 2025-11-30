@@ -1,1 +1,71 @@
-.search-form { width: 100%; max-width: 500px; }
+/* Overall wrapper */
+.custom-search {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    --primary: #3f51b5;
+    
+}
+
+/* Input field */
+.custom-search .search-input {
+    font-size: 14px;
+    height: fit-content;
+    padding-left: 10px;
+    color: var(--text);
+    border-radius: 25px !important;
+}
+
+.search-input::placeholder {
+    padding-left: 10px;
+}
+
+/* Select prefix */
+.custom-search .search-type {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 5px;
+    margin-left: 5px;
+}
+
+/* Search button */
+.custom-search .search-button {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.custom-search .search-button:hover:not([disabled]) {
+    transform: scale(1.1);
+}
+
+.custom-search .search-button[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Focus highlight */
+.custom-search.mat-focused .mat-form-field-outline-thick {
+    /* border-color: red; */
+}
+
+/* Hover subtle outline color */
+.custom-search:hover .mat-form-field-outline {
+    /* border-color: red !important; */
+    border-color: var(--primary);
+}
+
+/* Light shadow on focus */
+.custom-search.mat-focused .mat-form-field-flex {
+    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.15);
+    border-radius: 6px;
+}
+
+/* Smooth transition */
+.custom-search .mat-form-field-outline,
+.custom-search .mat-form-field-outline-thick,
+.custom-search .mat-form-field-flex {
+    transition: 0.2s ease;
+}

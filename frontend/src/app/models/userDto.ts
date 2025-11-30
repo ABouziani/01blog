@@ -12,6 +12,9 @@ export interface UserDto {
   alreadyReported: boolean;
   alreadyFollowed: boolean;
   owner: boolean;
+  followersCount : number,
+  followingCount : number,
+  postsCount : number,
   followers: User[];
   following: User[];
   banned:boolean;

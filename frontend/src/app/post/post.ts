@@ -10,10 +10,11 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreatePostComponent } from '../createpost/createpost';
 import { AlertService } from '../services/alert-service';
+import { SearchBarComponent } from '../search/search';
 
 @Component({
   selector: 'app-post',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, AddCommentComponent, CreatePostComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, AddCommentComponent, CreatePostComponent, SearchBarComponent],
   templateUrl: './post.html',
   styleUrl: './post.css'
 })
@@ -94,7 +95,10 @@ export class PostComponent {
       catchError(error => {
         console.error('Reaction error:', error.error);
         // Optional: show error message
-        this.myAlert.showAlert("Error", "Failed to react. Please try again.");
+        if (error.status == 400) {
+        this.myAlert.showAlert("Error", error.error);
+        }
+        // this.myAlert.showAlert("Error", "Failed to react. Please try again.");
         return of(null);
       }),
       finalize(() => {

@@ -13,12 +13,13 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../alert-dialog/alert-dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AlertService } from '../services/alert-service';
+import { SearchBarComponent } from '../search/search';
 
 
 @Component({
   selector: 'app-user',
   imports: [CommonModule, FormsModule, EditprofileComponent, MatDialogModule,
-    MatButtonModule],
+    MatButtonModule, SearchBarComponent],
   templateUrl: './user.html',
   styleUrl: './user.css'
 })

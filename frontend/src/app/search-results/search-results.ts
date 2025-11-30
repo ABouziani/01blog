@@ -9,6 +9,7 @@ import { Subscription, switchMap } from 'rxjs';
 import { SearchService } from '../services/search';
 import { UserDto } from '../models/userDto';
 import { PostDto } from '../models/postDto';
+import { SearchBarComponent } from '../search/search';
 
 interface SearchResultState {
   loading: boolean;
@@ -25,10 +26,11 @@ interface SearchResultState {
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    SearchBarComponent
   ],
   templateUrl: `./search-results.html`,
-  styleUrl: `./search-results.css`
+  styleUrls: [`./search-results.css`, '../posts/posts.css','../user/user.css']
 })
 export class SearchResultsComponent implements OnInit {
   state: SearchResultState = {
@@ -45,7 +47,7 @@ export class SearchResultsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    public router: Router,
     private searchService: SearchService
   ) {}
 
@@ -75,6 +77,8 @@ export class SearchResultsComponent implements OnInit {
       )
       .subscribe({
         next: (result: any) => {
+          console.log("-+-+-+-+-+-",result);
+          
           if (Array.isArray(result)) {
             // Legacy fallback (shouldn’t happen)
             result = { users: [], posts: result };
@@ -102,15 +106,6 @@ export class SearchResultsComponent implements OnInit {
     this.subscription?.unsubscribe();
   }
 
-  retry(): void {
-    if (this.currentQuery) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { type: this.currentType, q: this.currentQuery },
-        queryParamsHandling: 'merge'
-      });
-    }
-  }
 
   goBack(): void {
     this.router.navigate(['/']);

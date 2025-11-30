@@ -12,7 +12,7 @@ import { SearchResultsComponent } from './search-results/search-results';
   selector: 'app-root',
   imports: [RouterOutlet,HeaderComponent,RouterModule,HttpClientModule, FooterComponent, SearchBarComponent, SearchResultsComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css','./search/search.css']
 })
 export class AppComponent {
   protected readonly title = signal('01blog-frontend');

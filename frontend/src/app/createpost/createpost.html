@@ -35,10 +35,10 @@
       <div class="form-group" *ngIf="editing">
         <label for="photo">Post media preview</label>
         <div class="postmediaprev-wrapper">
-          <div *ngIf="isMediaPhoto(editing.media.toString())" class="postmediaprev"
+          <div *ngIf="editing.media && isMediaPhoto(editing.media.toString())" class="postmediaprev"
             [style.background-image]="'url(http://localhost:8080' + editing.media + ')'">
           </div>
-          <video class="postmediaprev" *ngIf="isMediaVideo(editing.media.toString())" [src]="'http://localhost:8080'+editing.media"
+          <video class="postmediaprev" *ngIf="editing.media && isMediaVideo(editing.media.toString())" [src]="'http://localhost:8080'+editing.media"
             controls muted preload="metadata"></video>
 
           <button class="remove-btn" *ngIf="editing.media" type="button" (click)="removePhoto()">
