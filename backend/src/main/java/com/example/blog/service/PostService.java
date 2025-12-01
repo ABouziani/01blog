@@ -85,7 +85,7 @@ public class PostService {
         }
         User loggedUser = loggedUserOpt.get();
 
-        if (Objects.equals(post.getCreator().getId(), loggedUserId) || loggedUser.getRole().equals("ADMIN")) {
+        if (Objects.equals(post.getCreator().getId(), loggedUserId)) {
             post.setIsOwner(true);
         }
 
@@ -138,7 +138,7 @@ public class PostService {
 
         String requesterRole = loggedUser.getRole();
 
-        if (!post.getCreator().getId().equals(requesterId) && !requesterRole.equals("ADMIN")) {
+        if (!post.getCreator().getId().equals(requesterId) ) {
             return new ResponseEntity<>("You can only modify your own posts", HttpStatus.BAD_REQUEST);
         }
 

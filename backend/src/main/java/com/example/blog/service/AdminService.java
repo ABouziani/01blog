@@ -210,7 +210,7 @@ public class AdminService {
     }
 
     public ResponseEntity<?> resolvePostReport(Long postId, String action) {
-        Optional<Post> postOpt = postService.getPostById(postId);
+        Optional<Post> postOpt = postRepository.findById(postId);
         if (postOpt.isEmpty()) {
             return new ResponseEntity<>("Post not found!", HttpStatus.BAD_REQUEST);
         }
