@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommentService } from '../services/comment';
 import { finalize } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { AlertService } from '../services/alert-service';
 
 @Component({
   selector: 'app-add-comment',
@@ -16,6 +17,7 @@ export class AddCommentComponent {
 
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
+  private myAlert = inject(AlertService);
   isLoading = false;
 
   commentForm = this.fb.group({
@@ -27,8 +29,8 @@ export class AddCommentComponent {
 
     this.isLoading = true;
     const { content } = this.commentForm.value;
-    
-      
+
+
     this.http
       .post('http://localhost:8080/api/comments/add', {
         postId: this.postId,
@@ -44,9 +46,14 @@ export class AddCommentComponent {
         error: (err) => {
           console.error('Failed to add comment:', err);
           this.isLoading = false;
+          if (err.statucode == 400) {
+            this.myAlert.showAlert("Error", "internal server error!");
+          } else {
+            this.myAlert.showAlert("Error", err.error);
+          }
           // Optional: show user-friendly error message
         }
       });
-  
+
   }
 }

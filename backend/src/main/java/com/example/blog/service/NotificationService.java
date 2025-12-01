@@ -47,11 +47,8 @@ public class NotificationService {
     public List<NotificationResponseDto> getNotificationsForUser(
             User viewer, Long lastId, int pageSize) {
 
-        User managedViewer = userRepository.findById(viewer.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         // Extract authors the user follows
-        List<User> followingAuthors = managedViewer.getFollowing().stream()
+        List<User> followingAuthors = viewer.getFollowing().stream()
                 .map(UserFollow::getFollowed)
                 .collect(Collectors.toList());
 
@@ -63,8 +60,8 @@ public class NotificationService {
 
         List<Notification> notifications
                 = (lastId == 0)
-                        ? notificationRepository.findByAuthorIn(followingAuthors, null, limit)
-                        : notificationRepository.findByAuthorIn(followingAuthors, lastId, limit);
+                        ? notificationRepository.findNotificationsAfterFollowDate(viewer.getId(), null, limit)
+                        : notificationRepository.findNotificationsAfterFollowDate(viewer.getId(), lastId, limit);
 
         // Fetch all unread custom IDs
         Set<Long> unreadCustomIds
@@ -76,8 +73,7 @@ public class NotificationService {
                 .map(notif -> {
 
                     boolean isUnread
-                            = notif.getCreatedAt().isAfter(lastCheck)
-                            || unreadCustomIds.contains(notif.getId());
+                            = notif.getCreatedAt().isAfter(lastCheck) || unreadCustomIds.contains(notif.getId());
 
                     return new NotificationResponseDto(
                             notif.getId(),

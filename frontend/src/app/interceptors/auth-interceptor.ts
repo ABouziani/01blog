@@ -3,10 +3,12 @@ import { inject } from '@angular/core';
 import { catchError, EMPTY, throwError, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth';
 import { Router } from '@angular/router';
+import { AlertService } from '../services/alert-service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const myAlert = inject(AlertService);
 
   const token = localStorage.getItem('access_token');
   const refresh = localStorage.getItem('refresh_token');
@@ -44,13 +46,20 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       // 403 Forbidden (user not allowed)
-          // if ((error.status === 403 || error.status === 401) && !req.url.endsWith('/login') ) {
+      // if ((error.status === 403 || error.status === 401) && !req.url.endsWith('/login') ) {
       if (error.status === 403 && !req.url.endsWith('/login')) {
         console.warn('Access denied:', req.url);
         // Option 1: redirect to a forbidden page
-        router.navigate(['/']); 
+        router.navigate(['/']);
         // Option 2: or just log out
         // authService.logout();
+        return EMPTY;
+      }
+
+      if (error.status === 0) {
+        console.log("Server unreachable");
+        myAlert.showAlert("Error", "Server unreachable!");
+        authService.logout();
         return EMPTY;
       }
 

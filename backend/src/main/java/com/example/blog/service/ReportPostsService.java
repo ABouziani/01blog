@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.blog.dto.NewReportPostRequest;
-import com.example.blog.exceptions.DuplicateReportException;
 import com.example.blog.model.Post;
 import com.example.blog.model.ReportPosts;
 import com.example.blog.model.User;
@@ -50,7 +48,7 @@ public class ReportPostsService {
 
         User reporter = reporterOpt.get();
 
-        Optional<Post> reportedPostOpt = postRepository.findById(newReportPostRequest.getReportedPostId());
+        Optional<Post> reportedPostOpt = postRepository.findByIdAndIsHiddenFalse(newReportPostRequest.getReportedPostId());
          if (reportedPostOpt.isEmpty()) {
             return new ResponseEntity<>("Reported Post not found", HttpStatus.BAD_REQUEST);
         }

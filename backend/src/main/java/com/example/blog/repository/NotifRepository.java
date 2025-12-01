@@ -1,7 +1,7 @@
 package com.example.blog.repository;
 
-import java.util.List;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +20,16 @@ public interface NotifRepository extends JpaRepository<Notification, Long> {
         ORDER BY n.createdAt DESC
         """)
     List<Notification> findByAuthorIn(@Param("followingAuthors") List<com.example.blog.model.User> followingAuthors, @Param("lastId") Long lastId, Pageable pageable);
+
+    @Query("""
+    SELECT n FROM Notification n
+    JOIN UserFollow uf ON uf.followed = n.author
+    WHERE uf.follower.id = :currentUserId
+      AND n.createdAt > uf.followedAt
+      AND (:lastId IS NULL OR n.id < :lastId)
+    ORDER BY n.createdAt DESC
+    """)
+    List<Notification> findNotificationsAfterFollowDate(@Param("currentUserId") Long currentUserId, @Param("lastId") Long lastId, Pageable pageable);
 
     // Optional: Fetch notifications newer than a timestamp (for optimization)
     @Query("""

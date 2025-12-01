@@ -1,6 +1,5 @@
 package com.example.blog.repository;
 
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.blog.model.CustomUnreadNotif;
-import com.example.blog.model.Notification;
 
 public interface CustomUnreadNotifRepository extends JpaRepository<CustomUnreadNotif, Long> {
 
@@ -19,6 +17,17 @@ public interface CustomUnreadNotifRepository extends JpaRepository<CustomUnreadN
     // Get all notification IDs that a user has marked as unread
     @Query("SELECT c.notification.id FROM CustomUnreadNotif c WHERE c.user.id = :userId")
     Set<Long> findNotificationIdsMarkedUnreadByUser(@Param("userId") Long userId);
+
+    @Query("""
+    SELECT c.notification.id
+    FROM CustomUnreadNotif c
+    JOIN UserFollow uf
+      ON uf.followed = c.notification.author
+     AND uf.follower.id = :userId
+    WHERE c.user.id = :userId
+      AND c.notification.createdAt > uf.followedAt
+    """)
+    Set<Long> findUnreadNotificationIdsAfterFollowDate(@Param("userId") Long userId);
 
     // Delete entry when user reads it again
     @Modifying

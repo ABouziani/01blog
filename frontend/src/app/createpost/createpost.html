@@ -86,8 +86,8 @@
       <!-- Submit Button -->
       <div class="form-actions">
         <button type="submit" *ngIf="!editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn">
-          <span *ngIf="!isSubmitting">Create Post</span>
-          <span *ngIf="isSubmitting">Creating...</span>
+          <span *ngIf="!isSubmitting" >Create Post</span>
+          <span *ngIf="isSubmitting" disabled>Creating...</span>
         </button>
 
         <button type="button" *ngIf="editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn"

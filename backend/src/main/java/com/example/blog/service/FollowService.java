@@ -47,8 +47,8 @@ public class FollowService {
         }
 
         UserFollow uf = new UserFollow();
-        uf.setFollower(follower);   // ← REQUIRED
-        uf.setFollowed(followed);   // ← REQUIRED
+        uf.setFollower(follower);  
+        uf.setFollowed(followed); 
 
         userFollowRepository.save(uf);
 

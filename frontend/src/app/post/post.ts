@@ -11,6 +11,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { CreatePostComponent } from '../createpost/createpost';
 import { AlertService } from '../services/alert-service';
 import { SearchBarComponent } from '../search/search';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-post',
@@ -42,7 +43,10 @@ export class PostComponent {
   selectedFile: File | null = null;
   previewUrl: string | null = null; // For image/video preview
 
-  constructor(private fb: FormBuilder, private http: HttpClient, public postService: PostService, private route: ActivatedRoute, public router: Router, private cd: ChangeDetectorRef, private myAlert: AlertService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, 
+    public postService: PostService, private route: ActivatedRoute, 
+    public router: Router, private cd: ChangeDetectorRef, 
+    private myAlert: AlertService, public authService : AuthService) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],

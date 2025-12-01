@@ -131,7 +131,6 @@ export class CreatePostComponent {
         next: (response) => {
           this.successMessage = 'Post created successfully!';
           this.noPhoto = false;
-          this.isSubmitting = false;
           setTimeout(() => {
             this.router.navigate(['/']);
           }, 2000);

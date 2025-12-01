@@ -19,12 +19,12 @@
               <i class="bi bi-person-circle me-2"></i>Discover
             </button>
 
-            <span *ngIf="post && post.owner">Manage this post:</span>
-            <div *ngIf="post && post.owner" class="d-flex gap-2">
-              <button class="btn action-btn btn-delete flex-fill" *ngIf="!isEditing" (click)="delete(post.id)">
+            <span *ngIf="post && (post.owner || authService.isAdmin())">Manage this post:</span>
+            <div class="d-flex gap-2" *ngIf="!isEditing">
+              <button *ngIf="post && (post.owner || authService.isAdmin())" class="btn action-btn btn-delete flex-fill"  (click)="delete(post.id)">
                 <i class="bi bi-trash"></i>
               </button>
-              <button class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
+              <button *ngIf="post && post.owner" class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
                 <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
               </button>
             </div>
@@ -80,12 +80,12 @@
               post.creator.username }}</p>
             <p class="text-muted small mb-0">{{ post.creator.bio }}</p>
           </div>
-          <span *ngIf="post && post.owner" style="margin-left: auto;">Manage this post:</span>
-          <div *ngIf="post && post.owner" class="d-flex gap-2">
-            <button class="btn action-btn btn-delete flex-fill" *ngIf="!isEditing" (click)="delete(post.id)">
+          <span *ngIf="post && (post.owner || authService.isAdmin())" style="margin-left: auto;">Manage this post:</span>
+          <div *ngIf="!isEditing" class="d-flex gap-2">
+            <button *ngIf="post && (post.owner || authService.isAdmin())" class="btn action-btn btn-delete flex-fill" (click)="delete(post.id)">
               <i class="bi bi-trash"></i>
             </button>
-            <button class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
+            <button *ngIf="post && post.owner" class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
               <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
             </button>
           </div>
