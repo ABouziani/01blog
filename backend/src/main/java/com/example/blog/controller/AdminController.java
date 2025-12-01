@@ -37,6 +37,14 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+    // === Summary ===
+    @GetMapping("/summary")
+    public ResponseEntity<?> getSummary(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long loggedUserId = userDetails.getId();
+        return ResponseEntity.ok(adminService.getSummary());
+    }
+
     // === USERS ===
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers(Authentication authentication) {

@@ -11,6 +11,7 @@ import { AdminUsersComponent } from '../users/users';
 import { AdminPostsComponent } from '../posts/posts';
 import { AdminReportsComponent } from '../reports/reports';
 import { HttpClient } from '@angular/common/http';
+import { AdminSummaryComponent } from '../admin-summary-component/admin-summary-component';
 
 @Component({
   selector: 'app-admin-panel',
@@ -24,7 +25,8 @@ import { HttpClient } from '@angular/common/http';
     RouterModule,
     AdminUsersComponent,
     AdminPostsComponent,
-    AdminReportsComponent
+    AdminReportsComponent,
+    AdminSummaryComponent
   ],
   templateUrl: './adminpanel.html',
   styleUrl: './adminpanel.css'
@@ -35,7 +37,7 @@ export class AdminPanel {
   adminUsername = '';
 
   activeTab = inject(ActiveTabService).activeTab;
-  selectTab(tab: 'users' | 'posts' | 'reports') {
+  selectTab(tab: 'summary' | 'users' | 'posts' | 'reports') {
     this.activeTab.set(tab);
   }
   constructor(private http: HttpClient, private route: ActivatedRoute) { }
@@ -45,7 +47,7 @@ export class AdminPanel {
       this.adminUsername = resp.username.toUpperCase();
     });
     this.route.firstChild?.url.subscribe(urlSegments => {
-      const tab = urlSegments[0]?.path as 'users' | 'posts' | 'reports';
+      const tab = urlSegments[0]?.path as 'summary' | 'users' | 'posts' | 'reports';
       if (tab) this.activeTab.set(tab);
     });
   }

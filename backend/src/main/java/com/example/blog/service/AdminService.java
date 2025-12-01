@@ -1,6 +1,7 @@
 package com.example.blog.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,15 @@ public class AdminService {
         this.postService = postService;
     }
 
+    // === getSummary ===
+    public Map getSummary() {
+        Long usersCounts = userRepository.count();
+        Long postsCounts = postRepository.count();
+        Long usersReportsCount = reportUserRepository.count();
+        Long postsReportsCount = reportPostsRepository.count();
+        return Map.of("usersCounts", usersCounts, "postsCounts", postsCounts, "usersReportsCount", usersReportsCount, "postsReportsCount", postsReportsCount);
+    }
+
     // === USERS ===
     public List<UserDto> getAllUsers(Long loggedUerId) {
         return userRepository.findAllByIdNot(loggedUerId).stream()
@@ -65,7 +75,7 @@ public class AdminService {
         }
 
         User user = userOpt.get();
-                
+
         user.setBanned(false);
         userRepository.save(user);
         return ResponseEntity.ok().build();
@@ -139,7 +149,7 @@ public class AdminService {
     }
 
     public ResponseEntity<?> deletePost(Long postId) {
-         Optional<Post> postOpt = postRepository.findById(postId);
+        Optional<Post> postOpt = postRepository.findById(postId);
         if (postOpt.isEmpty()) {
             return new ResponseEntity<>("Post not found", HttpStatus.BAD_REQUEST);
         }

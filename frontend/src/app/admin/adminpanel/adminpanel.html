@@ -8,6 +8,13 @@
     </div>
     <nav class="nav-list">
       <div class="nav-item">
+        <a class="nav-link active" (click)="selectTab('summary')" routerLink="summary" routerLinkActive="active"
+          [class.active]="activeTab() === 'summary'">
+          <i class="bi bi-people"></i>
+          <span>Summary</span>
+        </a>
+      </div>
+      <div class="nav-item">
         <a class="nav-link active" (click)="selectTab('users')" routerLink="users" routerLinkActive="active"
           [class.active]="activeTab() === 'users'">
           <i class="bi bi-people"></i>
@@ -49,6 +56,9 @@
     <!-- Content Area -->
     <div class="admin-content">
       @switch (activeTab()) {
+      @case ('summary') {
+      <app-admin-summary></app-admin-summary>
+      }
       @case ('users') {
       <app-admin-users></app-admin-users>
       }

@@ -4,5 +4,5 @@ import { signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class ActiveTabService {
-  activeTab = signal<'users' | 'posts' | 'reports'>('users');
+  activeTab = signal<'summary' | 'users' | 'posts' | 'reports'>('summary');
 }

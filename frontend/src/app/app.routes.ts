@@ -15,6 +15,7 @@ import { PostsComponent } from './posts/posts';
 import { RegisterComponent } from './register/register';
 import { NotfoundComponent } from './notfound/notfound';
 import { SearchResultsComponent } from './search-results/search-results';
+import { AdminSummaryComponent } from './admin/admin-summary-component/admin-summary-component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent , canActivate: [unAuthGuard]},
@@ -29,10 +30,11 @@ export const routes: Routes = [
     { path: 'searchresults', component: SearchResultsComponent, title: 'Search Results'},
     {
         path: 'adminpanel', component: AdminPanel, canActivate: [authGuard], children: [
+            { path: 'summary', component: AdminSummaryComponent },
             { path: 'users', component: AdminUsersComponent },
             { path: 'posts', component: AdminPostsComponent },
             { path: 'reports', component: AdminReportsComponent },
-            { path: '', redirectTo: 'users', pathMatch: 'full' } // default tab
+            { path: '', redirectTo: 'summary', pathMatch: 'full' } // default tab
         ]
     },
     { path: '**', component: NotfoundComponent },

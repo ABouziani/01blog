@@ -64,4 +64,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :term, '%'))
     """)
 List<UserSearchDto> searchUsersProjected(@Param("term") String term);
+
 }
