@@ -137,6 +137,10 @@ export class CreatePostComponent {
         },
         error: (error) => {
           this.isSubmitting = false;
+          if (error.status == 400) {
+            this.errorMessage = error.error;
+            return;
+          }
           this.errorMessage = this.getErrorMessage(error);
           console.error('Error creating post:', error);
         }

@@ -24,11 +24,11 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private http: HttpClient, public router: Router) {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3),Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      passverif: ['', [Validators.required, Validators.minLength(6)]],
-      bio: [''],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10), Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(20)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10)]],
+      passverif: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10)]],
+      bio: ['', [Validators.maxLength(500)]],
       photo: ['']
     });
   }
@@ -75,7 +75,7 @@ export class RegisterComponent {
       return
     }
     if (this.registerForm.invalid) {
-      this.errorMessage = "Please fix the errors above.";
+      this.errorMessage = "Please fix the errors bellow.";
       return;
     }
 

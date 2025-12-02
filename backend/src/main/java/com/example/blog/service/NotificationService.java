@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,15 +25,19 @@ import com.example.blog.repository.CustomUnreadNotifRepository;
 import com.example.blog.repository.NotifRepository;
 import com.example.blog.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+
 public class NotificationService {
 
-    private final NotifRepository notificationRepository;
-    private final CustomUnreadNotifRepository customUnreadNotifRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private NotifRepository notificationRepository;
+
+    @Autowired
+    private CustomUnreadNotifRepository customUnreadNotifRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public void createNotificationForNewPost(Post post) {

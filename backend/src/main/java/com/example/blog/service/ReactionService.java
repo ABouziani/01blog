@@ -73,7 +73,7 @@ public class ReactionService {
                 return ResponseEntity.ok().build();
             }
         } else {
-            Reaction newReaction = new Reaction();
+            Reaction newReaction = new Reaction(); 
             newReaction.setUser(reactor);
             newReaction.setPost(post);
             newReaction.setType(newType);

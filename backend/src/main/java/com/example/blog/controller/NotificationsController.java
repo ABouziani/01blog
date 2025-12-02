@@ -20,17 +20,19 @@ import com.example.blog.service.NotificationService;
 import com.example.blog.service.UserDetailsImpl;
 import com.example.blog.service.UserService;
 
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/api/notifications")
-@RequiredArgsConstructor
 public class NotificationsController {
 
     @Autowired
     private UserService userService;
 
-    private final NotificationService notificationService;
+    @Autowired
+    private NotificationService notificationService;
+
+    public NotificationsController() {
+
+    }
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,7 +55,7 @@ public class NotificationsController {
     @PostMapping("/{notificationId}/mark-unread")
     public ResponseEntity<?> markAsUnread(@PathVariable Long notificationId) {
         User user = getCurrentUser();
-        
+
         return notificationService.markNotificationAsUnread(user, notificationId);
     }
 

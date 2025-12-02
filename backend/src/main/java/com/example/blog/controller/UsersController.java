@@ -39,10 +39,10 @@ public class UsersController {
     // POST /api/users/register
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
-            @RequestParam("username") @NotBlank @Size(min = 3) String username,
-            @RequestParam("email") @NotBlank @Size(min = 6) String email,
-            @RequestParam("password") @NotBlank @Size(min = 6) String password,
-            @RequestParam("passverif") @NotBlank @Size(min = 6) String passverif,
+            @RequestParam("username") @NotBlank @Size(min = 3, max = 10) String username,
+            @RequestParam("email") @NotBlank @Size(min = 6, max = 20) String email,
+            @RequestParam("password") @NotBlank @Size(min = 6, max = 10) String password,
+            @RequestParam("passverif") @NotBlank @Size(min = 6, max = 10) String passverif,
             @RequestParam("bio") @Size(max = 500) String bio,
             @RequestParam(value = "photo", required = false) MultipartFile photo,
             Authentication authentication

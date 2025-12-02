@@ -1,7 +1,5 @@
 handling all confirmation dialog
 
-notifs after follow
-
 rite limit
 
 handle 401 logout

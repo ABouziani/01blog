@@ -10,14 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "user_followers")
 public class UserFollow {
+
+    public UserFollow() {
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,5 +33,37 @@ public class UserFollow {
 
     @Column(nullable = false)
     private LocalDateTime followedAt = LocalDateTime.now();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(User followed) {
+        this.followed = followed;
+    }
+
+    public User getFollower() {
+        return follower;
+    }
+
+    public void setFollower(User follower) {
+        this.follower = follower;
+    }
+
+    public LocalDateTime getFollowedAt() {
+        return followedAt;
+    }
+
+    public void setFollowedAt(LocalDateTime followedAt) {
+        this.followedAt = followedAt;
+    }
 
 }

@@ -15,13 +15,13 @@
         [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" placeholder="Enter your username" />
       <div class="error-message" *ngIf="username?.invalid && username?.touched">
         <div *ngIf="username?.errors?.['required']">Username is required.</div>
-        <div *ngIf="username?.errors?.['minlength']">
-          Username must be at least 3 characters long.
+        <div *ngIf="username?.errors?.['minlength'] || username?.errors?.['maxlength']">
+          Username must be between 3 and 10 characters long.
         </div>
         <div *ngIf="username?.errors?.['pattern']">
           Some characters are not allowed.
         </div>
-        
+
       </div>
     </div>
 
@@ -32,7 +32,7 @@
         [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" placeholder="Enter your email" />
       <div class="error-message" *ngIf="email?.invalid && email?.touched">
         <div *ngIf="email?.errors?.['required']">Email is required.</div>
-        <div *ngIf="email?.errors?.['email']">Invalid email format.</div>
+        <div *ngIf="email?.errors?.['email']">Invalid email format or length exceeded.</div>
       </div>
     </div>
 
@@ -43,8 +43,8 @@
         [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" placeholder="Enter your password" />
       <div class="error-message" *ngIf="password?.invalid && password?.touched">
         <div *ngIf="f['password']?.errors?.['required']">Password is required.</div>
-        <div *ngIf="f['password']?.errors?.['minlength']">
-          Password must be at least 6 characters long.
+        <div *ngIf="f['password']?.errors?.['minlength'] || f['password']?.errors?.['maxlength']">
+          Password must be between 6 and 10 characters long.
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@
       <div class="error-message" *ngIf="passverif?.invalid && passverif?.touched">
         <div *ngIf="f['passverif']?.errors?.['required']">password confirmation is required.</div>
         <div *ngIf="f['passverif']?.errors?.['minlength'] || passverif != password">
-          Password confirmation must be at least 6 characters long and equals to password.
+          Password confirmation must be between 6 and 10 characters long and equals to password.
         </div>
       </div>
     </div>
@@ -66,6 +66,11 @@
     <div class="form-group">
       <label for="bio">Bio</label>
       <textarea id="bio" formControlName="bio" class="form-control" placeholder="Tell us about yourself..."></textarea>
+      <div class="error-message" *ngIf="bio?.invalid && bio?.touched">
+        <div *ngIf="f['bio']?.errors?.['maxlength']">
+          Cannot be more than 500 characters!
+        </div>
+      </div>
     </div>
 
     <!-- Photo / Video Upload -->
