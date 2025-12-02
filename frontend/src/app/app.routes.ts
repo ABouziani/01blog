@@ -16,6 +16,7 @@ import { RegisterComponent } from './register/register';
 import { NotfoundComponent } from './notfound/notfound';
 import { SearchResultsComponent } from './search-results/search-results';
 import { AdminSummaryComponent } from './admin/admin-summary-component/admin-summary-component';
+import { ServerUnreachableComponent } from './server-unreachable/server-unreachable';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent , canActivate: [unAuthGuard]},
@@ -37,6 +38,7 @@ export const routes: Routes = [
             { path: '', redirectTo: 'summary', pathMatch: 'full' } // default tab
         ]
     },
+    { path: 'unreachable', component: ServerUnreachableComponent},
     { path: '**', component: NotfoundComponent },
 
 ];

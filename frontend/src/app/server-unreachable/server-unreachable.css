@@ -1,0 +1,23 @@
+.server-unreachable {
+      text-align: center;
+      padding: 2rem;
+      border: 1px solid #ffaeae;
+      border-radius: 8px;
+      background: #fff4f4;
+      color: #a80000;
+      max-width: 400px;
+      margin: 2rem auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 1rem;
+      background: #a80000;
+      color: white;
+      padding: .5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #880000;
+    }
