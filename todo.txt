@@ -7,3 +7,18 @@ handle 401 logout
 Css
 
 handle errors correctly
+
+post create date in admin
+l;imit report size
+limit bio
+error post not found on edit
+text content wrap
+remove trandin
+username in ban confirmation azavui
+resize image in post
+ban the admin
+email size
+
+update email server error
+
+fix scroll sizw
