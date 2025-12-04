@@ -70,13 +70,13 @@ export class EditprofileComponent {
       const file = input.files[0];
 
       // Optional: Validate file type
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        this.errorMessage = 'Only images (JPEG, PNG, GIF) are allowed.';
-        this.selectedFile = null;
-        this.previewUrl = null;
-        return;
-      }
+      // const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      // if (!allowedTypes.includes(file.type)) {
+      //   this.errorMessage = 'Only images (JPEG, PNG, GIF) are allowed.';
+      //   this.selectedFile = null;
+      //   this.previewUrl = null;
+      //   return;
+      // }
 
       // Optional: Validate file size (e.g., max 10MB)
       const maxSize = 10 * 1024 * 1024; // 10MB
@@ -108,7 +108,9 @@ export class EditprofileComponent {
     const formData = new FormData();
     formData.append('bio', this.userForm.get('bio')?.value);
     formData.append('noPhoto', this.noPhoto ? "true" : "false");
-    formData.append('email', this.userForm.get('email')?.value);
+    if (this.userForm.get('email')?.value != this.editing?.email) {
+      formData.append('email', this.userForm.get('email')?.value);
+    }
     if (this.selectedFile) {
       formData.append('media', this.selectedFile); // 'media' should match your backend field name
     }

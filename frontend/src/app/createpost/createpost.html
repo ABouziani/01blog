@@ -27,7 +27,7 @@
 
         <div class="error-message" *ngIf="description?.invalid && description?.touched">
           <span *ngIf="description?.errors?.['required']">Description is required</span>
-          <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+          <span *ngIf="description?.errors?.['minlength']">Description must be at least 20 characters</span>
           <span *ngIf="description?.errors?.['maxlength']">Description cannot exceed 1000 characters</span>
         </div>
       </div>

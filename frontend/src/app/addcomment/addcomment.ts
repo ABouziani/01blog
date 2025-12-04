@@ -21,7 +21,7 @@ export class AddCommentComponent {
   isLoading = false;
 
   commentForm = this.fb.group({
-    content: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]]
+    content: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(400)]]
   });
 
   onSubmit(): void {

@@ -227,7 +227,7 @@
                 <div class="comment-bubble">
                   <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
                     c.user.username }}</p>
-                  <p class="comment-text">{{ c.content }}</p>
+                  <p class="comment-text" [innerText]="c.content"></p>
                 </div>
                 <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
               </div>

@@ -74,7 +74,7 @@ public class PostsController {
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createPost(
             @RequestParam("title") @NotBlank @Size(min = 6, max = 100) String title,
-            @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
+            @RequestParam("description") @NotBlank @Size(min = 20, max = 1000) String description,
             @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication
     ) {

@@ -1,11 +1,13 @@
 package com.example.blog.controller;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,16 +36,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                // "An unexpected error occurred: " + ex.getMessage(),
-                ex.getMessage(),
-                Instant.now()
-        );
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    // @ExceptionHandler(Exception.class)
+    // public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+    //     ErrorResponse error = new ErrorResponse(
+    //             HttpStatus.INTERNAL_SERVER_ERROR.value(),
+    //             // "An unexpected error occurred: " + ex.getMessage(),
+    //             ex.getMessage(),
+    //             Instant.now()
+    //     );
+    //     return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
 
     @ExceptionHandler(TokenManagementException.class)
     public ResponseEntity<ErrorResponse> handleTokenManagementException(TokenManagementException ex) {
@@ -127,6 +129,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body("Bad request");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        ErrorResponse error = new ErrorResponse(500, ex.getMessage(), Instant.now());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON) // forces JSON output
+                .body(error);
     }
 
 }

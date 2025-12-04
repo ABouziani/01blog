@@ -69,6 +69,9 @@ public class CommentService {
             if (!Objects.equals(commentOpt.get().getUser().getId(), loggedUserOpt.get().getId())) {
                 return new ResponseEntity<>("You can delete only your comments", HttpStatus.BAD_REQUEST);
             }
+            if (commentOpt.get().getPost().isHidden()) {
+                return new ResponseEntity<>("Bad request, post not found or hidden", HttpStatus.BAD_REQUEST);
+            }
             commentRepository.delete(commentOpt.get());
         }
         return ResponseEntity.ok().build();

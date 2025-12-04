@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from './post-model';
 import { PostService } from '../services/post-service';
@@ -12,6 +12,8 @@ import { CreatePostComponent } from '../createpost/createpost';
 import { AlertService } from '../services/alert-service';
 import { SearchBarComponent } from '../search/search';
 import { AuthService } from '../services/auth';
+import { ConfirmDialogComponent } from '../admin/confirm-dialog/confirm-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-post',
@@ -21,6 +23,7 @@ import { AuthService } from '../services/auth';
 })
 
 export class PostComponent {
+  private dialog = inject(MatDialog);
   private apiUrlPostComment = 'http://localhost:8080/api/comments/getpostcomments/'
   postId: string | null = "";
   post: Post | null = null;
@@ -43,10 +46,10 @@ export class PostComponent {
   selectedFile: File | null = null;
   previewUrl: string | null = null; // For image/video preview
 
-  constructor(private fb: FormBuilder, private http: HttpClient, 
-    public postService: PostService, private route: ActivatedRoute, 
-    public router: Router, private cd: ChangeDetectorRef, 
-    private myAlert: AlertService, public authService : AuthService) {
+  constructor(private fb: FormBuilder, private http: HttpClient,
+    public postService: PostService, private route: ActivatedRoute,
+    public router: Router, private cd: ChangeDetectorRef,
+    private myAlert: AlertService, public authService: AuthService) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
@@ -73,7 +76,7 @@ export class PostComponent {
       },
       error: (err) => {
         console.log(err);
-        
+
         this.errorMessage = err.error;
         this.loading = false;
       }
@@ -100,7 +103,7 @@ export class PostComponent {
         console.error('Reaction error:', error.error);
         // Optional: show error message
         if (error.status == 400) {
-        this.myAlert.showAlert("Error", error.error);
+          this.myAlert.showAlert("Error", error.error);
         }
         // this.myAlert.showAlert("Error", "Failed to react. Please try again.");
         return of(null);
@@ -127,19 +130,28 @@ export class PostComponent {
   }
 
   delete(postId: number) {
-    if (confirm("Are you sure you want to delete this post?")) {
-      this.postService.deletePost(this.postId).subscribe({
-        next: (data) => {
-          console.log(data);
-          this.myAlert.showAlert("Success", "Post deleted successfully!");
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          this.myAlert.showAlert("Error", "Error deleting this posts!");
-          console.log(err);
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: {
+        title: 'Delete Comment',
+        message: 'Are you sure you want to delete this comment?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.postService.deletePost(this.postId).subscribe({
+          next: (data) => {
+            console.log(data);
+            this.myAlert.showAlert("Success", "Post deleted successfully!");
+            this.router.navigate(['/']);
+          },
+          error: (err) => {
+            this.myAlert.showAlert("Error", "Error deleting this posts!");
+            console.log(err);
+          }
+        });
+      }
+    });
   }
 
   cancelEditing() {
@@ -165,9 +177,9 @@ export class PostComponent {
       }
 
       // Optional: Validate file size (e.g., max 10MB)
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 50 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
-        this.errorMessage = 'File size must be less than 10MB.';
+        this.errorMessage = 'File size must be less than 50MB.';
         this.selectedFile = null;
         this.previewUrl = null;
         return;
@@ -276,38 +288,51 @@ export class PostComponent {
 
 
   deleteComment(commentId: number) {
-    if (!confirm("Are you sure you want to delete this comment?")) return;
-
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      this.myAlert.showAlert("Error", "You must be logged in to delete a comment!");
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: {
+        title: 'Delete Comment',
+        message: 'Are you sure you want to delete this comment?'
+      }
     });
 
-    this.http.delete<{ message: string }>(`http://localhost:8080/api/comments/delete/${commentId}`, { headers })
-      .subscribe({
-        next: (response) => {
-          // ✅ Remove comment from UI
-          if (this.post && this.post.comments) {
-            this.post.comments = this.post.comments.filter(c => c.id !== commentId);
-          }
-          this.myAlert.showAlert("Success", "Comment deleted successfully!");
-        },
-        error: (error) => {
-          console.error('Error deleting comment:', error);
-          if (error.status === 403) {
-            this.myAlert.showAlert("Error", "You are not authorized to delete this comment!");
-          } else if (error.status === 404) {
-            this.myAlert.showAlert("Error", "Comment not found!");
-          } else {
-            this.myAlert.showAlert("Error", "An error occurred while deleting the comment!");
-          }
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          this.myAlert.showAlert("Error", "You must be logged in to delete a comment!");
+          return;
         }
-      });
+
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        this.http.delete<{ message: string }>(`http://localhost:8080/api/comments/delete/${commentId}`, { headers })
+          .subscribe({
+            next: (response) => {
+              // ✅ Remove comment from UI
+              if (this.post && this.post.comments) {
+                this.post.comments = this.post.comments.filter(c => c.id !== commentId);
+              }
+              this.myAlert.showAlert("Success", "Comment deleted successfully!");
+            },
+            error: (error) => {
+              console.error('Error deleting comment:', error);
+              if (error.status === 403) {
+                this.myAlert.showAlert("Error", "You are not authorized to delete this comment!");
+              } else if (error.status === 404) {
+                this.myAlert.showAlert("Error", "Comment not found!");
+              } else if (error.status === 400) {
+                this.myAlert.showAlert("Error", error.error);
+              } else {
+                this.myAlert.showAlert("Error", "An error occurred while deleting the comment!");
+              }
+            }
+          });
+      }
+    });
+
   }
 
 

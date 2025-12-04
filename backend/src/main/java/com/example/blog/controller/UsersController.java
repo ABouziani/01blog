@@ -64,8 +64,8 @@ public class UsersController {
                     .status(HttpStatus.CONFLICT)
                     .body("Email already registered");
         }
-        User savedUser = userService.registerUser(username, email, password, bio, photo);
-        return ResponseEntity.ok(savedUser);
+        ResponseEntity<?> savedUser = userService.registerUser(username, email, password, bio, photo);
+        return savedUser;
     }
 
     @GetMapping("/{id}")
@@ -90,7 +90,7 @@ public class UsersController {
     @PutMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUser(
             @RequestParam("bio") @Size(max = 500) String bio,
-            @RequestParam("email") @NotBlank @Size(min = 6, max = 40) String email,
+            @RequestParam(value="email", required = false) @Size(min = 6, max = 40) String email,
             @RequestParam("noPhoto") @NotBlank String noPhoto,
             @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication

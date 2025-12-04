@@ -41,7 +41,7 @@ public class Comment {
     private Post post;
 
     @Column(nullable = false)
-    @Size(min = 10, max = 300, message = "Comment must be between 10 and 300 characters long")
+    @Size(min = 1, max = 400, message = "Comment must be between 1 and 400 characters long")
     private String content;
 
     @Column(nullable = false)

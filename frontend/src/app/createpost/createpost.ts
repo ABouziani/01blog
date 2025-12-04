@@ -52,7 +52,7 @@ export class CreatePostComponent {
   ) {
     this.postForm = this.fb.group({
       title: [this.editing?.title || '', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.minLength(20)]],
+      description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(1000)]],
       // media: [null, Validators.required]
     });
   }
@@ -83,9 +83,9 @@ export class CreatePostComponent {
       }
 
       // Optional: Validate file size (e.g., max 10MB)
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 50 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
-        this.errorMessage = 'File size must be less than 10MB.';
+        this.errorMessage = 'File size must be less than 50MB.';
         this.selectedFile = null;
         this.previewUrl = null;
         return;

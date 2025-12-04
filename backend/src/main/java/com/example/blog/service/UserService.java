@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import com.example.blog.dtoresponses.ActiveUsersDto;
 import com.example.blog.dtoresponses.EntityDtoMapper;
@@ -47,9 +48,17 @@ public class UserService {
         return userRepository.existsByEmailAndIsBannedFalse(email);
     }
 
-    public User registerUser(String username, String email, String password, String bio, MultipartFile photo) {
+    public ResponseEntity<?> registerUser(String username, String email, String password, String bio, MultipartFile photo) {
         String mediaUrl = null;
         if (photo != null && !photo.isEmpty()) {
+            String contentType = photo.getContentType();
+
+            if (contentType == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot determine file type");
+            }
+            if (!contentType.startsWith("image/") ) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Media type not supported");
+            }
             mediaUrl = fileStorageService.storeFile(photo);
         }
         User user = new User();
@@ -61,7 +70,7 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(password);
         user.setPassword(hashedPassword);
         user.setPhoto(mediaUrl);
-        return userRepository.save(user);
+        return ResponseEntity.ok(userRepository.save(user));
     }
 
     public Optional<User> findById(Long id) {
@@ -132,12 +141,22 @@ public class UserService {
         String mediaUrl = null;
         boolean addMedia = false;
         if (media != null && !media.isEmpty()) {
+            String contentType = media.getContentType();
+
+            if (contentType == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot determine file type");
+            }
+            if (!contentType.startsWith("image/") ) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Media type not supported");
+            }
             addMedia = true;
             mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
         }
 
         // 3. Update fields
-        loggedUser.setEmail(email);
+        if (email != null) {
+            loggedUser.setEmail(email);
+        }
         loggedUser.setBio(bio);
         if (mediaUrl != null) {
             loggedUser.setPhoto(mediaUrl);
