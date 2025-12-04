@@ -1,7 +1,21 @@
-<!-- Posts Section -->
-<div class="content-header">
-  <h2 class="content-title">Summary</h2>
-</div>
-<div class="table-container">
-
+<div class="admin-summary-container">
+  <h2 class="summary-title">Admin Dashboard Summary</h2>
+  <div class="summary-cards">
+    <div class="summary-card clickable posts" (click)="selectTab('posts')">
+      <div class="card-title">Total Posts</div>
+      <div class="card-value">{{ postsCounts }}</div>
+    </div>
+    <div class="summary-card clickable users" (click)="selectTab('users')">
+      <div class="card-title">Total Users</div>
+      <div class="card-value">{{ usersCounts }}</div>
+    </div>
+    <div class="summary-card clickable reports-posts" (click)="selectTab('reports')">
+      <div class="card-title">Post Reports</div>
+      <div class="card-value">{{ postsReportsCount }}</div>
+    </div>
+    <div class="summary-card clickable reports-users" (click)="selectTab('reports')">
+      <div class="card-title">User Reports</div>
+      <div class="card-value">{{ usersReportsCount }}</div>
+    </div>
+  </div>
 </div>

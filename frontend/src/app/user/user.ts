@@ -26,6 +26,7 @@ import { SearchBarComponent } from '../search/search';
 export class UserComponent {
   user: UserDto | null = null;
   error: string | null = null;
+  reporterror: string | null = null;
   isEditing = false;
   loadingMore = false;
   allLoaded = false;
@@ -142,9 +143,17 @@ export class UserComponent {
   reportUser() {
 
     if (!this.reason.trim()) {
-      this.error = 'Please, provide a reason!';
+      this.reporterror = 'Please provide a reason.';
       setTimeout(() => {
-        this.error = '';
+        this.reporterror = '';
+      }, 1500);
+      return;
+    }
+
+    if (this.reason.trim().length < 10 || this.reason.trim().length > 300) {
+      this.reporterror = 'Reason must be between 10 and 300 characters!';
+      setTimeout(() => {
+        this.reporterror = '';
       }, 1500);
       return;
     }

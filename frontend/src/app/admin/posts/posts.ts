@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
     MatTableModule,
     MatButtonModule,
     CommonModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   templateUrl: './posts.html',
   styleUrls: ['./posts.css', '../adminpanel/adminpanel.css']

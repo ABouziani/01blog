@@ -33,6 +33,10 @@ public class ReportUsersService {
     }
 
     public ResponseEntity<?> addReport(NewReportRequest newReportRequest, Long creatorId) {
+        var len = newReportRequest.getReason().length();
+        if (len < 10 || len > 300) {
+            return new ResponseEntity<>("Report reason must be between 10 and 300 characters!", HttpStatus.BAD_REQUEST);
+        }
         if (Objects.equals(newReportRequest.getReportedId(), creatorId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot report yourself!");
         }

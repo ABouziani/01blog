@@ -63,6 +63,10 @@ public class AdminService {
             return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
         }
         User user = userOpt.get();
+        if (user.getRole().equals("ADMIN")) {
+            return new ResponseEntity<>("You cannot ban the admin!", HttpStatus.BAD_REQUEST);
+        }
+
         user.setBanned(true);
         userRepository.save(user);
         return ResponseEntity.ok().build();
@@ -200,6 +204,9 @@ public class AdminService {
 
         switch (action) {
             case "ban_user" -> {
+                if (reportedUser.getRole().equals("ADMIN")) {
+                    return new ResponseEntity<>("You cannot ban the admin!", HttpStatus.BAD_REQUEST);
+                }
                 reportedUser.setBanned(true);
                 userRepository.save(reportedUser);
                 reportUserRepository.deleteByReported(reportedUser);

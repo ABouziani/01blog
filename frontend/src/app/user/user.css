@@ -83,6 +83,9 @@
   max-width: 500px;
   /* margin-left: auto; */
   margin-right: auto;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Info Grid */
@@ -478,6 +481,12 @@
 .btn-edit:hover {
   background: #e6aefc;
   transform: scale(1.05);
+}
+
+.reporterror {
+  color: red;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .error {

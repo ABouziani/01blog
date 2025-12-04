@@ -1,0 +1,97 @@
+/* Main container */
+.admin-summary-container {
+  padding: 0.5rem;
+  background-color:var(--card-bg);
+  height: fit-content;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  padding-bottom: 20px;
+}
+
+/* Title styling */
+.summary-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Grid for responsive cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Individual card */
+.summary-card {
+  background:var(--comment-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 10px 5px 5px 5px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+  border-left: 4px solid #007bff;
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Card with different colors for variety */
+.summary-card.posts {
+  border-left-color: #28a745; /* Green */
+}
+
+.summary-card.users {
+  border-left-color: #17a2b8; /* Teal */
+}
+
+.summary-card.reports-posts {
+  border-left-color: #ffc107; /* Amber */
+}
+
+.summary-card.reports-users {
+  border-left-color: #dc3545; /* Red */
+}
+
+/* Card title */
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #aaabac;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Card value */
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #343a40;
+  line-height: 1.2;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .admin-summary-container {
+    padding: 1rem;
+  }
+
+  .summary-title {
+    font-size: 1.4rem;
+  }
+
+  .card-value {
+    font-size: 1.75rem;
+  }
+}

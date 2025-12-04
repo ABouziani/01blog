@@ -112,7 +112,7 @@ public class PostService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot determine file type");
             }
 
-            if (!contentType.startsWith("image/") || !contentType.startsWith("video/")) {
+            if (!contentType.startsWith("image/") && !contentType.startsWith("video/")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Media type not supported");
             }
             mediaUrl = fileStorageService.storeFile(media); // e.g., returns "/uploads/abc.jpg"
@@ -164,6 +164,15 @@ public class PostService {
 
         String mediaUrl = null;
         if (media != null && !media.isEmpty()) {
+            String contentType = media.getContentType();
+
+            if (contentType == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot determine file type");
+            }
+
+            if (!contentType.startsWith("image/") && !contentType.startsWith("video/")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Media type not supported");
+            }
             mediaUrl = fileStorageService.storeFile(media); // returns "/uploads/abc.jpg"
         }
 

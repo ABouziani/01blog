@@ -56,7 +56,9 @@
                 <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
                 <div class="popup-box" *ngIf="showPopup">
                   <h3>Report this user</h3>
-
+                  <div class="reporterror" *ngIf="reporterror">
+                    {{ reporterror }}
+                  </div>
                   <label>Reason</label>
                   <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
 

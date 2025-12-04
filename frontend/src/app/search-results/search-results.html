@@ -52,7 +52,7 @@
         </div>
 
         <p class="bio" *ngIf="user.bio; else noBio">
-          {{ user.bio }}
+          {{ user.bio.length > 100 ? user.bio.substring(0,97) + '...' : user.bio }}
         </p>
         <ng-template #noBio>
           <p class="bio muted">No bio available.</p>

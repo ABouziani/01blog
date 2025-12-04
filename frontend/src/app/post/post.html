@@ -14,7 +14,7 @@
             <img [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
               alt="{{ post.creator.username }}" class="author-avatar mb-3" style="background-color: white;">
             <h2 class="h5 fw-bold mb-2">@{{ post.creator.username }}</h2>
-            <p class="text-muted small mb-4">{{ post.creator.bio }}</p>
+            <p class="text-muted small mb-4 creatorbio">{{ post.creator.bio.length > 20 ? post.creator.bio.substring(0,17) + '...' : post.creator.bio }}</p>
             <button class="btn btn-profile w-100 mb-3" (click)="router.navigate(['/users/' + post.creator.id])">
               <i class="bi bi-person-circle me-2"></i>Discover
             </button>
@@ -78,7 +78,7 @@
           <div>
             <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">@{{
               post.creator.username }}</p>
-            <p class="text-muted small mb-0">{{ post.creator.bio }}</p>
+            <p class="text-muted small mb-0 creatorbio">{{ post.creator.bio.length > 20 ? post.creator.bio.substring(0,17) + '...' : post.creator.bio }}</p>
           </div>
           <span *ngIf="post && (post.owner || authService.isAdmin())" style="margin-left: auto;">Manage this post:</span>
           <div *ngIf="!isEditing" class="d-flex gap-2">
@@ -97,9 +97,9 @@
           <div *ngIf="post">
             <img *ngIf="post.media && isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
               class="media-image-video"
-              style="display: block; width: 80%; height: auto;margin: auto ;object-fit: cover;margin-bottom: 10px;">
+              style="display: block; width: 80%; max-height: 500px;margin: auto ;object-fit: cover;margin-bottom: 10px;">
             <video *ngIf="post.media && isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media"
-              controls muted preload="metadata"></video>
+              controls muted preload="metadata" class="media-image-video"></video>
           </div>
           <p [innerText]="post.description"></p>
         </div>

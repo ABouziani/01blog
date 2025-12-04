@@ -175,7 +175,11 @@ export class CreatePostComponent {
         },
         error: (error) => {
           this.isSubmitting = false;
-          this.errorMessage = this.getErrorMessage(error);
+          if (error.status == 400) {
+          this.myAlert.showAlert("Error", error.error);
+          } else {
+            this.errorMessage = this.getErrorMessage(error);
+          }
           console.error('Error editing post:', error);
         }
       });

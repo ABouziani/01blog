@@ -75,7 +75,7 @@ export class AdminReportsComponent {
 
   resolveUserReportWithAction(report: GroupedUserReport, action: 'ban_user' | 'dismiss' | 'delete') {
     const message = action === 'ban_user'
-      ? `Ban the reported user "${report.reportedUserId}"?`
+      ? `Ban the reported user "${report.reportedUserUsername}"?`
       : action === 'delete' ? `Are you sure you want to delete this report ?` : `Dismiss this report without action?`;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -93,7 +93,7 @@ export class AdminReportsComponent {
           },
           error: (err) => {
             console.error("Error resolving report:", err);
-            this.myAlert.showAlert("Error", "Failed to resolve report. Please try again.");
+            this.myAlert.showAlert("Error", err.error);
           }
         });
       }
@@ -124,7 +124,7 @@ export class AdminReportsComponent {
           },
           error: (err) => {
             console.error("Error resolving post report:", err);
-            this.myAlert.showAlert("Error", "Failed to resolve report. Please try again.");
+            this.myAlert.showAlert("Error", err.error);
           }
         });
       }

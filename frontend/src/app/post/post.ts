@@ -387,8 +387,8 @@ export class PostComponent {
       return;
     }
 
-    if (this.reason.trim().length < 10) {
-      this.reporterror = 'Reason must be more that 10 characters long!';
+    if (this.reason.trim().length < 10 || this.reason.trim().length > 300) {
+      this.reporterror = 'Reason must be between 10 and 300 characters!';
       setTimeout(() => {
         this.reporterror = '';
       }, 2500);

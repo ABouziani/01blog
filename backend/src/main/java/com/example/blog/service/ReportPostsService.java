@@ -36,6 +36,10 @@ public class ReportPostsService {
     }
 
     public ResponseEntity<?> addReport(NewReportPostRequest newReportPostRequest, Long creatorId) {
+        var len = newReportPostRequest.getReason().length();
+         if (len < 10 || len > 300) {
+            return new ResponseEntity<>("Report reason must be between 10 and 300 characters!", HttpStatus.BAD_REQUEST); 
+        }
 
         if (reportPostsRepository.existsByReporterIdAndReportedpostId(creatorId, newReportPostRequest.getReportedPostId())) {
             return new ResponseEntity<>("You already reported this post!", HttpStatus.BAD_REQUEST);
