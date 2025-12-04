@@ -1,67 +1,262 @@
-/* src/app/signin/signin.component.css */
-div {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-family: Arial, sans-serif;
-}
+    /* Form Container */
+    .form-container {
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      /* border: 1px solid #e8edf5; */
+      padding: 3rem;
+      max-width: 440px;
+      width: 100%;
+      animation: fadeInUp 0.6s ease-out;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-form div {
-  margin-bottom: 1rem;
-}
+    /* Header */
+    .form-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #555;
-}
+    .form-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
 
-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
+    .form-icon i {
+      font-size: 2rem;
+      color: white;
+    }
 
-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
+    .form-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
 
-.error {
-  color: #d32f2f;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
+    .form-subtitle {
+      font-size: 0.9375rem;
+      color: #64748b;
+      font-weight: 500;
+    }
 
-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-}
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
 
-button:hover:not(:disabled) {
-  background-color: #0056b3;
-}
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 0.5rem;
+    }
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 3rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      color: #1e293b;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 1.125rem;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    .form-input:focus ~ .input-icon {
+      color: #667eea;
+    }
+
+    /* Error Messages */
+    .error-message {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      color: #dc2626;
+      font-weight: 500;
+    }
+
+    .error-message i {
+      font-size: 0.875rem;
+    }
+
+    .alert-error {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.875rem 1rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      color: #dc2626;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-error i {
+      font-size: 1rem;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    .form-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .form-footer-text {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+
+    .form-link {
+      color: #667eea;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .form-link:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 576px) {
+      .form-container {
+        padding: 2rem 1.5rem;
+      }
+
+      .form-title {
+        font-size: 1.625rem;
+      }
+
+      .form-icon {
+        width: 56px;
+        height: 56px;
+      }
+
+      .form-icon i {
+        font-size: 1.75rem;
+      }
+    }
+
+    /* Valid Input State */
+    .form-input.ng-valid.ng-touched {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    /* Invalid Input State */
+    .form-input.ng-invalid.ng-touched {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .form-input.ng-invalid.ng-touched:focus {
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }

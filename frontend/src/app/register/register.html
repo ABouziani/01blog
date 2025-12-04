@@ -1,93 +1,141 @@
 <div class="register-container">
-  <h2>User Registration</h2>
-
-  <!-- Success and Error Messages -->
-  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
-  <!-- Registration Form -->
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
-
-    <!-- Username -->
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" formControlName="username" class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" placeholder="Enter your username" />
-      <div class="error-message" *ngIf="username?.invalid && username?.touched">
-        <div *ngIf="username?.errors?.['required']">Username is required.</div>
-        <div *ngIf="username?.errors?.['minlength'] || username?.errors?.['maxlength']">
-          Username must be between 3 and 10 characters long.
-        </div>
-        <div *ngIf="username?.errors?.['pattern']">
-          Some characters are not allowed.
-        </div>
-
+    <!-- Header -->
+    <div class="form-header">
+      <div class="form-icon">
+        <i class="bi bi-person-plus"></i>
       </div>
+      <h2>Create Account</h2>
+      <p class="form-subtitle">Join 01Blog community today</p>
     </div>
 
-    <!-- Email -->
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" formControlName="email" class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" placeholder="Enter your email" />
-      <div class="error-message" *ngIf="email?.invalid && email?.touched">
-        <div *ngIf="email?.errors?.['required']">Email is required.</div>
-        <div *ngIf="email?.errors?.['email']">Invalid email format or length exceeded.</div>
-      </div>
-    </div>
+    <!-- Success and Error Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-    <!-- Password -->
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" formControlName="password" class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" placeholder="Enter your password" />
-      <div class="error-message" *ngIf="password?.invalid && password?.touched">
-        <div *ngIf="f['password']?.errors?.['required']">Password is required.</div>
-        <div *ngIf="f['password']?.errors?.['minlength'] || f['password']?.errors?.['maxlength']">
-          Password must be between 6 and 10 characters long.
+    <!-- Registration Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-wrapper">
+          <input type="text" 
+                 id="username" 
+                 formControlName="username" 
+                 class="form-control"
+                 [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" 
+                 placeholder="Choose a username" />
+          <i class="bi bi-person input-icon"></i>
+        </div>
+        <div class="error-message" *ngIf="username?.invalid && username?.touched">
+          <div *ngIf="username?.errors?.['required']">Username is required.</div>
+          <div *ngIf="username?.errors?.['minlength'] || username?.errors?.['maxlength']">
+            Username must be between 3 and 10 characters long.
+          </div>
+          <div *ngIf="username?.errors?.['pattern']">
+            Some characters are not allowed.
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Password -->
-    <div class="form-group">
-      <label for="passverif">password confirmation</label>
-      <input type="password" id="passverif" formControlName="passverif" class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f['passverif'].errors }" placeholder="Enter your passverif" />
-      <div class="error-message" *ngIf="passverif?.invalid && passverif?.touched">
-        <div *ngIf="f['passverif']?.errors?.['required']">password confirmation is required.</div>
-        <div *ngIf="f['passverif']?.errors?.['minlength'] || passverif != password">
-          Password confirmation must be between 6 and 10 characters long and equals to password.
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-wrapper">
+          <input type="email" 
+                 id="email" 
+                 formControlName="email" 
+                 class="form-control"
+                 [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" 
+                 placeholder="Enter your email" />
+          <i class="bi bi-envelope input-icon"></i>
+        </div>
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <div *ngIf="email?.errors?.['required']">Email is required.</div>
+          <div *ngIf="email?.errors?.['email']">Invalid email format or length exceeded.</div>
         </div>
       </div>
-    </div>
 
-    <!-- Bio -->
-    <div class="form-group">
-      <label for="bio">Bio</label>
-      <textarea id="bio" formControlName="bio" class="form-control" placeholder="Tell us about yourself..."></textarea>
-      <div class="error-message" *ngIf="bio?.invalid && bio?.touched">
-        <div *ngIf="f['bio']?.errors?.['maxlength']">
-          Cannot be more than 500 characters!
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <input type="password" 
+                 id="password" 
+                 formControlName="password" 
+                 class="form-control"
+                 [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" 
+                 placeholder="Create a password" />
+          <i class="bi bi-lock input-icon"></i>
+        </div>
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <div *ngIf="f['password']?.errors?.['required']">Password is required.</div>
+          <div *ngIf="f['password']?.errors?.['minlength'] || f['password']?.errors?.['maxlength']">
+            Password must be between 6 and 10 characters long.
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Photo / Video Upload -->
-    <div class="form-group">
-      <label for="photo">Profile Photo or Video</label>
-      <input type="file" id="photo" (change)="onFileSelected($event)" accept="image/*,video/*"
-        class="form-control-file" />
-
-      <!-- Preview -->
-      <div class="preview" *ngIf="previewUrl">
-        <img [src]="previewUrl" alt="Preview" class="preview-img" />
+      <!-- Password Confirmation -->
+      <div class="form-group">
+        <label for="passverif">Password Confirmation</label>
+        <div class="input-wrapper">
+          <input type="password" 
+                 id="passverif" 
+                 formControlName="passverif" 
+                 class="form-control"
+                 [ngClass]="{ 'is-invalid': submitted && f['passverif'].errors }" 
+                 placeholder="Confirm your password" />
+          <i class="bi bi-lock-fill input-icon"></i>
+        </div>
+        <div class="error-message" *ngIf="passverif?.invalid && passverif?.touched">
+          <div *ngIf="f['passverif']?.errors?.['required']">Password confirmation is required.</div>
+          <div *ngIf="f['passverif']?.errors?.['minlength'] || passverif != password">
+            Password confirmation must be between 6 and 10 characters long and equals to password.
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || registerForm.invalid">
-      {{ isSubmitting ? 'Registering...' : 'Register' }}
-    </button>
-  </form>
-</div>
+      <!-- Bio -->
+      <div class="form-group">
+        <label for="bio">Bio (Optional)</label>
+        <textarea id="bio" 
+                  formControlName="bio" 
+                  class="form-control" 
+                  placeholder="Tell us about yourself..."></textarea>
+        <div class="error-message" *ngIf="bio?.invalid && bio?.touched">
+          <div *ngIf="f['bio']?.errors?.['maxlength']">
+            Cannot be more than 500 characters!
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo / Video Upload -->
+      <div class="form-group">
+        <label for="photo">Profile Photo (Optional)</label>
+        <input type="file" 
+               id="photo" 
+               (change)="onFileSelected($event)" 
+               accept="image/*,video/*"
+               class="form-control-file" />
+
+        <!-- Preview -->
+        <div class="preview" *ngIf="previewUrl">
+          <img [src]="previewUrl" alt="Preview" class="preview-img" />
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || registerForm.invalid">
+        <span *ngIf="isSubmitting" class="spinner"></span>
+        {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="form-footer">
+      <p class="form-footer-text">
+        Already have an account? <a href="/signin" class="form-link">Sign in</a>
+      </p>
+    </div>
+  </div>

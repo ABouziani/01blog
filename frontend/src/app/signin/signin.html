@@ -1,41 +1,79 @@
-<div>
-  <h2>Sign In</h2>
-  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-    <div>
-      <label for="username">Username</label>
-      <input
-        id="username"
-        name="username"
-        [(ngModel)]="credentials.identifier"
-        required
-        #username="ngModel"
-      >
-      <div *ngIf="username.invalid && username.touched" class="error">
-        Username is required
+ <div class="form-container">
+    <!-- Header -->
+    <div class="form-header">
+      <div class="form-icon">
+        <i class="bi bi-shield-lock"></i>
       </div>
+      <h2 class="form-title">Welcome Back</h2>
+      <p class="form-subtitle">Sign in to continue to 01Blog</p>
     </div>
 
-    <div>
-      <label for="password">Password</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        [(ngModel)]="credentials.password"
-        required
-        #password="ngModel"
-      >
-      <div *ngIf="password.invalid && password.touched" class="error">
-        Password is required
+    <!-- Error Alert -->
+    <div class="alert-error" *ngIf="error">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      <span>{{ error }}</span>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-wrapper">
+          <input
+            id="username"
+            name="username"
+            type="text"
+            class="form-input"
+            placeholder="Enter your username"
+            [(ngModel)]="credentials.identifier"
+            required
+            #username="ngModel"
+          >
+          <i class="bi bi-person input-icon"></i>
+        </div>
+        <div *ngIf="username.invalid && username.touched" class="error-message">
+          <i class="bi bi-exclamation-circle"></i>
+          <span>Username is required</span>
+        </div>
       </div>
-    </div>
 
-    <button type="submit" [disabled]="loginForm.invalid || loading">
-      {{ loading ? 'Signing in...' : 'Sign In' }}
-    </button>
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-wrapper">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            class="form-input"
+            placeholder="Enter your password"
+            [(ngModel)]="credentials.password"
+            required
+            #password="ngModel"
+          >
+          <i class="bi bi-lock input-icon"></i>
+        </div>
+        <div *ngIf="password.invalid && password.touched" class="error-message">
+          <i class="bi bi-exclamation-circle"></i>
+          <span>Password is required</span>
+        </div>
+      </div>
 
-    <div *ngIf="error" class="error">
-      {{ error }}
+      <!-- Submit Button -->
+      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || loading">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="form-footer">
+      <p class="form-footer-text">
+        Don't have an account? <a href="/register" class="form-link">Sign up</a>
+      </p>
+      <p class="form-footer-text">
+        <a href="/forgot-password" class="form-link">Forgot password?</a>
+      </p>
     </div>
-  </form>
-</div>
+  </div>

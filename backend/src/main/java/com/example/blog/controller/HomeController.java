@@ -32,7 +32,7 @@ public class HomeController {
         Long loggedUserId = userDetails.getId();
         List<HomePostDto> homePosts = postService.getRecentPostsForHome(loggedUserId,6);
         List<ActiveUsersDto> homeUsers = userService.getActiveUsersForHome(5);
-        List<HomePostDto> topPosts = postService.getTopPostsForHome(5);
+        List<HomePostDto> topPosts = postService.getTopPostsForHome(8);
         return ResponseEntity.ok(Map.of(
         "recentPosts", homePosts,
         "activeUsers", homeUsers,
