@@ -40,7 +40,7 @@ public class UsersController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
             @RequestParam("username") @NotBlank @Size(min = 3, max = 10) String username,
-            @RequestParam("email") @NotBlank @Size(min = 6, max = 20) String email,
+            @RequestParam("email") @NotBlank @Size(min = 6, max = 40) String email,
             @RequestParam("password") @NotBlank @Size(min = 6, max = 10) String password,
             @RequestParam("passverif") @NotBlank @Size(min = 6, max = 10) String passverif,
             @RequestParam("bio") @Size(max = 500) String bio,
@@ -90,13 +90,19 @@ public class UsersController {
     @PutMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUser(
             @RequestParam("bio") @Size(max = 500) String bio,
-            @RequestParam("email") @NotBlank @Size(min = 10, max = 1000) String email,
+            @RequestParam("email") @NotBlank @Size(min = 6, max = 40) String email,
             @RequestParam("noPhoto") @NotBlank String noPhoto,
             @RequestParam(value = "media", required = false) MultipartFile media,
             Authentication authentication
     ) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long loggedUserId = userDetails.getId();
+
+        if (userService.existsByEmail(email)) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Email already registered");
+        }
         ResponseEntity<?> updatedUser = userService.updateUser(loggedUserId, bio, email, media, noPhoto.equals("true"));
 
         return updatedUser;

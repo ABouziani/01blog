@@ -100,7 +100,7 @@ export class EditprofileComponent {
   }
 
 
-  updatePost(): void {
+  updateProfile(): void {
     this.isSubmitting = true;
     this.errorMessage = null;
     this.successMessage = null;
@@ -128,7 +128,14 @@ export class EditprofileComponent {
         },
         error: (error) => {
           this.isSubmitting = false;
-          this.errorMessage = this.getErrorMessage(error);
+          if (error.status == 400 || error.status == 409){
+            this.errorMessage = error.error;
+            setTimeout(() => {
+              this.errorMessage = '';
+            }, 1500);
+          } else {
+            this.errorMessage = this.getErrorMessage(error);
+          }
           console.error('Error editing post:', error);
         }
       });

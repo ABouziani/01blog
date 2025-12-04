@@ -9,12 +9,4 @@ handle errors correctly
 
 text content wrap
 
-remove trandin
 ------------------------
-resize image in post
-ban the admin
-email size
-
-update email server error
-
-fix scroll sizw

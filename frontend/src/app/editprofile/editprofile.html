@@ -3,7 +3,7 @@
     <div class="card">
         <h2>Update Profile</h2>
 
-        <form [formGroup]="userForm" (ngSubmit)="updatePost()" novalidate>
+        <form [formGroup]="userForm" (ngSubmit)="updateProfile()" novalidate>
             <!-- Username Field -->
             <div class="form-group">
                 <label for="username">Username *</label>
@@ -68,21 +68,21 @@
                     Remove
                 </button>
 
+                <small class="hint">Supported: JPG, PNG, GIF (max 10MB)</small>
                 <div class="error-message" *ngIf="errorMessage && !userForm.invalid">
                     {{ errorMessage }}
                 </div>
-                <small class="hint">Supported: JPG, PNG, GIF (max 10MB)</small>
             </div>
 
             <!-- Messages -->
-            <div class="messages">
+            <!-- <div class="messages">
                 <div class="success-message" *ngIf="successMessage">
                     {{ successMessage }}
                 </div>
                 <div class="error-message" *ngIf="errorMessage">
                     {{ errorMessage }}
                 </div>
-            </div>
+            </div> -->
 
             <!-- Submit Button -->
             <div class="form-actions">

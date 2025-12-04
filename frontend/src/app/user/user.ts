@@ -31,7 +31,7 @@ export class UserComponent {
   loadingMore = false;
   allLoaded = false;
   lastPostId: number = 0;
-  pageSize: number = 4;
+  pageSize: number = 9;
   private scrollTimer: any;
   loading = true;
   showPopup = false;

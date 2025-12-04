@@ -29,7 +29,7 @@ export class PostComponent {
   loadingMore = false;
   allLoaded = false;
   lastCommentId: number = 0;
-  pageSize: number = 4;
+  pageSize: number = 10;
   private scrollTimer: any;
   showPopup = false;
   reason = '';

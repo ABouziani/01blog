@@ -22,7 +22,7 @@ export class PostsComponent implements OnInit {
   loadingMore = false;
   allLoaded = false;
   lastPostId: number = 0;
-  pageSize: number = 8;
+  pageSize: number = 9;
 
 
   private internalPosts: PostDto[] = [];
