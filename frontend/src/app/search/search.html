@@ -1,15 +1,25 @@
-<mat-form-field appearance="outline" class="search-form custom-search">
-  <mat-label style="margin-left: 10px;">Search</mat-label>
-
-  <input matInput class="search-input" [(ngModel)]="query" (keyup.enter)="onSearch()"
-    placeholder="e.g. john, tutorial..." autocomplete="off" />
-
-  <mat-select matIconPrefix class="search-type" [(ngModel)]="type">
-    <mat-option value="users">Users</mat-option>
-    <mat-option value="posts">Posts</mat-option>
-  </mat-select>
-
-  <button matSuffix mat-icon-button class="search-button" (click)="onSearch()" [disabled]="!query.trim()">
-    <mat-icon>search</mat-icon>
-  </button>
-</mat-form-field>
+<div class="container my-4">
+    <div class="input-group input-group-lg custom-search-bar shadow-sm rounded-3">
+        
+        <select class="form-select search-type-select fw-semibold" 
+                [(ngModel)]="type" 
+                aria-label="Select search type">
+            <option value="users">Users</option>
+            <option value="posts">Posts</option>
+        </select>
+        
+        <input type="text" 
+               class="form-control search-input" 
+               [(ngModel)]="query" 
+               (keyup.enter)="onSearch()"
+               placeholder="Search posts or users (e.g., john, tutorial...)" 
+               autocomplete="off" 
+               aria-label="Search input field">
+        
+        <button class="btn btn-primary search-button" 
+                (click)="onSearch()" 
+                [disabled]="!query.trim()">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+</div>

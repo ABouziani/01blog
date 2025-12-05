@@ -1,100 +1,139 @@
 <app-search-bar></app-search-bar>
-<main class="container py-4">
-  <!-- Hero Section -->
-  <div class="row align-items-center hero-section">
-    <div class="col-lg-6 mb-4 mb-lg-0">
-      <h1 class="hero-title">Share Your Learning Journey</h1>
-      <p class="hero-text">
-        01Blog is a platform for students to document experiences, share insights, and connect with a community of
-        peers.
-      </p>
-      <button class="btn-hero" (click)="router.navigate(['/posts'])">Discover the Community</button>
-    </div>
-    <div class="col-lg-6">
-      <div class="hero-image" style="background-image: url('/frontphoto.jpeg');"></div>
-    </div>
-  </div>
 
-  <!-- Recent Posts -->
-  <div class="section-spacing">
-    <h2 class="section-title">Recent Posts</h2>
-    <div class="row g-3">
-      <div class="col-md-6 col-lg-4" *ngFor="let post of recentPosts">
-        <div class="post-card">
-          <div class="post-card-image clickable" (click)="router.navigate(['/posts/' + post.id])"
-            [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
-          </div>
-          <div class="post-card-body">
-            <h5 class="post-card-title clickable" (click)="router.navigate(['/posts/' + post.id])">
-              {{ post.title }}
-            </h5>
-            <p class="post-card-author clickable" (click)="router.navigate(['/users/' + post.creatorId])">
-              @{{ post.creatorUsername }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="!recentPosts || recentPosts.length == 0">
-        <div class="empty-state">
-          No posts from your followings, discover the platform and follow users to get feeds!
-        </div>
-      </div>
-    </div>
-    <div class="text-center mt-4">
-      <button class="btn-discover clickable" (click)="router.navigate(['/posts'])">
-        Discover More
-      </button>
-    </div>
-  </div>
+<main class="content-wrapper container-fluid px-0">
 
-  <!-- Most Active Users -->
-  <div class="section-spacing">
-    <h2 class="section-title">Most Active Users</h2>
-    <div class="row g-4 justify-content-center">
-      <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let user of activeUsers">
-        <div class="user-card">
-          <div class="user-avatar clickable" (click)="router.navigate(['/users/' + user.id])"
-            [style.background-image]="user.avatar ? 'url(http://localhost:8080' + user.avatar + ')' : 'url(/user_avatar.png)'">
-          </div>
-          <p class="user-name clickable" (click)="router.navigate(['/users/' + user.id])">
-            @{{ user.name }}
+  <section class="hero-jumbotron py-5 py-md-6 mb-5">
+    <div class="container">
+      <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-7 order-2 order-lg-1">
+          <h1 class="hero-display display-5 fw-bold mb-3">
+            Share Your Learning Journey
+          </h1>
+          <p class="lead text-muted hero-text mb-4">
+            01Blog is a platform for students to document experiences, share insights, and connect with a community of peers.
           </p>
-          <p class="user-stats">{{ user.posts }} Posts</p>
+          <button class="btn btn-outline-secondary btn-lg" (click)="router.navigate(['/posts'])">
+            Discover the Community
+          </button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Posts with Most Reactions -->
-  <div class="section-spacing">
-    <h2 class="section-title">Posts with Most Reactions</h2>
-    <div class="row g-3">
-      <div class="col-6 col-md-4 col-lg-3" *ngFor="let post of topPosts">
-        <div class="small-post-card">
-          <div class="small-post-image clickable" (click)="router.navigate(['/posts/' + post.id])"
-            [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
-          </div>
-          <div class="small-post-body">
-            <h6 class="small-post-title clickable" (click)="router.navigate(['/posts/' + post.id])">
-              {{ post.title }}
-            </h6>
-            <p class="small-post-author clickable" (click)="router.navigate(['/users/' + post.creatorId])">
-              @{{ post.creatorUsername }}
-            </p>
+        <div class="col-lg-5 order-1 order-lg-2">
+          <div class="hero-visual-block rounded-3 shadow-lg"
+               style="background-image: url('/frontphoto.jpeg');"
+               aria-label="Student sharing learning journey on a platform">
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Trending Topics -->
-  <div class="section-spacing">
-    <h2 class="section-title">Trending Topics</h2>
-    <div class="d-flex flex-wrap gap-2">
-      <button *ngFor="let tag of trendingTags" class="tag-pill" [class.tag-primary]="tag.primary"
-        [class.tag-default]="!tag.primary">
-        {{ tag.label }}
-      </button>
+  <div class="container section-grid pb-5">
+    <div class="row g-5">
+
+      <div class="col-lg-8 main-content-column">
+
+        <section class="feed-section mb-5">
+          <h2 class="h3 fw-bold section-title mb-4 border-bottom pb-2">🚀 Latest Insights</h2>
+          <div class="row g-4">
+            <div class="col-12 col-md-6" *ngFor="let post of recentPosts">
+              <article class="post-card-lg card shadow-sm h-100 border-0 rounded-4 overflow-hidden">
+                <div class="post-media-wrapper">
+                  <div class="post-media clickable"
+                       (click)="router.navigate(['/posts/' + post.id])"
+                       [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
+                  </div>
+                </div>
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title post-title clickable fw-bold"
+                      (click)="router.navigate(['/posts/' + post.id])">
+                    {{ post.title }}
+                  </h5>
+                  <p class="card-text mt-auto">
+                    <small class="text-muted post-author clickable"
+                           (click)="router.navigate(['/users/' + post.creatorId])">
+                      By **@{{ post.creatorUsername }}**
+                    </small>
+                  </p>
+                </div>
+              </article>
+            </div>
+            <div class="col-12" *ngIf="!recentPosts || recentPosts.length === 0">
+              <div class="alert alert-info text-center" role="alert">
+                No posts from your followings, **discover the platform** and follow users to get feeds!
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-5">
+            <button class="btn btn-outline-secondary btn-lg" (click)="router.navigate(['/posts'])">
+              View All Posts &nbsp;<i class="bi bi-arrow-right-short"></i>
+            </button>
+          </div>
+        </section>
+
+        <hr class="my-5">
+
+        <section class="top-reactions-section">
+          <h2 class="h3 fw-bold section-title mb-4 border-bottom pb-2">⭐ Trending Now (Most Reactions)</h2>
+          <div class="row g-3">
+            <div class="col-12 col-sm-6" *ngFor="let post of topPosts">
+              <div class="small-post-card d-flex align-items-center p-3 rounded-3 hover-shadow">
+                <div class="small-post-media clickable flex-shrink-0 me-3 rounded-2"
+                     (click)="router.navigate(['/posts/' + post.id])"
+                     [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
+                </div>
+                <div class="small-post-body overflow-hidden">
+                  <h6 class="small-post-title clickable fw-semibold mb-1 text-truncate"
+                      (click)="router.navigate(['/posts/' + post.id])">
+                    {{ post.title }}
+                  </h6>
+                  <p class="small-post-author text-muted mb-0">
+                    <small class="clickable" (click)="router.navigate(['/users/' + post.creatorId])">
+                      @{{ post.creatorUsername }}
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="col-lg-4 sidebar-column">
+        <div class="sticky-top pt-lg-4" style="top: 20px;">
+
+            <aside class="sidebar-block card shadow-sm p-4 mb-4 rounded-4">
+              <h3 class="h5 fw-bold sidebar-title mb-4 text-primary">🥇 Active Contributors</h3>
+              <div class="d-flex flex-column gap-3">
+                <div class="user-list-item d-flex align-items-center" *ngFor="let user of activeUsers">
+                  <div class="user-avatar-sm clickable rounded-circle flex-shrink-0 me-3"
+                       (click)="router.navigate(['/users/' + user.id])"
+                       [style.background-image]="user.avatar ? 'url(http://localhost:8080' + user.avatar + ')' : 'url(/user_avatar.png)'">
+                  </div>
+                  <div class="text-truncate">
+                    <p class="user-name clickable fw-semibold mb-0 text-truncate"
+                       (click)="router.navigate(['/users/' + user.id])">
+                      @{{ user.name }}
+                    </p>
+                    <small class="text-muted user-stats">{{ user.posts }} Posts</small>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <aside class="sidebar-block card shadow-sm p-4 rounded-4">
+              <h3 class="h5 fw-bold sidebar-title mb-3 text-primary">🎯 Trending Topics</h3>
+              <div class="d-flex flex-wrap gap-2">
+                <button *ngFor="let tag of trendingTags"
+                        class="btn btn-sm btn-tag"
+                        [ngClass]="{'btn-primary': tag.primary, 'btn-outline-secondary': !tag.primary}">
+                  #{{ tag.label }}
+                </button>
+              </div>
+            </aside>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </main>

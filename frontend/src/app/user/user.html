@@ -1,155 +1,205 @@
 <app-search-bar *ngIf="!isEditing"></app-search-bar>
-<main class="container py-4 py-lg-5">
-  <div class="no-user">
-    <div class="error" *ngIf="error != '' && error != null && !user"> {{ error }} </div>
-    <div class="errorbanned" *ngIf="user?.banned"> This user is BANNED </div>
-    <div class="empty"></div>
+<main class="container py-4 py-lg-5 profile-page-container">
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-12 col-lg-10">
+      <div class="alert alert-danger text-center" *ngIf="error != '' && error != null && !user">
+        <i class="bi bi-x-octagon-fill me-2"></i> {{ error }}
+      </div>
+      <div class="alert alert-warning text-center fw-bold" *ngIf="user?.banned">
+        <i class="bi bi-shield-fill-exclamation me-2"></i> This user is BANNED
+      </div>
+    </div>
   </div>
-  <div class="row justify-content-center" *ngIf="user && !isEditing">
-    <div class="col-12">
-      <!-- Profile Card -->
-      <div class="profile-card">
-        <div class="profile-header"></div>
-        <div class="profile-content">
-          <div style="display: flex; gap: 10px;">
-            <div class="profile-avatar" [style.background-image]="'url(http://localhost:8080' + user.photo + ')'"></div>
-            <button class="btn-edit" *ngIf="user.owner" (click)="isEditing = !isEditing">
-              <i class="bi bi-pencil-square" style="font-size: 18px;"></i>
+
+  <div class="row justify-content-center cont" *ngIf="user && !isEditing">
+    <div class="col-12 col-lg-10">
+
+      <div class="card profile-card shadow-lg rounded-4 overflow-hidden mb-5">
+
+        <div class="profile-header bg-light-subtle" ></div>
+
+        <div class="card-body profile-content p-4 p-md-5 pt-0">
+
+          <div class="d-flex justify-content-between align-items-end mb-4">
+
+            <div class="d-flex flex-column flex-sm-row align-items-sm-end">
+
+              <div class="profile-avatar rounded-circle shadow-sm flex-shrink-0"
+                [style.background-image]="'url(http://localhost:8080' + user.photo + ')'">
+              </div>
+
+              <div class="username-text mt-3 mt-sm-0 ms-sm-4">
+                <h1 class="profile-username display-5 fw-bold mb-1">{{ user.username }}</h1>
+                <p class="profile-bio text-muted lead-sm">{{ user.bio }}</p>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-edit flex-shrink-0 mt-3 mt-md-0" *ngIf="user.owner"
+              (click)="isEditing = !isEditing">
+              <i class="bi bi-pencil-square me-1"></i> Edit Profile
             </button>
           </div>
-          <div class="profile-info">
-            <div class="usernamebio">
-              <h1 class="profile-username">{{ user.username }}</h1>
-              <p class="profile-bio">{{ user.bio }}</p>
-              <div class="action-buttons" *ngIf="!user.owner">
-                <button class="btn-action btn-subscribe" (click)="follow()" *ngIf="!user.alreadyFollowed">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
-                      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
-                      2H20l-2-2z" />
-                  </svg>
-                  Subscribe
+
+          <hr class="mb-4">
+
+          <div class="row g-4">
+
+            <div class="col-lg-5 border-end pe-lg-4">
+              <h5 class="fw-bold mb-3 text-secondary">Actions</h5>
+              <div class="action-buttons d-flex flex-wrap gap-3 mb-4" *ngIf="!user.owner">
+
+                <button class="btn btn-success btn-action" (click)="follow()" *ngIf="!user.alreadyFollowed">
+                  <i class="bi bi-person-plus-fill me-1"></i> Follow
                 </button>
-                <button class="btn-action btn-unsubscribe" (click)="unfollow()" *ngIf="user.alreadyFollowed">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
-                      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
-                      2H20l-2-2z" />
-                  </svg>
-                  Unsubscribe
-                </button>
-                <button class="btn-action btn-report" (click)="showPopup = true" *ngIf="!user.alreadyReported">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
-                      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
-                  </svg>
-                  Report
+                <button class="btn btn-outline-secondary btn-action" (click)="unfollow()" *ngIf="user.alreadyFollowed">
+                  <i class="bi bi-person-check-fill me-1"></i> Following
                 </button>
 
-                <button class="btn-action btn-report" disabled *ngIf="user.alreadyReported">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
-                      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
-                  </svg>
-                  Already Reported
+                <button class="btn btn-outline-danger btn-action" (click)="showPopup = true"
+                  *ngIf="!user.alreadyReported">
+                  <i class="bi bi-flag me-1"></i> Report User
                 </button>
-                <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
-                <div class="popup-box" *ngIf="showPopup">
-                  <h3>Report this user</h3>
-                  <div class="reporterror" *ngIf="reporterror">
-                    {{ reporterror }}
-                  </div>
-                  <label>Reason</label>
-                  <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
+                <button class="btn btn-secondary btn-action" disabled *ngIf="user.alreadyReported">
+                  <i class="bi bi-flag-fill me-1"></i> Already Reported
+                </button>
+              </div>
 
-                  <div class="actions">
-                    <button class="cancel" (click)="closePopup()">Cancel</button>
-                    <button class="submit" (click)="reportUser()">Submit</button>
-                  </div>
+              <div class="d-flex justify-content-between py-2 mt-4 bg-light rounded-3 p-3">
+                <div class="text-center w-100 border-end">
+                  <i class="bi bi-people-fill text-primary fs-5"></i>
+                  <h6 class="fw-bold mb-0 mt-1">{{ user.followers.length || 0 }}</h6>
+                  <small class="text-muted">Followers</small>
+                </div>
+                <div class="text-center w-100 border-end">
+                  <i class="bi bi-person-fill text-secondary fs-5"></i>
+                  <h6 class="fw-bold mb-0 mt-1">{{ user.following.length || 0 }}</h6>
+                  <small class="text-muted">Following</small>
+                </div>
+                <div class="text-center w-100">
+                  <i class="bi bi-stickies-fill text-info fs-5"></i>
+                  <h6 class="fw-bold mb-0 mt-1">{{ user.posts.length }}</h6>
+                  <small class="text-muted">Posts</small>
                 </div>
               </div>
             </div>
 
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="info-icon">
-                  <i class="bi bi-person-badge"></i>
+            <div class="col-lg-7 ps-lg-4">
+              <h5 class="fw-bold mb-3 text-secondary">Details</h5>
+              <div class="row info-grid g-3">
+                <div class="col-sm-6">
+                  <div class="info-item d-flex align-items-center">
+                    <i class="bi bi-key-fill text-primary me-3 fs-5"></i>
+                    <div>
+                      <small class="text-muted d-block">User ID</small>
+                      <div class="fw-bold small">{{ user.id }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-text">ID: {{ user.id }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-icon">
-                  <i class="bi bi-envelope"></i>
+                <div class="col-sm-6">
+                  <div class="info-item d-flex align-items-center">
+                    <i class="bi bi-envelope-fill text-info me-3 fs-5"></i>
+                    <div>
+                      <small class="text-muted d-block">Email</small>
+                      <div class="fw-bold small text-truncate">{{ user.email }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-text">{{ user.email }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-icon">
-                  <i class="bi bi-calendar-check"></i>
+                <div class="col-sm-6">
+                  <div class="info-item d-flex align-items-center">
+                    <i class="bi bi-calendar-check-fill text-success me-3 fs-5"></i>
+                    <div>
+                      <small class="text-muted d-block">Joined</small>
+                      <div class="fw-bold small">{{ user.createdAt | date:"mediumDate" }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-text">Joined: {{ user.createdAt | date:"short" }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-icon">
-                  <i class="bi bi-award"></i>
+                <div class="col-sm-6">
+                  <div class="info-item d-flex align-items-center">
+                    <i class="bi bi-award-fill text-warning me-3 fs-5"></i>
+                    <div>
+                      <small class="text-muted d-block">Role</small>
+                      <div class="fw-bold small">{{ user.role }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-text">Role: {{ user.role }}</div>
               </div>
             </div>
-
-
           </div>
+
         </div>
       </div>
 
-      <div class="user-engagement">
-        <div class="user-engagement-item">
-          <i class="bi bi-person text-primary" style="font-size: 1.25rem;"></i>
-          <span class="fw-bold small" style="color:var(--text)">{{ user.followers.length || 0 }} Followers</span>
-        </div>
-        <div class="engagement-divider"></div>
-        <div class="user-engagement-item">
-          <i class="bi bi-person text-secondary" style="font-size: 1.25rem;"></i>
-          <span class="fw-bold small">{{ user.following.length || 0 }} Following</span>
-        </div>
-        <div class="engagement-divider"></div>
-        <div class="user-engagement-item">
-          <i class="bi bi-stickies" style="font-size: 1.25rem; color: #764ba2;"></i>
-          <span class="fw-bold small">{{ user.posts.length }} Post</span>
-        </div>
+      <section class="user-posts-section">
+        <h3 class="h4 fw-bold posts-section-title mb-4 border-bottom pb-2">Recent Posts</h3>
 
-      </div>
+        <div class="row g-4 posts-grid">
+          <div class="col-12 col-sm-6 col-lg-4" *ngFor="let post of user?.posts">
+            <div class="card post-card-dynamic shadow-hover h-100 border-0 rounded-4 overflow-hidden"
+              (click)="router.navigate(['/posts/' + post.id])">
 
-      <!-- Posts Section -->
-      <h2 class="posts-section-title">Posts</h2>
-      <div class="posts-grid" *ngIf="user.posts">
-        <div class="post-card" *ngFor="let post of user?.posts" (click)="router.navigate(['/posts/' + post.id])">
-          <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
+              <div class="post-media-header">
+                <div class="post-image-dynamic clickable"
+                  [style.background-image]="post.media ? 'url(' + 'http://localhost:8080' + post.media + ')' : 
+                  'url(/post_image.png)'">
+                </div>
+              </div>
+
+              <div class="card-body p-4 d-flex flex-column">
+                <h4 class="card-title post-title fw-bold h5 mb-2"><span class="clickable">{{ post.title }}</span></h4>
+                <p class="card-text text-muted post-description small mb-0 mt-auto">
+                  {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="post-body">
-            <h3 class="post-title">{{ post.title }}</h3>
-            <p class="post-description">
-              {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
-            </p>
+
+          <div class="col-12" *ngIf="(!user.posts || user.posts.length === 0) && allLoaded">
+            <div class="no-post alert alert-light text-center py-4 empty-posts">
+              <i class="bi bi-journal-x display-6 text-muted mb-2"></i>
+              <p class="mb-0 no-post-text">No posts shared by this user yet.</p>
+            </div>
           </div>
         </div>
 
-        <div class="empty-posts" *ngIf="(!user.posts || user.posts.length === 0) && allLoaded">
-          <div class="empty-posts-icon">📝</div>
-          <br>
-          <p class="empty-posts-text">No posts yet</p>
+        <div class="text-center py-3 loading-more" *ngIf="loadingMore">
+          <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> Loading posts...
         </div>
-      </div>
-    </div>
-    <div class="loading-more" *ngIf="loadingMore">
-      Loading posts...
-    </div>
-    <div class="all-loaded" *ngIf="allLoaded && user.posts.length > 0">
-      <div class="empty-posts-icon">📝</div>
-      <br>
-      <p class="empty-posts-text">No more posts!</p>
+        <div class="text-center py-3 all-loaded text-muted" *ngIf="allLoaded && user.posts.length > 0">
+          <hr>
+          <p class="mb-0">You've reached the end of their posts!</p>
+        </div>
+      </section>
+
     </div>
   </div>
+
+  <div class="modal fade" [class.show]="showPopup" [class.d-block]="showPopup" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Report User: {{ user?.username }}</h5>
+          <button type="button" class="btn-close" (click)="closePopup()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger" *ngIf="reporterror">
+            {{ reporterror }}
+          </div>
+          <div class="mb-3">
+            <label for="report-reason" class="form-label">Reason</label>
+            <textarea id="report-reason" [(ngModel)]="reason" class="form-control" placeholder="Describe the issue..."
+              rows="4"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary cancel" (click)="closePopup()">Cancel</button>
+          <button type="button" class="btn btn-danger submit" (click)="reportUser()">Submit Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade" [class.show]="showPopup" *ngIf="showPopup"></div>
+
   <app-editprofile *ngIf="isEditing && user"
     [editing]="{id:user.id, username:user.username, bio:user.bio, email:user.email, photo:user.photo}"
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">

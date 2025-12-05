@@ -1,68 +1,157 @@
-<!-- Error Message -->
-<div *ngIf="error" class="alert alert-error">
-  <i class="icon-error"></i>
-  {{ error }}
-</div>
-
-<!-- User Card -->
-<div *ngIf="user as u" class="user-card">
-
-  <!-- Centered User Info -->
-  <div class="user-header-centered">
-    <img [src]="u.photo" alt="User Photo" class="user-photo" />
-    <h2>{{ u.username }}</h2>
-    <p class="user-email">{{ u.email }}</p>
+<app-search-bar *ngIf="!isEditing"></app-search-bar>
+<main class="container py-4 py-lg-5">
+  <div class="no-user">
+    <div class="error" *ngIf="error != '' && error != null && !user"> {{ error }} </div>
+    <div class="errorbanned" *ngIf="user?.banned"> This user is BANNED </div>
+    <div class="empty"></div>
   </div>
+  <div class="row justify-content-center" *ngIf="user && !isEditing">
+    <div class="col-12">
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-header"></div>
+        <div class="profile-content">
+          <div style="display: flex; gap: 10px;">
+            <div class="profile-avatar" [style.background-image]="'url(http://localhost:8080' + user.photo + ')'"></div>
+            <button class="btn-edit" *ngIf="user.owner" (click)="isEditing = !isEditing">
+              <i class="bi bi-pencil-square" style="font-size: 18px;"></i>
+            </button>
+          </div>
+          <div class="profile-info">
+            <div class="usernamebio">
+              <h1 class="profile-username">{{ user.username }}</h1>
+              <p class="profile-bio">{{ user.bio }}</p>
+              <div class="action-buttons" *ngIf="!user.owner">
+                <button class="btn-action btn-subscribe" (click)="follow()" *ngIf="!user.alreadyFollowed">
+                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
+                      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
+                      2H20l-2-2z" />
+                  </svg>
+                  Subscribe
+                </button>
+                <button class="btn-action btn-unsubscribe" (click)="unfollow()" *ngIf="user.alreadyFollowed">
+                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
+                      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
+                      2H20l-2-2z" />
+                  </svg>
+                  Unsubscribe
+                </button>
+                <button class="btn-action btn-report" (click)="showPopup = true" *ngIf="!user.alreadyReported">
+                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
+                      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
+                  </svg>
+                  Report
+                </button>
 
-  <!-- User Details -->
-  <div class="user-details">
-    <p><strong>Role:</strong> {{ u.role }}</p>
-    <p><strong>Bio:</strong> {{ u.bio }}</p>
-    <p><strong>Joined:</strong> {{ u.createdAt | date: 'medium' }}</p>
+                <button class="btn-action btn-report" disabled *ngIf="user.alreadyReported">
+                  <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
+                      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
+                  </svg>
+                  Already Reported
+                </button>
+                <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
+                <div class="popup-box" *ngIf="showPopup">
+                  <h3>Report this user</h3>
+                  <div class="reporterror" *ngIf="reporterror">
+                    {{ reporterror }}
+                  </div>
+                  <label>Reason</label>
+                  <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
+
+                  <div class="actions">
+                    <button class="cancel" (click)="closePopup()">Cancel</button>
+                    <button class="submit" (click)="reportUser()">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-icon">
+                  <i class="bi bi-person-badge"></i>
+                </div>
+                <div class="info-text">ID: {{ user.id }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon">
+                  <i class="bi bi-envelope"></i>
+                </div>
+                <div class="info-text">{{ user.email }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon">
+                  <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="info-text">Joined: {{ user.createdAt | date:"short" }}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon">
+                  <i class="bi bi-award"></i>
+                </div>
+                <div class="info-text">Role: {{ user.role }}</div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="user-engagement">
+        <div class="user-engagement-item">
+          <i class="bi bi-person text-primary" style="font-size: 1.25rem;"></i>
+          <span class="fw-bold small" style="color:var(--text)">{{ user.followers.length || 0 }} Followers</span>
+        </div>
+        <div class="engagement-divider"></div>
+        <div class="user-engagement-item">
+          <i class="bi bi-person text-secondary" style="font-size: 1.25rem;"></i>
+          <span class="fw-bold small">{{ user.following.length || 0 }} Following</span>
+        </div>
+        <div class="engagement-divider"></div>
+        <div class="user-engagement-item">
+          <i class="bi bi-stickies" style="font-size: 1.25rem; color: #764ba2;"></i>
+          <span class="fw-bold small">{{ user.posts.length }} Post</span>
+        </div>
+
+      </div>
+
+      <!-- Posts Section -->
+      <h2 class="posts-section-title">Posts</h2>
+      <div class="posts-grid" *ngIf="user.posts">
+        <div class="post-card" *ngFor="let post of user?.posts" (click)="router.navigate(['/posts/' + post.id])">
+          <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
+          </div>
+          <div class="post-body">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p class="post-description">
+              {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+            </p>
+          </div>
+        </div>
+
+        <div class="empty-posts" *ngIf="(!user.posts || user.posts.length === 0) && allLoaded">
+          <div class="empty-posts-icon">📝</div>
+          <br>
+          <p class="empty-posts-text">No posts yet</p>
+        </div>
+      </div>
+    </div>
+    <div class="loading-more" *ngIf="loadingMore">
+      Loading posts...
+    </div>
+    <div class="all-loaded" *ngIf="allLoaded && user.posts.length > 0">
+      <div class="empty-posts-icon">📝</div>
+      <br>
+      <p class="empty-posts-text">No more posts!</p>
+    </div>
   </div>
-
-  <div class="user-buttons" *ngIf="!user.owner">
-    <button class="subscribe" (click)="follow()" *ngIf="!u.alreadyFollowed">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
-      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
-      2H20l-2-2z" />
-      </svg>
-      Subscribe
-    </button>
-    <button class="subscribe" (click)="unfollow()" *ngIf="u.alreadyFollowed">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 
-      1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-1.99 
-      2H20l-2-2z" />
-      </svg>
-      Subscribed
-    </button>
-
-    <button class="report" (click)="reportUser()" *ngIf="!u.alreadyReported">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
-      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
-      </svg>
-      Report
-    </button>
-
-    <button class="report" (click)="reportUser()" disabled *ngIf="u.alreadyReported">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
-      10-4.48 10-10S17.52 2 12 2zm0 15h-1v-6h2v6h-1zm0-8h-1V7h2v2h-1z" />
-      </svg>
-      You already reported this user!
-    </button>
-  </div>
-  <!-- Posts Section -->
-  <div class="user-posts">
-    <h3>User's Posts</h3>
-    <ng-container *ngIf="u.posts.length > 0; else noPosts">
-      <app-posts [posts]="u.posts"></app-posts>
-    </ng-container>
-    <ng-template #noPosts>
-      <p class="no-posts">This user has not written any posts yet.</p>
-    </ng-template>
-  </div>
-</div>
+  <app-editprofile *ngIf="isEditing && user"
+    [editing]="{id:user.id, username:user.username, bio:user.bio, email:user.email, photo:user.photo}"
+    (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">
+  </app-editprofile>
+</main>

@@ -1,106 +1,123 @@
-<!-- create-post/create-post.component.html -->
-<div class="create-post-container">
-  <div class="card">
-    <h2 *ngIf="!editing">Create New Post</h2>
-    <h2 *ngIf="editing">Update Post</h2>
+<div class="container py-5 form-page-container">
+  <div class="card shadow-lg p-4 p-md-5 mx-auto post-form-card">
+
+    <h2 class="text-center fw-bold mb-4 text-primary">
+      <ng-container *ngIf="!editing">✨ Create New Post</ng-container>
+      <ng-container *ngIf="editing">✏️ Update Post</ng-container>
+    </h2>
 
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()" novalidate>
-      <!-- Title Field -->
-      <div class="form-group">
-        <label for="title">Title *</label>
-        <input type="text" id="title" formControlName="title" [class.error]="title?.invalid && title?.touched"
-          placeholder="Enter post title">
 
-        <div class="error-message" *ngIf="title?.invalid && title?.touched">
-          <span *ngIf="title?.errors?.['required']">Title is required</span>
-          <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
-          <span *ngIf="title?.errors?.['maxlength']">Title cannot exceed 100 characters</span>
+      <div class="mb-4">
+        <label for="title" class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+        <input type="text" id="title" formControlName="title"
+          class="form-control form-control-lg"
+          [class.is-invalid]="title?.invalid && title?.touched"
+          placeholder="Enter a compelling post title (3-100 characters)">
+
+        <div class="invalid-feedback" *ngIf="title?.invalid && title?.touched">
+          <span *ngIf="title?.errors?.['required']">Title is required.</span>
+          <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters.</span>
+          <span *ngIf="title?.errors?.['maxlength']">Title cannot exceed 100 characters.</span>
         </div>
       </div>
 
-      <!-- Description Field -->
-      <div class="form-group">
-        <label for="description">Description *</label>
+      <div class="mb-4">
+        <label for="description" class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
         <textarea id="description" formControlName="description"
-          [class.error]="description?.invalid && description?.touched" placeholder="Enter post description"
+          class="form-control"
+          [class.is-invalid]="description?.invalid && description?.touched"
+          placeholder="Describe your learning experience or insight (20-1000 characters)"
           rows="6"></textarea>
 
-        <div class="error-message" *ngIf="description?.invalid && description?.touched">
-          <span *ngIf="description?.errors?.['required']">Description is required</span>
-          <span *ngIf="description?.errors?.['minlength']">Description must be at least 20 characters</span>
-          <span *ngIf="description?.errors?.['maxlength']">Description cannot exceed 1000 characters</span>
+        <div class="invalid-feedback" *ngIf="description?.invalid && description?.touched">
+          <span *ngIf="description?.errors?.['required']">Description is required.</span>
+          <span *ngIf="description?.errors?.['minlength']">Description must be at least 20 characters.</span>
+          <span *ngIf="description?.errors?.['maxlength']">Description cannot exceed 1000 characters.</span>
         </div>
       </div>
 
-      <div class="form-group" *ngIf="editing">
-        <label for="photo">Post media preview</label>
-        <div class="postmediaprev-wrapper">
-          <div *ngIf="editing.media && isMediaPhoto(editing.media.toString())" class="postmediaprev"
-            [style.background-image]="'url(http://localhost:8080' + editing.media + ')'">
+      <div class="mb-4" *ngIf="editing">
+        <label for="photo" class="form-label fw-semibold d-block">Current Post Media</label>
+        <div class="current-media-wrapper p-3 border rounded-3 bg-light" *ngIf="editing.media">
+
+          <div *ngIf="isMediaPhoto(editing.media.toString())" class="media-preview-existing mb-3"
+            [style.background-image]="'url(http://localhost:8080' + editing.media + ')'"
+            aria-label="Current media photo preview">
           </div>
-          <video class="postmediaprev" *ngIf="editing.media && isMediaVideo(editing.media.toString())" [src]="'http://localhost:8080'+editing.media"
-            controls muted preload="metadata"></video>
 
-          <button class="remove-btn" *ngIf="editing.media" type="button" (click)="removePhoto()">
-            ✕
-          </button>
+          <video class="media-preview-existing w-100 mb-3" *ngIf="isMediaVideo(editing.media.toString())"
+            [src]="'http://localhost:8080'+editing.media" controls muted preload="metadata">
+          </video>
+          
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-sm btn-outline-danger remove-btn-sm" 
+                    type="button" 
+                    (click)="removePhoto()">
+              <i class="bi bi-trash me-1"></i> Remove Current Media
+            </button>
+          </div>
         </div>
-        <div class="postmediaprev" [style.background-image]="'url(' + editing.media + ')'"></div>
+        <div *ngIf="!editing.media" class="alert alert-info py-2 small">No current media uploaded for this post.</div>
       </div>
 
-      <!-- Media Upload Field -->
-      <div class="form-group">
-        <label for="media">Upload Media (optional)</label>
+      <div class="mb-4 p-3 border rounded-3 media-upload-box">
+        <label for="media" class="form-label fw-semibold">Upload New Media (optional)</label>
 
-        <input type="file" id="media" (change)="onFileSelected($event)" accept="image/*,video/*" class="file-input">
+        <input type="file" id="media" (change)="onFileSelected($event)" accept="image/*,video/*" class="form-control">
 
-        <!-- Preview -->
-        <div *ngIf="previewUrl">
+        <small class="form-text text-muted hint">Supported: JPG, PNG, GIF, MP4, WebM, Ogg (max 10MB)</small>
+
+        <div *ngIf="previewUrl" class="mt-3 text-center new-media-preview-box">
+          <label class="form-label fw-semibold text-muted small">New Media Preview:</label>
           <div *ngIf="isImage">
-            <img [src]="previewUrl" alt="Preview" class="media-preview">
+            <img [src]="previewUrl" alt="New Media Preview" class="media-preview img-fluid rounded-3">
           </div>
           <div *ngIf="isVideo">
-            <video [src]="previewUrl" controls class="media-preview"></video>
+            <video [src]="previewUrl" controls class="media-preview img-fluid rounded-3"></video>
           </div>
-          <button type="button" (click)="selectedFile = null; previewUrl = null;" class="remove-preview-btn">
-            Remove
+          <button type="button" (click)="selectedFile = null; previewUrl = null;" class="btn btn-sm btn-outline-secondary mt-2">
+            <i class="bi bi-x-circle me-1"></i> Remove Preview
           </button>
         </div>
 
-        <div class="error-message" *ngIf="errorMessage && !postForm.invalid">
-          {{ errorMessage }}
-        </div>
-        <small class="hint">Supported: JPG, PNG, GIF, MP4, WebM, Ogg (max 10MB)</small>
-      </div>
-
-      <!-- Messages -->
-      <div class="messages">
-        <div class="success-message" *ngIf="successMessage">
-          {{ successMessage }}
-        </div>
-        <div class="error-message" *ngIf="errorMessage">
+        <div class="alert alert-warning mt-3 small" *ngIf="errorMessage && !postForm.invalid">
           {{ errorMessage }}
         </div>
       </div>
 
-      <!-- Submit Button -->
-      <div class="form-actions">
-        <button type="submit" *ngIf="!editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn">
-          <span *ngIf="!isSubmitting" >Create Post</span>
-          <span *ngIf="isSubmitting" disabled>Creating...</span>
-        </button>
+      <div class="messages mb-4">
+        <div class="alert alert-success" *ngIf="successMessage">
+          <i class="bi bi-check-circle me-1"></i> {{ successMessage }}
+        </div>
+        <div class="alert alert-danger" *ngIf="errorMessage && postForm.invalid">
+          <i class="bi bi-exclamation-triangle me-1"></i> {{ errorMessage }}
+        </div>
+      </div>
 
-        <button type="button" *ngIf="editing" [disabled]="isSubmitting || postForm.invalid" class="submit-btn"
-          (click)="updatePost()">
-          <span *ngIf="!isSubmitting">Update Post</span>
-          <span *ngIf="isSubmitting">updating...</span>
-        </button>
-
-        <button type="button" *ngIf="!editing" (click)="router.navigate(['/'])" class="cancel-btn">
+      <div class="form-actions d-flex justify-content-end gap-3 pt-3 border-top">
+        
+        <button type="button" 
+                (click)="editing ? cancelEdit() : router.navigate(['/'])" 
+                class="btn btn-outline-secondary cancel-btn">
           Cancel
         </button>
-        <button type="button" *ngIf="editing" (click)="cancelEdit()" class="cancel-btn">
-          Cancel
+
+        <button type="submit" 
+                *ngIf="!editing" 
+                [disabled]="isSubmitting || postForm.invalid" 
+                class="btn btn-primary submit-btn">
+          <span *ngIf="!isSubmitting">Create Post</span>
+          <span *ngIf="isSubmitting">Creating... <i class="spinner-border spinner-border-sm ms-2"></i></span>
+        </button>
+
+        <button type="button" 
+                *ngIf="editing" 
+                [disabled]="isSubmitting || postForm.invalid" 
+                class="btn btn-success submit-btn"
+                (click)="updatePost()">
+          <span *ngIf="!isSubmitting">Save Changes</span>
+          <span *ngIf="isSubmitting">Updating... <i class="spinner-border spinner-border-sm ms-2"></i></span>
         </button>
       </div>
     </form>

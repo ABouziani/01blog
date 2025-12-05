@@ -1,131 +1,87 @@
-.posts-container {
-    padding: 2rem 3rem 2rem 3rem;
+.post-image-feed {
+    /* REQUIRED: Set a fixed height for visibility */
+    height: 200px; /* Use a height appropriate for your design */
+    width: 100%;
+    
+    /* Ensure the background image covers the area correctly */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.post-meta {
-    margin-top: 1rem;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    align-items: center;
-    gap: 0.1rem;
-    flex-wrap: wrap;
+.post-image-dynamic {
+    /* 1. REQUIRED: Set a fixed height for visibility */
+    height: 200px; /* Choose a height suitable for a large visual card */
+    width: 100%;
+
+    /* 2. REQUIRED: Ensure the image is rendered correctly */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.post-author {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: #667eea;
+/* Optional: Add overflow hidden to the header wrapper for clean corners */
+.post-media-header {
+    overflow: hidden; 
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- */
+/* 1. Base Styles for Smooth Transitions */
+/* ----------------------------------------------------------------- */
+
+.post-card-dynamic {
+    /* Ensure the card is the focus of the effect */
     cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 0.375rem 0.875rem;
-    background: #667eea15;
-    border-radius: 50px;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
+    
+    /* Make all transformations smooth and professional */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+    
+    /* Ensure no content leaks out during scaling */
+    overflow: hidden; 
 }
 
-.post-author::before {
-    content: '👤';
-    font-size: 0.75rem;
+.post-image-dynamic {
+    /* Ensure the image can be transformed smoothly */
+    transition: transform 0.5s ease-in-out;
 }
 
-.post-author:hover {
-    background: #667eea;
-    color: white;
-    transform: translateY(-2px);
+/* ----------------------------------------------------------------- */
+/* 2. Hover Effects */
+/* ----------------------------------------------------------------- */
+
+.post-card-dynamic:hover {
+    /* Subtle lift: Scales up the entire card slightly */
+    transform: translateY(-5px) scale(1.01);
+    
+    /* Enhanced shadow for depth */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important; 
 }
 
-.post-date {
-    font-size: 0.8125rem;
-    color: #718096;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-weight: 500;
+.post-card-dynamic:hover .post-image-dynamic {
+    /* Subtle Zoom: Makes the image feel more engaging */
+    transform: scale(1.05);
 }
 
-.post-date::before {
-    content: '📅';
-    font-size: 0.75rem;
+/* Optional: Make text elements slightly more emphasized on hover */
+.post-card-dynamic:hover .post-title,
+.post-card-dynamic:hover .post-author {
+    color: var(--bs-primary); /* Use your primary/accent color */
 }
 
-.reactions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  /* padding: 0.5rem 0; */
-  border-top: 1px solid #e5e7eb;
-  margin-top: 0.75rem;
-  color: #4b5563;
-  font-size: 0.95rem;
-  font-weight: 500;
-  justify-content: center;
-  cursor: auto;
-}
+/* ----------------------------------------------------------------- */
+/* 3. Ensure Image Dimensions (Crucial for visibility!) */
+/* ----------------------------------------------------------------- */
 
-.reactions span {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  /* cursor: pointer; */
-  transition: all 0.2s ease-in-out;
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-}
-
-
-/* Like */
-.post-likes::before {
-  content: "👍";
-  font-size: 1.1rem;
-}
-
-/* Dislike */
-.post-dislikes::before {
-  content: "👎";
-  font-size: 1.1rem;
-}
-
-/* Active states (optional if user reacted) */
-.post-likes.active {
-  color: #2563eb;
-  background-color: #eff6ff;
-}
-
-.post-dislikes.active {
-  color: #dc2626;
-  background-color: #fef2f2;
-}
-
-
-.loading-more {
-  width: 100%;
-  text-align: center;
-  padding: 12px;
-  color: gray;
-  font-style: italic;
-}
-
-.all-loaded {
-  grid-column: 1 / -1;
-  height: fit-content;
-  text-align: center;
-  /* padding: 3rem 2rem; */
-  background: var(--card-bg);
-  border-radius: 16px;
-  border: 2px dashed #cbd5e1;
-  margin-top: 3rem;
-}
-
-.all-loaded-icon {
-  font-size: 3rem;
-  margin-bottom: 0.75rem;
-}
-
-.all-loaded-text {
-  font-size: 1rem;
-  color: #94a3b8;
-  font-weight: 500;
+/* Note: You MUST include the previously discussed CSS for images to show up */
+.post-image-dynamic {
+    height: 250px; 
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* transition must be included here as well */
 }

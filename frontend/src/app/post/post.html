@@ -1,202 +1,148 @@
 <app-search-bar *ngIf="!isEditing"></app-search-bar>
-<div class="container-fluid px-lg-4 py-4 py-lg-5" style="max-width: 1800px;">
+
+<div class="container-fluid py-4 py-lg-5" style="max-width: 1400px;">
 
   <div class="error-message" *ngIf="!post && errorMessage">{{ errorMessage }}</div>
 
   <div class="row g-4 justify-content-center" *ngIf="!isEditing && post">
 
-    <!-- Left Sidebar (Author) - 15% -->
-    <aside class="d-none d-lg-block" style="flex: 0 0 15%; max-width: 15%;">
-      <div class="sticky-sidebar">
-        <div class="author-card fade-in-up">
-          <div class="author-header"></div>
-          <div class="p-4">
-            <img [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
-              alt="{{ post.creator.username }}" class="author-avatar mb-3" style="background-color: white;">
-            <h2 class="h5 fw-bold mb-2">@{{ post.creator.username }}</h2>
-            <p class="text-muted small mb-4 creatorbio">{{ post.creator.bio.length > 20 ? post.creator.bio.substring(0,17) + '...' : post.creator.bio }}</p>
-            <button class="btn btn-profile w-100 mb-3" (click)="router.navigate(['/users/' + post.creator.id])">
-              <i class="bi bi-person-circle me-2"></i>Discover
-            </button>
-
-            <span *ngIf="post && (post.owner || authService.isAdmin())">Manage this post:</span>
-            <div class="d-flex gap-2" *ngIf="!isEditing">
-              <button *ngIf="post && (post.owner || authService.isAdmin())" class="btn action-btn btn-delete flex-fill"  (click)="delete(post.id)">
-                <i class="bi bi-trash"></i>
-              </button>
-              <button *ngIf="post && post.owner" class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
-                <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main Content - 60% -->
-    <main class="middlebar" style="flex: 0 0 55%; max-width: 55%;">
+    <main class="col-12 col-lg-9">
       <article class="article-card p-4 p-md-5 fade-in-up">
-        <!-- Article Meta -->
-        <div class="d-flex flex-wrap gap-2 mb-4">
-          <span class="badge-custom badge-date">
-            <i class="bi bi-calendar3"></i>
-            {{ post.createdAt | date:'short' }}
-          </span>
-          <!-- <span class="badge-custom badge-views">
-              <i class="bi bi-eye"></i>
-              5.4K views
-            </span> -->
-          <span *ngIf="post && !post.owner" (click)="showPopup = true" class="reportpost report-badge">
-            <i class="bi bi-flag-fill"></i>
-            <!-- Report this post -->
-          </span>
-          <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
-          <div class="popup-box" *ngIf="showPopup">
-            <h3>Report this post</h3>
-            <div class="reporterror" *ngIf="reporterror">
-              {{ reporterror }}
-            </div>
-            <label>Reason</label>
-            <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
-
-            <div class="actions">
-              <button class="cancel" (click)="closePopup()">Cancel</button>
-              <button class="submit" (click)="submitReport()">Submit</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Article Title -->
+        
         <h1 class="article-title">{{ post.title }}</h1>
-
-        <!-- Mobile Author Info -->
-        <div class="d-lg-none d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
+        
+        <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
           <img (click)="router.navigate(['/users/' + post.creator.id])"
             [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
-            alt="{{ post.creator.username }}" class="clickable rounded-3"
-            style="width: 48px; height: 48px; object-fit: cover; background-color: white;">
-          <div>
-            <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">@{{
-              post.creator.username }}</p>
-            <p class="text-muted small mb-0 creatorbio">{{ post.creator.bio.length > 20 ? post.creator.bio.substring(0,17) + '...' : post.creator.bio }}</p>
+            alt="{{ post.creator.username }}" class="clickable rounded-circle"
+            style="width: 50px; height: 50px; object-fit: cover;">
+          
+          <div class="flex-grow-1">
+            <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">
+                @{{ post.creator.username }}
+            </p>
+            <p class="text-muted small mb-0">
+                <i class="bi bi-calendar3 me-1"></i>{{ post.createdAt | date:'mediumDate' }}
+            </p>
           </div>
-          <span *ngIf="post && (post.owner || authService.isAdmin())" style="margin-left: auto;">Manage this post:</span>
-          <div *ngIf="!isEditing" class="d-flex gap-2">
-            <button *ngIf="post && (post.owner || authService.isAdmin())" class="btn action-btn btn-delete flex-fill" (click)="delete(post.id)">
-              <i class="bi bi-trash"></i>
-            </button>
-            <button *ngIf="post && post.owner" class="btn action-btn btn-edit flex-fill" (click)="isEditing = !isEditing">
-              <i class="bi" [ngClass]="isEditing ? 'bi-x-circle' : 'bi-pencil-square'"></i>
-            </button>
+          
+          <div class="d-flex gap-2 ms-auto">
+            <div *ngIf="post && (post.owner || authService.isAdmin())" class="d-flex gap-2">
+              <button *ngIf="post.owner" class="btn action-btn btn-edit btn-sm" (click)="isEditing = !isEditing" title="Edit">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn action-btn btn-delete btn-sm" (click)="delete(post.id)" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <span *ngIf="post && !post.owner" (click)="showPopup = true" class="report-badge">
+              <i class="bi bi-flag-fill"></i>
+            </span>
           </div>
         </div>
 
-        <!-- Article Content -->
         <div class="article-content" *ngIf="!isEditing">
-          <hr class="section-divider section-divider-mobile">
-          <div *ngIf="post">
+          <div *ngIf="post.media" class="mb-4 text-center">
             <img *ngIf="post.media && isImage(post.media.toString())" [src]="'http://localhost:8080'+post.media"
-              class="media-image-video"
-              style="display: block; width: 80%; max-height: 500px;margin: auto ;object-fit: cover;margin-bottom: 10px;">
+              class="media-image-video img-fluid rounded-3 shadow-sm"
+              style="max-height: 500px; object-fit: contain; margin: auto;">
             <video *ngIf="post.media && isVideo(post.media.toString())" [src]="'http://localhost:8080'+post.media"
-              controls muted preload="metadata" class="media-image-video"></video>
+              controls muted preload="metadata" class="media-image-video w-100 rounded-3 shadow-sm"></video>
           </div>
-          <p [innerText]="post.description"></p>
+          <p class="lead" [innerText]="post.description"></p>
         </div>
+        
+        <hr class="section-divider mt-5">
+
+        <div class="d-lg-none mt-4">
+            <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
+              <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
+                <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i> Like ({{ post.likes || 0 }})
+              </button>
+              <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
+                [disabled]="postService.waiting">
+                <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i> Dislike ({{ post.dislikes || 0 }})
+              </button>
+            </div>
+        </div>
+
       </article>
 
-      <!-- Mobile Engagement Bar -->
-      <div class="d-lg-none mt-4">
-        <div class="mobile-engagement">
-          <div class="mobile-engagement-item">
-            <i class="bi bi-hand-thumbs-up-fill text-primary" style="font-size: 1.25rem;"></i>
-            <span class="fw-bold small" style="color:var(--text)">{{ post.likes || 0 }}</span>
-          </div>
-          <div class="engagement-divider"></div>
-          <div class="mobile-engagement-item">
-            <i class="bi bi-hand-thumbs-down-fill text-secondary" style="font-size: 1.25rem;"></i>
-            <span class="fw-bold small">{{ post.dislikes || 0 }}</span>
-          </div>
-          <div class="engagement-divider"></div>
-          <div class="mobile-engagement-item">
-            <i class="bi bi-chat-dots-fill" style="font-size: 1.25rem; color: #764ba2;"></i>
-            <span class="fw-bold small">{{ post.comments.length }}</span>
-          </div>
-
-        </div>
-        <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
-          <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
-            <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i>
-          </button>
-          <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
-            [disabled]="postService.waiting">
-            <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile Comments -->
-      <div class="d-lg-none mt-4">
-        <div class="engagement-card">
+      <div class="mt-4">
+        <div class="engagement-card p-4">
           <h3 class="comments-header">
             <i class="bi bi-chat-dots-fill" style="color: #764ba2;"></i>
             Comments ({{ post.comments.length }})
           </h3>
 
-          <div class="comments-list" (scroll)="onScroll($event)">
+          <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
+          
+          <div class="comments-list mt-4" style="max-height: 500px; overflow-y: auto;" (scroll)="onScroll($event)">
             <div *ngFor="let c of post.comments" class="comment-item">
-              <div>
+              <div class="d-flex align-items-start w-100">
                 <img (click)="router.navigate(['/users/' + c.user.id])"
                   [src]="c.user.photo ? 'http://localhost:8080' + c.user.photo : '/user_avatar.png'"
-                  alt="{{ c.user.username }}" class="clickable comment-avatar">
+                  alt="{{ c.user.username }}" class="clickable comment-avatar me-3">
                 <div class="flex-grow-1">
                   <div class="comment-bubble">
                     <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
                       c.user.username }}</p>
-                    <p class="comment-text">{{ c.content }}</p>
+                    <p class="comment-text" [innerText]="c.content"></p>
                   </div>
                   <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
                 </div>
               </div>
-              <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-preview-btn">
+              <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-comment remove-preview-btn">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
-            <div class="all-loaded" *ngIf="!post.comments || post.comments.length == 0">
+            
+            <div class="text-center" *ngIf="loadingMore">
+              <div class="loading-more">Loading comments...</div>
+            </div>
+            <div class="text-center no-comment" *ngIf="allLoaded && (!post.comments || post.comments.length == 0)">
               <div class="empty-comments-icon">📝</div>
-              <br>
               <p class="empty-comments-text">No comments!</p>
             </div>
-            <div class="loading-more" *ngIf="loadingMore">
-              Loading comments...
-            </div>
-            <div class="all-loaded" *ngIf="allLoaded && post.comments.length != 0">
-              <div class="empty-comments-icon">📝</div>
-              <br>
+            <div class="text-center all-loaded" *ngIf="allLoaded && post.comments.length != 0">
               <p class="empty-comments-text">No more comments!</p>
             </div>
           </div>
-
-          <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
         </div>
       </div>
     </main>
 
-    <!-- Right Sidebar (Engagement & Comments) - 25% -->
-    <aside class="d-none d-lg-block" style="flex: 0 0 30%; max-width: 30%;">
-      <div class="engagement-card fade-in-up">
-        <!-- Engagement Section -->
-        <div class="text-center mb-4">
-          <p class="text-uppercase text-muted fw-semibold small mb-3" style="letter-spacing: 1px;">Post Reactions</p>
+    <aside class="col-lg-3 d-none d-lg-block">
+      <div class="sticky-top" style="top: 2rem;">
+        
+        <div class="author-card card shadow-sm mb-4">
+            <div class="card-body p-4 text-center">
+                <p class="text-uppercase text-muted fw-semibold small mb-3 border-bottom pb-2" style="letter-spacing: 1px;">About the Author</p>
+                <img [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
+                    alt="{{ post.creator.username }}" class="author-avatar-sm rounded-circle mb-3 clickable"
+                    (click)="router.navigate(['/users/' + post.creator.id])">
+                <h2 class="h6 fw-bold mb-1">@{{ post.creator.username }}</h2>
+                <p class="text-muted small creatorbio mb-3">
+                    {{ post.creator.bio.length > 80 ? post.creator.bio.substring(0,77) + '...' : post.creator.bio }}
+                </p>
+                <button class="btn btn-profile-sm w-100" (click)="router.navigate(['/users/' + post.creator.id])">
+                    <i class="bi bi-person-circle me-1"></i>View Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="engagement-card card shadow-sm p-4 text-center">
+          <p class="text-uppercase text-muted fw-semibold small mb-3 border-bottom pb-2" style="letter-spacing: 1px;">Post Reactions</p>
+          
           <div class="reaction-stats mb-3">
-            <span class="fw-bold text-primary me-2">
-              <i class="bi bi-hand-thumbs-up-fill me-1 text-success"></i>{{ post.likes || 0 }} Likes
+            <span class="fw-bold text-success me-3">
+              <i class="bi bi-hand-thumbs-up-fill me-1"></i>{{ post.likes || 0 }}
             </span>
-            <span class="text-muted">|</span>
-            <span class="fw-bold text-danger ms-2">
-              <i class="bi bi-hand-thumbs-down-fill me-1 text-danger"></i>{{ post.dislikes || 0 }} Dislikes
+            <span class="fw-bold text-danger">
+              <i class="bi bi-hand-thumbs-down-fill me-1"></i>{{ post.dislikes || 0 }}
             </span>
           </div>
+          
           <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
             <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
               <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i>
@@ -206,58 +152,26 @@
               <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i>
             </button>
           </div>
-
         </div>
-
-        <hr class="section-divider">
-
-        <!-- Comments Section -->
-        <h3 class="comments-header">
-          <i class="bi bi-chat-dots-fill" style="color: #764ba2;"></i>
-          Comments ({{ post.comments.length }})
-        </h3>
-
-        <div class="comments-list" style="max-height: 400px; overflow-y: auto;" (scroll)="onScroll($event)">
-          <div *ngFor="let c of post.comments" class="comment-item">
-            <div>
-              <img (click)="router.navigate(['/users/' + c.user.id])"
-                [src]="c.user.photo ? 'http://localhost:8080' + c.user.photo : '/user_avatar.png'"
-                alt="{{ c.user.username }}" class="clickable comment-avatar">
-              <div class="flex-grow-1">
-                <div class="comment-bubble">
-                  <p class="clickable comment-author" (click)="router.navigate(['/users/' + c.user.id])">{{
-                    c.user.username }}</p>
-                  <p class="comment-text" [innerText]="c.content"></p>
-                </div>
-                <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
-              </div>
-            </div>
-            <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-preview-btn">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-          <div class="loading-more" *ngIf="loadingMore">
-            Loading comments...
-          </div>
-          <div class="no-comment" *ngIf="allLoaded && (!post.comments || post.comments.length == 0)">
-            <div class="empty-comments-icon">📝</div>
-            <br>
-            <p class="empty-comments-text">No comments!</p>
-          </div>
-          <div class="all-loaded" *ngIf="allLoaded && post.comments.length != 0">
-            <div class="empty-comments-icon">📝</div>
-            <br>
-            <p class="empty-comments-text">No more comments!</p>
-          </div>
-        </div>
-
-        <!-- Comment Form -->
-        <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
       </div>
     </aside>
   </div>
 
-  <!-- Edit Mode -->
+  <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
+  <div class="popup-box" *ngIf="showPopup">
+    <h3>Report this post</h3>
+    <div class="reporterror" *ngIf="reporterror">
+      {{ reporterror }}
+    </div>
+    <label>Reason</label>
+    <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
+
+    <div class="actions">
+      <button class="cancel" (click)="closePopup()">Cancel</button>
+      <button class="submit" (click)="submitReport()">Submit</button>
+    </div>
+  </div>
+
   <app-create-post *ngIf="isEditing && post" [editing]="{id:post.id,title:post.title,description:post.description,media:post.media}"
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">
   </app-create-post>

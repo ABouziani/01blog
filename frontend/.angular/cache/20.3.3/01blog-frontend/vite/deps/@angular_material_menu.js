@@ -1,10 +1,4 @@
 import {
-  MatRipple,
-  MatRippleModule,
-  _StructuralStylesLoader
-} from "./chunk-GHZFYOQF.js";
-import "./chunk-DELSYPTG.js";
-import {
   DomPortalOutlet,
   OverlayConfig,
   OverlayModule,
@@ -12,15 +6,21 @@ import {
   createFlexibleConnectedPositionStrategy,
   createOverlayRef,
   createRepositionScrollStrategy
-} from "./chunk-6K2OABLS.js";
+} from "./chunk-6KGU23WC.js";
+import {
+  MatRipple,
+  MatRippleModule,
+  _StructuralStylesLoader
+} from "./chunk-GHZFYOQF.js";
+import "./chunk-DELSYPTG.js";
+import "./chunk-46HAYV32.js";
+import "./chunk-VENV3F3G.js";
 import {
   CdkScrollableModule,
   ScrollDispatcher,
   ViewportRuler
 } from "./chunk-AEXRWMMC.js";
 import "./chunk-6TU72PAN.js";
-import "./chunk-VENV3F3G.js";
-import "./chunk-46HAYV32.js";
 import "./chunk-5EG33CFQ.js";
 import {
   _animationsDisabled

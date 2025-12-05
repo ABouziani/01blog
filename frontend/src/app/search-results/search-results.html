@@ -1,106 +1,122 @@
 <app-search-bar></app-search-bar>
-<div class="results-container">
 
-  <!-- Loading -->
-  <div class="loading" *ngIf="state.loading">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
+<div class="container py-5 results-page-container">
 
-  <!-- Error -->
-  <div class="error-box" *ngIf="state.error">
-    <mat-icon color="warn">error</mat-icon>
-    <p>{{ state.error }}</p>
-    <button mat-raised-button color="primary">Retry</button>
-  </div>
-
-  <!-- No Query -->
-  <div class="no-query" *ngIf="!state.loading && !currentQuery">
-    <mat-icon>search</mat-icon>
-    <p>Type something to start searching...</p>
-  </div>
-
-  <!-- No Results: Users -->
-  <div class="no-results" *ngIf="!state.loading && currentQuery && currentType === 'users' && state.users.length === 0">
-    <mat-icon>person_search</mat-icon>
-    <p>No users found for "{{ currentQuery }}"</p>
-  </div>
-
-  <!-- No Results: Posts -->
-  <div class="no-results" *ngIf="!state.loading && currentQuery && currentType === 'posts' && state.posts.length === 0">
-    <mat-icon>article</mat-icon>
-    <p>No posts found for "{{ currentQuery }}"</p>
-  </div>
-
-  <!-- RESULTS: USERS -->
-  <div class="users-list" *ngIf="currentType === 'users' && state.users.length > 0">
-    <h2>Users</h2>
-
-    <div class="users-grid">
-      <mat-card class="user-card" *ngFor="let user of state.users">
-        <div class="user-header">
-          <img (click)="router.navigate(['/users/' + user.id])"
-            [src]="user.photo ? 'http://localhost:8080' + user.photo : 'user_avatar.png'" alt="User photo"
-            class="clickable avatar" />
-
-          <div class="header-text">
-            <h3 class="clickable" (click)="router.navigate(['/users/' + user.id])">
-              {{ user.username }}
-            </h3>
-            <span class="meta">{{ user.role }}</span>
-            <span class="meta">Joined: {{ user.createdAt | date:'mediumDate' }}</span>
-          </div>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 text-center">
+      
+      <div class="py-5 loading-state" *ngIf="state.loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
+        <p class="mt-3 text-muted lead">Searching for results...</p>
+      </div>
 
-        <p class="bio" *ngIf="user.bio; else noBio">
-          {{ user.bio.length > 100 ? user.bio.substring(0,97) + '...' : user.bio }}
-        </p>
-        <ng-template #noBio>
-          <p class="bio muted">No bio available.</p>
-        </ng-template>
+      <div class="alert alert-danger error-box p-4" *ngIf="state.error">
+        <h4 class="alert-heading fw-bold"><i class="bi bi-exclamation-triangle me-2"></i> Search Error</h4>
+        <p>{{ state.error }}</p>
+        <button class="btn btn-primary mt-2">Retry</button>
+      </div>
 
-        <div class="stats">
-          <div>
-            <strong>{{ user.followersCount || 0 }}</strong>
-            <small>Followers</small>
-          </div>
-          <div>
-            <strong>{{ user.followingCount || 0 }}</strong>
-            <small>Following</small>
-          </div>
-          <div>
-            <strong>{{ user.postsCount || 0 }}</strong>
-            <small>Posts</small>
-          </div>
-        </div>
-      </mat-card>
+      <div class="py-5 no-query" *ngIf="!state.loading && !currentQuery">
+        <i class="bi bi-search display-3 text-muted mb-3"></i>
+        <p class="lead">Start typing in the bar above to search for users or posts.</p>
+      </div>
+
+      <div class="alert alert-info no-results" 
+          *ngIf="!state.loading && currentQuery && currentType === 'users' && state.users.length === 0">
+        <i class="bi bi-person-slash display-6 mb-2"></i>
+        <p class="mb-0">No users found matching **"{{ currentQuery }}"**.</p>
+      </div>
+
+      <div class="alert alert-info no-results" 
+          *ngIf="!state.loading && currentQuery && currentType === 'posts' && state.posts.length === 0">
+        <i class="bi bi-journal-text display-6 mb-2"></i>
+        <p class="mb-0">No posts found matching **"{{ currentQuery }}"**.</p>
+      </div>
     </div>
   </div>
 
-  <div class="users-list" *ngIf="currentType === 'posts' && state.posts.length > 0">
-    <h2 class="posts-section-title">Posts</h2>
-    <div class="posts-grid" >
-      <div class="post-card" *ngFor="let post of state.posts" (click)="router.navigate(['/posts/' + post.id])">
-        <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
-        </div>
-        <div class="post-meta">
-          <span class="post-author" (click)="router.navigate(['/users/', post.creatorId])">
-            {{ post.creatorUsername }}
-          </span>
-          <time class="post-date" [attr.datetime]="post.createdAt">
-            {{ post.createdAt | date:'mediumDate' }}
-          </time>
-        </div>
-        <div class="post-body">
-          <h3 class="post-title">{{ post.title }}</h3>
-          <p class="post-description">
-            {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+  <div class="users-list mt-4" *ngIf="currentType === 'users' && state.users.length > 0">
+    <h2 class="h4 fw-bold section-title mb-4 border-bottom pb-2">👥 Users ({{ state.users.length }} results)</h2>
+
+    <div class="row g-4 users-grid">
+      <div class="col-12 col-md-6 col-lg-4" *ngFor="let user of state.users">
+        
+        <div class="card user-card border-0 shadow-sm h-100 p-3 rounded-4 hover-lift" (click)="router.navigate(['/users/' + user.id])">
+          <div class="d-flex align-items-center user-header">
+            
+            <img 
+              [src]="user.photo ? 'http://localhost:8080' + user.photo : 'user_avatar.png'" alt="User photo"
+              class="avatar-sm rounded-circle me-3 flex-shrink-0" />
+
+            <div class="header-text overflow-hidden">
+              <h3 class="h6 fw-bold text-truncate mb-0">
+                {{ user.username }}
+              </h3>
+              <small class="text-muted d-block">{{ user.role }}</small>
+            </div>
+          </div>
+
+          <p class="bio small text-muted mt-3 mb-3 border-top pt-2" *ngIf="user.bio; else noBio">
+            {{ user.bio.length > 80 ? user.bio.substring(0,77) + '...' : user.bio }}
           </p>
+          <ng-template #noBio>
+            <p class="bio muted small fst-italic mt-3 mb-3 border-top pt-2">No bio available.</p>
+          </ng-template>
+
+          <div class="stats d-flex justify-content-between pt-2 mt-auto small">
+            <div class="text-center">
+              <strong class="d-block fw-bold text-primary">{{ user.followersCount || 0 }}</strong>
+              <small>Followers</small>
+            </div>
+            <div class="text-center">
+              <strong class="d-block fw-bold text-secondary">{{ user.postsCount || 0 }}</strong>
+              <small>Posts</small>
+            </div>
+          </div>
         </div>
-
-        <div #scrollSentinel class="scroll-sentinel"></div>
-
       </div>
-
-      
-
+    </div>
   </div>
+
+  <div class="posts-list mt-4" *ngIf="currentType === 'posts' && state.posts.length > 0">
+    <h2 class="h4 fw-bold section-title mb-4 border-bottom pb-2">📰 Posts ({{ state.posts.length }} results)</h2>
+    <div class="row g-4 posts-grid">
+      
+      <div class="col-12 col-md-6 col-lg-4" *ngFor="let post of state.posts">
+        
+        <div class="card post-card-dynamic border-0 shadow-sm h-100 rounded-4 overflow-hidden" 
+             (click)="router.navigate(['/posts/' + post.id])">
+          
+          <div class="post-media-header">
+            <div class="post-image-dynamic clickable"
+                 [style.background-image]="post.media ? 'url(' + 'http://localhost:8080' + post.media + ')' : 
+                 'url(/post_image.png)'">
+            </div>
+          </div>
+
+          <div class="card-body p-3 d-flex flex-column">
+            <h3 class="card-title post-title fw-semibold h6 mb-2 text-truncate-2"><span class="clickable">{{ post.title }}</span></h3>
+            
+            <p class="card-text text-muted post-description small mb-3">
+              {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+            </p>
+
+            <div class="d-flex align-items-center mt-auto pt-3 border-top small">
+              <i class="bi bi-person-circle me-1 text-info"></i>
+              <span class="text-info post-author me-3" 
+                    (click)="router.navigate(['/users/', post.creatorId]); $event.stopPropagation()">
+                @{{ post.creatorUsername }}
+              </span>
+              <span class="text-muted ms-auto">
+                {{ post.createdAt | date:'shortDate' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div #scrollSentinel class="scroll-sentinel"></div>
+      </div>
+    </div>
+  </div>
+</div>

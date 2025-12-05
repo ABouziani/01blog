@@ -1,55 +1,74 @@
 <app-search-bar></app-search-bar>
-<div class="posts-container">
-  <div class="loading" *ngIf="loading">
-    <div class="spinner"></div>
+
+<div class="container py-5 posts-page-container">
+
+  <div class="loading-state text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading posts...</p>
   </div>
 
+  <h2 class="h3 fw-bold section-title mb-4 border-bottom pb-2" *ngIf="!loading">🌐 Explore All Posts</h2>
 
-  <!-- Posts Section -->
-  <h2 class="posts-section-title">Posts</h2>
-  <div class="posts-grid" *ngIf="displayedPosts">
-    <div class="post-card" *ngFor="let post of displayedPosts" [routerLink]="['/posts', post.id]">
-      <div class="post-image" [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
-      </div>
-      <div class="post-meta">
-        <span class="post-author" [routerLink]="['/users', post.creatorId]">
-          {{ post.creatorUsername }}
-        </span>
-        <time class="post-date" [attr.datetime]="post.createdAt">
-          {{ post.createdAt | date:'mediumDate' }}
-        </time>
-      </div>
-      <div class="post-body">
-        <h3 class="post-title">{{ post.title }}</h3>
-        <p class="post-description">
-          {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
-        </p>
-      </div>
-      <div class="reactions">
-        <span class="post-likes">
-          {{ post.likes }}
-        </span>
-        <span class="post-dislikes">
-          {{ post.dislikes }}
-        </span>
-      </div>
+  <div class="row g-4 posts-masonry-grid" *ngIf="displayedPosts && displayedPosts.length > 0">
+    <div class="col-12 col-sm-6 col-lg-4 postcard" *ngFor="let post of displayedPosts">
 
-      <div #scrollSentinel class="scroll-sentinel"></div>
+      <div class="card post-card-dynamic shadow-hover h-100 border-0 rounded-4 overflow-hidden "
+           [routerLink]="['/posts', post.id]">
 
+        <div class="post-media-header">
+          <div class="post-image-dynamic clickable"
+               [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
+          </div>
+        </div>
+
+        <div class="card-body p-4 d-flex flex-column">
+          <h3 class="card-title post-title fw-bold h5 mb-2 text-truncate-2"><span class="clickable">{{ post.title }}</span></h3>
+          <p class="card-text text-muted post-description small mb-3">
+            {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
+          </p>
+
+          <div class="d-flex align-items-center mb-3 mt-auto">
+            <i class="bi bi-person-circle me-2 text-primary"></i>
+            <span class="text-primary fw-semibold post-author clickable me-3 clickable" [routerLink]="['/users', post.creatorId]">
+              @{{ post.creatorUsername }}
+            </span>
+            <span class="text-muted small">|</span>
+            <time class="text-muted post-date small ms-3" [attr.datetime]="post.createdAt">
+              {{ post.createdAt | date:'mediumDate' }}
+            </time>
+          </div>
+
+          <div class="reactions-footer pt-3 border-top d-flex justify-content-start gap-4">
+            <span class="text-success fw-semibold post-likes">
+              <i class="bi bi-hand-thumbs-up me-1"></i> {{ post.likes }}
+            </span>
+            <span class="text-danger fw-semibold post-dislikes">
+              <i class="bi bi-hand-thumbs-down me-1"></i> {{ post.dislikes }}
+            </span>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <div class="empty-posts" *ngIf="!displayedPosts">
-      <div class="empty-posts-icon">📝</div>
-      <br>
-      <p class="empty-posts-text">No posts yet</p>
-    </div>
+    <div #scrollSentinel class="col-12 text-center scroll-sentinel" style="height: 1px; visibility: hidden;"></div>
   </div>
-  <div class="loading-more" *ngIf="loadingMore">
+
+  <div class="text-center py-5 empty-state" *ngIf="!displayedPosts || displayedPosts.length === 0">
+      <div class="display-4 mb-3 text-muted">📝</div>
+      <p class="lead empty-posts-text">No posts yet</p>
+      <p class="text-muted small">Time to be the first to share an insight!</p>
+  </div>
+
+  <div class="text-center py-4 loading-more" *ngIf="loadingMore">
+    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
     Loading posts...
   </div>
-  <div class="all-loaded" *ngIf="allLoaded">
-    <div class="empty-posts-icon">📝</div>
-    <br>
-    <p class="empty-posts-text">No more posts!</p>
+
+  <div class="text-center py-4 all-loaded text-muted" *ngIf="allLoaded">
+    <hr>
+    <p class="mb-0">You've reached the end! No more posts!</p>
   </div>
 </div>

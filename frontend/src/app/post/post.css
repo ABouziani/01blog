@@ -1,81 +1,18 @@
-/* Author Card */
-.author-card {
-  background: var(--card-bg);
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+/* --- 1. Layout & Core Styles --- */
+
+/* Ensure sticky elements work */
+.sticky-top {
+  position: sticky;
+  top: 2rem !important; 
+}
+/* Crucial fix for multi-column stickiness stability in Bootstrap */
+.row {
+    align-items: flex-start;
 }
 
-.author-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
-.author-header {
-  height: 100px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.author-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 20px;
-  border: 4px solid white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  object-fit: cover;
-  margin-top: -50px;
-}
-
-.btn-profile {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 12px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.btn-profile:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-  color: white;
-}
-
-.action-btn {
-  border-radius: 12px;
-  font-weight: 600;
-  padding: 5px;
-  transition: all 0.3s ease;
-  border: 2px solid;
-}
-
-.btn-delete {
-  border-color: #fee2e2;
-  color: #dc2626;
-  background: white;
-}
-
-.btn-delete:hover {
-  background: #fef2f2;
-  transform: scale(1.05);
-}
-
-.btn-edit {
-  border-color: #dbeafe;
-  color: #2563eb;
-  background: white;
-}
-
-.btn-edit:hover {
-  background: #eff6ff;
-  transform: scale(1.05);
-}
-
-/* Main Article */
-.article-card {
+/* Main Article Card (Article and Comments) */
+.article-card, .engagement-card, .author-card.card {
   background: var(--card-bg);
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
@@ -84,7 +21,7 @@
 }
 
 .article-title {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 800;
   color: var(--text);
   line-height: 1.2;
@@ -94,102 +31,100 @@
   word-break: break-word;
 }
 
-.badge-custom {
-  padding: 6px 12px;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.badge-custom i {
-  font-size: 0.75rem;
-}
-
-.badge-date {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.badge-views {
-  background: #e9d5ff;
-  color: #6b21a8;
-}
-
 .article-content {
-  font-size: 1.0rem;
+  font-size: 1.1rem;
   line-height: 1.8;
   color: var(--text);
 }
 
-/* Engagement Section */
-.engagement-card {
-  background: var(--card-bg);
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 2rem;
-  position: sticky;
-  top: 2rem;
+.media-image-video {
+  border-radius: 12px;
 }
 
-.engagement-btn {
-  background: #f8fafc;
+
+/* --- 2. Author Card (Right Sidebar) --- */
+
+.author-avatar-sm {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-profile-sm {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  padding: 1.25rem 1.5rem;
-  border-radius: 16px;
+  color: white;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
   transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
+  font-size: 0.9rem;
 }
 
-.engagement-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.btn-profile-sm:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  color: white;
 }
 
-.engagement-btn.like {
-  background: #dbeafe;
+
+/* --- 3. Engagement & Actions --- */
+
+/* --- 4. Engagement Colors (Like/Dislike) --- */
+
+.reaction-stats .fw-bold.text-success {
+    color: #10b981 !important; /* Brighter, modern green for LIKE */
+}
+.reaction-stats .fw-bold.text-danger {
+    color: #ef4444 !important; /* Clear, modern red for DISLIKE */
 }
 
-.engagement-btn.like:hover {
-  background: #bfdbfe;
+
+/* Reaction Buttons */
+.reaction-buttons .engagement-btn {
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    padding: 10px 20px;
+    border: 1px solid transparent; /* Ensure consistent size */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
 }
 
-.engagement-btn.dislike {
-  background: #f1f5f9;
+/* LIKE Button Styling */
+.reaction-buttons .engagement-btn.like { 
+    background: #d1fae5; /* Very light green background */
+    border-color: #34d399; 
+    color: #059669; /* Darker green text/icon color */
+}
+.reaction-buttons .engagement-btn.like:hover {
+    background: #a7f3d0;
+    transform: translateY(-2px);
+}
+.reaction-buttons .engagement-btn.like .engagement-icon {
+    color: #059669;
 }
 
-.engagement-btn.dislike:hover {
-  background: #e2e8f0;
+/* DISLIKE Button Styling */
+.reaction-buttons .engagement-btn.dislike { 
+    background: #fee2e2; /* Very light red background */
+    border-color: #f87171; 
+    color: #dc2626; /* Darker red text/icon color */
+}
+.reaction-buttons .engagement-btn.dislike:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+}
+.reaction-buttons .engagement-btn.dislike .engagement-icon {
+    color: #dc2626;
 }
 
-.engagement-icon {
-  font-size: 1.75rem;
-}
+/* --- 4. Comments --- */
 
-.like .engagement-icon {
-  color: #2563eb;
-}
-
-.dislike .engagement-icon {
-  color: #64748b;
-}
-
-.engagement-count {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #1e293b;
-}
-
-/* Comments Section */
 .comments-header {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text);
   display: flex;
@@ -198,10 +133,12 @@
   margin-bottom: 1.5rem;
 }
 
+
 .comments-list {
   max-height: 500px;
   min-height: 100px;
   overflow-y: auto;
+  padding-right: 5px;
 
   /* Firefox scrollbar */
   scrollbar-width: thin;
@@ -230,26 +167,19 @@
   /* darker on hover */
 }
 
-
 .comment-item {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 1.5rem;
 }
 
 .comment-avatar {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-}
-
-.flex-grow-1 {
-  flex: 1 1 auto;
-  /* let it grow and shrink */
-  min-width: 0;
-  /* IMPORTANT: allow it to shrink below its content width */
 }
 
 .comment-bubble {
@@ -257,488 +187,41 @@
   border-radius: 16px;
   border-top-left-radius: 4px;
   padding: 1rem;
-
-  /* layout */
-  display: block;
-  /* avoid being a flex item itself (use wrapper for flex) */
   width: 100%;
-  box-sizing: border-box;
-
-  /* text wrapping */
   white-space: normal;
   overflow-wrap: break-word;
   word-break: break-word;
-  /* helps break very long tokens */
 }
 
-
-.comment-author {
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 4px;
-  font-size: 0.875rem;
-}
-
-.comment-text {
-  color: var(--text);
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.6;
-
-  white-space: normal;
-  /* allow multi-line wrapping */
-  word-wrap: break-word;
-  /* break long words if needed */
-  overflow-wrap: break-word;
-  /* ensures text wraps properly in modern browsers */
-  max-width: 100%;
-  /* make sure it doesn’t exceed parent width */
-  display: block;
-}
-
-.comment-time {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-top: 4px;
-  margin-left: 4px;
-}
-
-.comment-input-wrapper {
-  display: flex;
-  gap: 8px;
-  margin-top: 1.5rem;
-}
-
-.comment-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background: #f8fafc;
-  transition: all 0.3s ease;
-}
-
-.comment-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background: white;
-}
-
-.btn-send {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.remove-comment {
+  padding: 4px;
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+  background-color: #f7cac9 !important;
+  color: #dc3545;
   border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  color: white;
-  transition: all 0.3s ease;
-}
-
-.btn-send:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.section-divider {
-  border: none;
-  height: 1px;
-  background: #e2e8f0;
-  margin: 1.5rem 0;
-}
-
-/* Mobile Engagement Bar */
-.mobile-engagement {
-  background: var(--card-bg);
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 60px;
-}
-
-.mobile-engagement-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 16px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  /* cursor: pointer; */
-}
-
-/* .mobile-engagement-item:hover {
-  background: white;
-} */
-
-.engagement-divider {
-  width: 1px;
-  height: 32px;
-  background: #cbd5e1;
-}
-
-.remove-preview-btn {
-  margin-top: 8px;
-  /* padding: 4px 8px; */
-  width: fit-content;
-  height: fit-content;
-  background-color: #ff4d4d;
-  color: var(--text);
-  border: none;
-  border-radius: 20px;
   cursor: pointer;
-  /* margin-left: -50%; */
-  margin-top: 40px;
-  margin-left: -20px;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 5px;
 }
 
-.remove-preview-btn:hover {
-  background-color: #e60000;
-}
+/* --- 5. Responsiveness --- */
 
-/* Responsive adjustments */
 @media (max-width: 991.98px) {
+  /* Tablet/Mobile screens */
   .article-title {
-    font-size: 2rem;
-  }
-
-  .author-card {
-    margin-bottom: 1.5rem;
-  }
-
-  .middlebar {
-    flex: 0 0 80% !important;
-    max-width: 80% !important;
-  }
-
-  .section-divider-mobile {
-    display: none;
+    font-size: 2.2rem;
   }
 }
 
 @media (max-width: 767.98px) {
-  .article-title {
-    font-size: 1.75rem;
-  }
-
-  .badge-custom {
-    font-size: 0.75rem;
-    padding: 6px 12px;
-  }
+    .article-title {
+        font-size: 1.8rem;
+    }
+    .reaction-buttons .engagement-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
 }
-
-
-@media (max-width: 430.00px) {
-
-
-  .middlebar {
-    flex: 0 0 98% !important;
-    max-width: 98% !important;
-  }
-
-}
-
-/* Sticky behavior */
-.sticky-sidebar {
-  position: sticky;
-  top: 2rem;
-}
-
-/* Animation */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-
-/* -------------- */
-.reaction-buttons {
-  padding: 10px 0;
-}
-
-.engagement-btn {
-  width: 55px;
-  height: 55px;
-  border: none;
-  border-radius: 50%;
-  background: #f8f9fa;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s ease;
-}
-
-.engagement-btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.engagement-btn.like:hover:not(:disabled) {
-  background: #e7f8ef;
-}
-
-.engagement-btn.dislike:hover:not(:disabled) {
-  background: #fdeaea;
-}
-
-.engagement-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.engagement-icon {
-  font-size: 1.6rem;
-  color: #6c757d;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.engagement-btn.like:hover .engagement-icon {
-  color: #198754;
-  transform: scale(1.15);
-}
-
-.engagement-btn.dislike:hover .engagement-icon {
-  color: #dc3545;
-  transform: scale(1.15);
-}
-
-
-.clickable {
-  cursor: pointer;
-}
-
-
-.report-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-  background: #d50000;
-  /* strong red */
-  color: #fff;
-  padding: 4px 10px;
-
-  border-radius: 12px;
-  /* badge shape */
-  font-size: 0.85rem;
-  font-weight: 700;
-
-  cursor: pointer;
-  user-select: none;
-
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: background 0.2s, transform 0.15s;
-}
-
-.report-badge i {
-  font-size: 0.9rem;
-}
-
-.report-badge:hover {
-  background: #b00000;
-  /* darker red */
-  transform: translateY(-2px);
-  /* slight lift */
-}
-
-.report-badge:active {
-  transform: scale(0.95);
-  /* “press” effect */
-}
-
-/* Red warning badge */
-.report-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  background: #d50000;
-  color: #fff;
-  padding: 4px 10px;
-
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 700;
-
-  cursor: pointer;
-  user-select: none;
-
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: 0.2s;
-}
-
-.report-badge:hover {
-  background: #b00000;
-  transform: translateY(-2px);
-}
-
-.report-badge:active {
-  transform: scale(0.95);
-}
-
-/* Backdrop */
-.popup-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-  z-index: 90;
-}
-
-/* Popup box */
-.popup-box {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 350px;
-
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 8px;
-
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Textarea */
-textarea {
-  width: 100%;
-  min-height: 120px;
-  padding: 10px;
-
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  resize: vertical;
-  font-size: 14px;
-}
-
-/* Buttons */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.actions .cancel {
-  background: #fa5c5c;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.actions .submit {
-  background: #02d18c;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.actions .submit:hover {
-  background: #03af76;
-}
-
-.actions .cancel:hover {
-  background: #f74141;
-}
-
-.no-comment {
-  margin-top: 20px;
-  grid-column: 1 / -1;
-  height: fit-content;
-  text-align: center;
-  /* padding: 3rem 2rem; */
-  background: var(--card-bg);
-  border-radius: 16px;
-  /* border: 2px dashed #cbd5e1; */
-  margin-top: -40px;
-}
-
-
-.loading-more {
-  width: 100%;
-  text-align: center;
-  padding: 12px;
-  color: gray;
-  font-style: italic;
-  margin-top: 40px;
-}
-
-.all-loaded {
-  grid-column: 1 / -1;
-  height: fit-content;
-  text-align: center;
-  /* padding: 3rem 2rem; */
-  background: var(--card-bg);
-  border-radius: 16px;
-  /* border: 2px dashed #cbd5e1; */
-  margin-top: -40px;
-}
-
-.all-loaded-icon {
-  font-size: 3rem;
-  margin-bottom: 0.75rem;
-}
-
-.all-loaded-text {
-  font-size: 1rem;
-  color: #94a3b8;
-  font-weight: 500;
-}
-
-.reporterror {
-  color: red;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.error-message {
-    background-color: #ffe6e6;        /* soft red background */
-    color: #b10000;                    /* strong readable red */
-    border: 1px solid #ffb3b3;         /* light border */
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    font-family: "Inter", Arial, sans-serif;
-
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    animation: fadeIn 0.25s ease-in-out;
-}
-
-.error-message::before {
-    content: "⚠️";
-    font-size: 1.2rem;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-3px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-

@@ -393,3 +393,46 @@
 .clickable {
   cursor: pointer;
 }
+
+.small-post-media {
+    /* REQUIRED: Define a fixed size for the div */
+    width: 60px; /* Example size */
+    height: 60px; /* Example size */
+
+    /* REQUIRED: Ensure the background image is displayed correctly */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* Optional: Smooth transition on hover/click */
+    transition: transform 0.2s ease-in-out;
+}
+
+.user-avatar-sm {
+    /* REQUIRED: Define a fixed size for the div */
+    width: 40px; /* Example size for small avatar */
+    height: 40px; /* Example size for small avatar */
+
+    /* Ensure the image fills the circle without distortion */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Ensure the border-radius works correctly */
+    overflow: hidden; 
+}
+
+.hero-visual-block {
+    /* REQUIRED: Set a base height relative to width */
+    position: relative;
+    padding-bottom: 75%; /* Sets height to 75% of its width (4:3 aspect ratio) */
+    width: 100%; /* Ensure it fills its column */
+
+    /* REQUIRED: Style for the background image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Ensure child elements are positioned correctly if you add overlays */
+    overflow: hidden; 
+}
