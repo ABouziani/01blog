@@ -29,14 +29,14 @@
           <div class="d-flex gap-2 ms-auto">
             <div *ngIf="post && (post.owner || authService.isAdmin())" class="d-flex gap-2">
               <button *ngIf="post.owner" class="btn action-btn btn-edit btn-sm" (click)="isEditing = !isEditing" title="Edit">
-                <i class="bi bi-pencil-square"></i>
+                <i class="bi bi-pencil-square" style="font-size: 20px;"></i>
               </button>
               <button class="btn action-btn btn-delete btn-sm" (click)="delete(post.id)" title="Delete">
-                <i class="bi bi-trash"></i>
+                <i class="bi bi-trash" style="font-size: 20px;"></i>
               </button>
             </div>
             <span *ngIf="post && !post.owner" (click)="showPopup = true" class="report-badge">
-              <i class="bi bi-flag-fill"></i>
+              <i class="bi bi-flag-fill" style="font-size: 20px;"></i>
             </span>
           </div>
         </div>

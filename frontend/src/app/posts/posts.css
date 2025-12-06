@@ -35,7 +35,7 @@
 
 .post-card-dynamic {
     /* Ensure the card is the focus of the effect */
-    cursor: pointer;
+    /* cursor: pointer; */
     
     /* Make all transformations smooth and professional */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 

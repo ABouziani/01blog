@@ -207,6 +207,21 @@
   margin-top: 5px;
 }
 
+.btn-edit, .btn-delete {
+width: 35px;
+height: 35px;
+padding: 0px !important;
+}
+
+.btn-delete {
+  background-color: red;
+}
+
+.btn-edit {
+  /* background-color: blue; */
+}
+
+
 /* --- 5. Responsiveness --- */
 
 @media (max-width: 991.98px) {

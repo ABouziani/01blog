@@ -2,12 +2,12 @@
 
 <div class="container py-5 posts-page-container">
 
-  <div class="loading-state text-center py-5" *ngIf="loading">
+  <!-- <div class="loading-state text-center py-5" *ngIf="loading">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
     <p class="mt-2 text-muted">Loading posts...</p>
-  </div>
+  </div> -->
 
   <h2 class="h3 fw-bold section-title mb-4 border-bottom pb-2" *ngIf="!loading">🌐 Explore All Posts</h2>
 
@@ -19,7 +19,7 @@
 
         <div class="post-media-header">
           <div class="post-image-dynamic clickable"
-               [style.background-image]="'url(' + 'http://localhost:8080' + post.media + ')'">
+               [style.background-image]=" post.media ? 'url(' + 'http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
           </div>
         </div>
 
@@ -31,7 +31,7 @@
 
           <div class="d-flex align-items-center mb-3 mt-auto">
             <i class="bi bi-person-circle me-2 text-primary"></i>
-            <span class="text-primary fw-semibold post-author clickable me-3 clickable" [routerLink]="['/users', post.creatorId]">
+            <span class="text-primary fw-semibold post-author clickable me-3" [routerLink]="['/users', post.creatorId]">
               @{{ post.creatorUsername }}
             </span>
             <span class="text-muted small">|</span>
@@ -56,7 +56,7 @@
     <div #scrollSentinel class="col-12 text-center scroll-sentinel" style="height: 1px; visibility: hidden;"></div>
   </div>
 
-  <div class="text-center py-5 empty-state" *ngIf="!displayedPosts || displayedPosts.length === 0">
+  <div class="text-center py-5 empty-state" *ngIf="(!displayedPosts || displayedPosts.length === 0) && allLoaded">
       <div class="display-4 mb-3 text-muted">📝</div>
       <p class="lead empty-posts-text">No posts yet</p>
       <p class="text-muted small">Time to be the first to share an insight!</p>

@@ -2,13 +2,13 @@ import {
   _CdkPrivateStyleLoader
 } from "./chunk-M6CEXJ5E.js";
 import {
+  BidiModule
+} from "./chunk-BRGVXSCV.js";
+import {
   Platform,
   coerceElement,
   coerceNumberProperty
-} from "./chunk-I6DXRCPU.js";
-import {
-  BidiModule
-} from "./chunk-BRGVXSCV.js";
+} from "./chunk-7UIXWPLT.js";
 import {
   APP_ID,
   CSP_NONCE,
@@ -3151,4 +3151,4 @@ export {
   AriaDescriber,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-QU7D6LRR.js.map
+//# sourceMappingURL=chunk-VSGJ7IAV.js.map
