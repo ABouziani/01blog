@@ -13,11 +13,11 @@ export class ReportAdminService {
     return this.http.get<{userReports:Report[],postReports:PostReport[]}>(`${this.apiUrl}/reports`);
   }
 
-  resolveUserReport(userId: string, action: 'ban_user' | 'delete' | 'dismiss'): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/userreports/${userId}/resolve`, { action });
+  resolveUserReport(userId: string, reportId: string, action: 'ban_user' | 'delete' | 'dismiss'): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/userreports/${userId}/${reportId}/resolve`, { action });
   }
 
-  resolvePostReport(postId: string, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report'): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/postreports/${postId}/resolve`, { action });
+  resolvePostReport(postId: string, reportId:String, action: 'delete_post' | 'hide_post' | 'dismiss' | 'delete_report'): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/postreports/${postId}/${reportId}/resolve`, { action });
   }
 }

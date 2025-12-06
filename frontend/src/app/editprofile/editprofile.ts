@@ -47,7 +47,7 @@ export class EditprofileComponent {
     private myAlert: AlertService
   ) {
     this.userForm = this.fb.group({
-      bio: ['', [Validators.required, Validators.maxLength(500)]],
+      bio: ['', [ Validators.maxLength(500)]],
       email: ['', [Validators.required, Validators.email]],
       // media: [null, Validators.required]
     });

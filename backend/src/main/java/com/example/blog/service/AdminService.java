@@ -15,6 +15,8 @@ import com.example.blog.dtoresponses.adminDtos.PostReportDto;
 import com.example.blog.dtoresponses.adminDtos.ReportDto;
 import com.example.blog.dtoresponses.adminDtos.UserDto;
 import com.example.blog.model.Post;
+import com.example.blog.model.ReportPosts;
+import com.example.blog.model.ReportUsers;
 import com.example.blog.model.User;
 import com.example.blog.repository.PostAdminRepo;
 import com.example.blog.repository.ReportPostsRepository;
@@ -33,7 +35,8 @@ public class AdminService {
 
     public AdminService(UserRepository userRepository,
             PostAdminRepo postRepository,
-            ReportUserRepository reportUserRepository, ReportPostsRepository reportPostsRepository, PostService postService) {
+            ReportUserRepository reportUserRepository, ReportPostsRepository reportPostsRepository,
+            PostService postService) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.reportUserRepository = reportUserRepository;
@@ -47,13 +50,15 @@ public class AdminService {
         Long postsCounts = postRepository.count();
         Long usersReportsCount = reportUserRepository.count();
         Long postsReportsCount = reportPostsRepository.count();
-        return Map.of("usersCounts", usersCounts, "postsCounts", postsCounts, "usersReportsCount", usersReportsCount, "postsReportsCount", postsReportsCount);
+        return Map.of("usersCounts", usersCounts, "postsCounts", postsCounts, "usersReportsCount", usersReportsCount,
+                "postsReportsCount", postsReportsCount);
     }
 
     // === USERS ===
     public List<UserDto> getAllUsers(Long loggedUerId) {
         return userRepository.findAllByIdNot(loggedUerId).stream()
-                .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt(), u.getRole().equals("ADMIN")))
+                .map(u -> new UserDto(u.getId(), u.getUsername(), u.getEmail(), u.isBanned(), u.getCreatedAt(),
+                        u.getRole().equals("ADMIN")))
                 .collect(Collectors.toList());
     }
 
@@ -109,6 +114,9 @@ public class AdminService {
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
         }
+        if (userOpt.get().getRole().equals("ADMIN")) {
+            return new ResponseEntity<>("You cannot delete the admin!", HttpStatus.BAD_REQUEST);
+        }
         userRepository.deleteById(userId);
         return ResponseEntity.ok().build();
     }
@@ -117,14 +125,13 @@ public class AdminService {
     public List<PostDto> getAllPosts() {
         return postRepository.findAll().stream()
                 .map(p -> new PostDto(
-                p.getId(),
-                p.getTitle(),
-                p.getDescription(),
-                p.getCreator().getId(),
-                p.getCreator().getUsername(),
-                p.getCreatedAt(),
-                p.isHidden()
-        ))
+                        p.getId(),
+                        p.getTitle(),
+                        p.getDescription(),
+                        p.getCreator().getId(),
+                        p.getCreator().getUsername(),
+                        p.getCreatedAt(),
+                        p.isHidden()))
                 .collect(Collectors.toList());
     }
 
@@ -165,34 +172,36 @@ public class AdminService {
     public List<ReportDto> getAllUsersReports() {
         return reportUserRepository.findAll().stream()
                 .map(r -> new ReportDto(
-                r.getId(),
-                r.getReporter().getId(),
-                r.getReporter().getUsername(),
-                r.getReported().getId(),
-                r.getReported().getUsername(),
-                null, // no post reports yet
-                r.getReason(),
-                r.getCreatedAt(),
-                r.getStatus()
-        ))
+                        r.getId(),
+                        r.getReporter().getId(),
+                        r.getReporter().getUsername(),
+                        r.getReported().getId(),
+                        r.getReported().getUsername(),
+                        null, // no post reports yet
+                        r.getReason(),
+                        r.getCreatedAt(),
+                        r.getStatus()))
                 .collect(Collectors.toList());
     }
 
     public List<PostReportDto> getAllPostsReports() {
         return reportPostsRepository.findAll().stream()
                 .map(r -> new PostReportDto(
-                r.getId(),
-                r.getReporter().getId(),
-                r.getReporter().getUsername(),
-                r.getReportedPost(),
-                r.getReason(),
-                r.getCreatedAt(),
-                r.getStatus()
-        ))
+                        r.getId(),
+                        r.getReporter().getId(),
+                        r.getReporter().getUsername(),
+                        r.getReportedPost(),
+                        r.getReason(),
+                        r.getCreatedAt(),
+                        r.getStatus()))
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> resolveReport(Long reportedUserId, String action) {
+    public ResponseEntity<?> resolveReport(Long reportedUserId, String action, Long reportId) {
+        Optional<ReportUsers> reportOpt = reportUserRepository.findById(reportId);
+        if (reportOpt.isEmpty()) {
+            return new ResponseEntity<>("Report not found or already resolved!", HttpStatus.BAD_REQUEST);
+        }
 
         Optional<User> reportedUserOpt = userRepository.findById(reportedUserId);
 
@@ -213,6 +222,9 @@ public class AdminService {
                 return ResponseEntity.ok().build();
             }
             case "delete" -> {
+                if (reportedUser.getRole().equals("ADMIN")) {
+                    return new ResponseEntity<>("You cannot delete the admin!", HttpStatus.BAD_REQUEST);
+                }
                 reportUserRepository.deleteByReported(reportedUser);
                 return ResponseEntity.ok().build();
             }
@@ -226,7 +238,11 @@ public class AdminService {
 
     }
 
-    public ResponseEntity<?> resolvePostReport(Long postId, String action) {
+    public ResponseEntity<?> resolvePostReport(Long postId, String action, Long reportId) {
+        Optional<ReportPosts> reportOpt = reportPostsRepository.findById(reportId);
+        if (reportOpt.isEmpty()) {
+            return new ResponseEntity<>("Report not found or already resolved!", HttpStatus.BAD_REQUEST);
+        }
         Optional<Post> postOpt = postRepository.findById(postId);
         if (postOpt.isEmpty()) {
             return new ResponseEntity<>("Post not found!", HttpStatus.BAD_REQUEST);
@@ -244,7 +260,6 @@ public class AdminService {
             case "delete_post" -> {
                 postRepository.delete(reportedPost);
                 reportPostsRepository.deleteByReportedpost(reportedPost);
-                // postService.deletePost(reportedPost.getId(), loggedUserId);
                 return ResponseEntity.ok().build();
             }
             case "delete_report" -> {
@@ -259,8 +274,6 @@ public class AdminService {
                 throw new IllegalArgumentException("Invalid action: " + action);
         }
 
-        // report.setStatus("resolved");
-        // reportPostsRepository.save(report);
-        // return ResponseEntity.ok().build();
+
     }
 }

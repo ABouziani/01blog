@@ -87,6 +87,7 @@ export class PostComponent {
 
   cancelEdit(event: string) {
     if (event == 'cancel') this.isEditing = false;
+    this.loadComments();
   }
 
   addReaction(postId: number, type: 'LIKE' | 'DISLIKE') {
@@ -160,6 +161,7 @@ export class PostComponent {
       title: this.post?.title,
       description: this.post?.description
     });
+    this.loadComments();
   }
 
   onFileSelected(event: Event): void {
@@ -273,9 +275,10 @@ export class PostComponent {
 
   onUpdate(data: Post) {
     this.lastCommentId = 0;
+    this.allLoaded=false;
+    this.loadingMore=false;
     data.comments = [];
     this.post = data;
-    this.loadComments();
     if (this.post) {
       this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
       this.post.dislikes = data.reactions.filter(r => r.type == "dislike").length.toString();
@@ -283,7 +286,9 @@ export class PostComponent {
     // this.post.comments.reverse();
     this.isSubmitting = false;
     this.loading = false;
-    this.isEditing = false;
+    this.isEditing = false;     
+      this.loadComments();
+
   }
 
 

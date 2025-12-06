@@ -13,6 +13,7 @@ import { AlertService } from '../../services/alert-service';
 
 
 interface GroupedUserReport {
+  id: number;
   reportedUserId: number;
   reportedUserUsername: string;
   reporters: {
@@ -24,6 +25,7 @@ interface GroupedUserReport {
 }
 
 interface GroupedPostReport {
+  id: number;
   postId: number;
   postTitle: string;
 
@@ -84,7 +86,7 @@ export class AdminReportsComponent {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), action).subscribe({
+        this.reportAdminService.resolveUserReport(report.reportedUserId.toString(), report.id.toString(), action).subscribe({
           next: () => {
             this.myAlert.showAlert("Success", "Report resolved successfully!");
             this.groupedUserReports = this.groupedUserReports.filter(
@@ -115,7 +117,7 @@ export class AdminReportsComponent {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.reportAdminService.resolvePostReport(report.postId.toString(), action).subscribe({
+        this.reportAdminService.resolvePostReport(report.postId.toString(), report.id.toString(), action).subscribe({
           next: () => {
             this.myAlert.showAlert("Success", "Report resolved successfully!");
             this.groupedPostReports = this.groupedPostReports.filter(
@@ -139,6 +141,7 @@ export class AdminReportsComponent {
 
       if (!map.has(userId)) {
         map.set(userId, {
+          id: report.id,
           reportedUserId: report.reportedUserId,
           reportedUserUsername: report.reportedUserUsername,
           reporters: [],
@@ -166,6 +169,7 @@ export class AdminReportsComponent {
 
       if (!map.has(postId)) {
         map.set(postId, {
+          id: report.id,
           postId,
           postTitle: report.reportedPost.title,
           reporters: [],

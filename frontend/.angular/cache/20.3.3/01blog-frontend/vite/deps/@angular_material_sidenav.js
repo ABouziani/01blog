@@ -1,3 +1,11 @@
+import "./chunk-DELSYPTG.js";
+import "./chunk-VENV3F3G.js";
+import {
+  coerceBooleanProperty
+} from "./chunk-46HAYV32.js";
+import {
+  _animationsDisabled
+} from "./chunk-VGW6EJ5I.js";
 import {
   CdkScrollable,
   CdkScrollableModule,
@@ -5,15 +13,7 @@ import {
   ViewportRuler
 } from "./chunk-HAFPJVVH.js";
 import "./chunk-6TU72PAN.js";
-import "./chunk-DELSYPTG.js";
-import {
-  coerceBooleanProperty
-} from "./chunk-46HAYV32.js";
-import "./chunk-VENV3F3G.js";
 import "./chunk-5EG33CFQ.js";
-import {
-  _animationsDisabled
-} from "./chunk-VGW6EJ5I.js";
 import {
   ESCAPE,
   FocusMonitor,
@@ -81,11 +81,11 @@ import {
   ɵɵstyleProp,
   ɵɵviewQuery
 } from "./chunk-YO6GPXUM.js";
-import "./chunk-JRFR6BLO.js";
 import {
   fromEvent,
   merge
 } from "./chunk-HWYXSU2G.js";
+import "./chunk-JRFR6BLO.js";
 import {
   Subject,
   debounceTime,
