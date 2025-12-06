@@ -301,6 +301,10 @@
   font-weight: 500;
 }
 
+.sidebar-column {
+  z-index: 100;
+}
+
 /* Sections Spacing */
 .section-spacing {
   padding: 3rem 0;

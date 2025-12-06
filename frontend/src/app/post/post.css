@@ -5,6 +5,7 @@
 .sticky-top {
   position: sticky;
   top: 2rem !important; 
+  z-index: 90;
 }
 /* Crucial fix for multi-column stickiness stability in Bootstrap */
 .row {
@@ -221,6 +222,40 @@ padding: 0px !important;
   /* background-color: blue; */
 }
 
+
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 90;
+}
+
+/* Popup box */
+.popup-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-title {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
 
 /* --- 5. Responsiveness --- */
 

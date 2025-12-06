@@ -26,7 +26,7 @@
             <div class="d-flex flex-column flex-sm-row align-items-sm-end">
 
               <div class="profile-avatar rounded-circle shadow-sm flex-shrink-0"
-                [style.background-image]="'url(http://localhost:8080' + user.photo + ')'">
+                [style.background-image]=" user.photo ? 'url(http://localhost:8080' + user.photo + ')' : 'url(/user_avatar.png)'">
               </div>
 
               <div class="username-text mt-3 mt-sm-0 ms-sm-4">

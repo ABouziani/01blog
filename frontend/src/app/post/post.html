@@ -8,27 +8,28 @@
 
     <main class="col-12 col-lg-9">
       <article class="article-card p-4 p-md-5 fade-in-up">
-        
+
         <h1 class="article-title">{{ post.title }}</h1>
-        
+
         <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
           <img (click)="router.navigate(['/users/' + post.creator.id])"
             [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
             alt="{{ post.creator.username }}" class="clickable rounded-circle"
             style="width: 50px; height: 50px; object-fit: cover;">
-          
+
           <div class="flex-grow-1">
             <p class="clickable fw-semibold mb-0" (click)="router.navigate(['/users/' + post.creator.id])">
-                @{{ post.creator.username }}
+              @{{ post.creator.username }}
             </p>
             <p class="text-muted small mb-0">
-                <i class="bi bi-calendar3 me-1"></i>{{ post.createdAt | date:'mediumDate' }}
+              <i class="bi bi-calendar3 me-1"></i>{{ post.createdAt | date:'mediumDate' }}
             </p>
           </div>
-          
+
           <div class="d-flex gap-2 ms-auto">
             <div *ngIf="post && (post.owner || authService.isAdmin())" class="d-flex gap-2">
-              <button *ngIf="post.owner" class="btn action-btn btn-edit btn-sm" (click)="isEditing = !isEditing" title="Edit">
+              <button *ngIf="post.owner" class="btn action-btn btn-edit btn-sm" (click)="isEditing = !isEditing"
+                title="Edit">
                 <i class="bi bi-pencil-square" style="font-size: 20px;"></i>
               </button>
               <button class="btn action-btn btn-delete btn-sm" (click)="delete(post.id)" title="Delete">
@@ -36,7 +37,7 @@
               </button>
             </div>
             <span *ngIf="post && !post.owner" (click)="showPopup = true" class="report-badge">
-              <i class="bi bi-flag-fill" style="font-size: 20px;"></i>
+              <i class="bi bi-flag-fill" style="font-size: 20px; cursor: pointer;"></i>
             </span>
           </div>
         </div>
@@ -51,19 +52,19 @@
           </div>
           <p class="lead" [innerText]="post.description"></p>
         </div>
-        
+
         <hr class="section-divider mt-5">
 
         <div class="d-lg-none mt-4">
-            <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
-              <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
-                <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i> Like ({{ post.likes || 0 }})
-              </button>
-              <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
-                [disabled]="postService.waiting">
-                <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i> Dislike ({{ post.dislikes || 0 }})
-              </button>
-            </div>
+          <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
+            <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
+              <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i> Like ({{ post.likes || 0 }})
+            </button>
+            <button class="engagement-btn dislike" (click)="addReaction(post.id, 'DISLIKE')"
+              [disabled]="postService.waiting">
+              <i class="bi bi-hand-thumbs-down-fill engagement-icon"></i> Dislike ({{ post.dislikes || 0 }})
+            </button>
+          </div>
         </div>
 
       </article>
@@ -76,7 +77,7 @@
           </h3>
 
           <app-add-comment [postId]="post.id" (commentPosted)="onCommentAdded($event)"></app-add-comment>
-          
+
           <div class="comments-list mt-4" style="max-height: 500px; overflow-y: auto;" (scroll)="onScroll($event)">
             <div *ngFor="let c of post.comments" class="comment-item">
               <div class="d-flex align-items-start w-100">
@@ -92,11 +93,12 @@
                   <p class="comment-time">{{ c.createdAt | date:'short' }}</p>
                 </div>
               </div>
-              <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)" class="remove-comment remove-preview-btn">
+              <button type="button" *ngIf="c.owner" (click)="deleteComment(c.id)"
+                class="remove-comment remove-preview-btn">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
-            
+
             <div class="text-center" *ngIf="loadingMore">
               <div class="loading-more">Loading comments...</div>
             </div>
@@ -114,26 +116,28 @@
 
     <aside class="col-lg-3 d-none d-lg-block">
       <div class="sticky-top" style="top: 2rem;">
-        
+
         <div class="author-card card shadow-sm mb-4">
-            <div class="card-body p-4 text-center">
-                <p class="text-uppercase text-muted fw-semibold small mb-3 border-bottom pb-2" style="letter-spacing: 1px;">About the Author</p>
-                <img [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
-                    alt="{{ post.creator.username }}" class="author-avatar-sm rounded-circle mb-3 clickable"
-                    (click)="router.navigate(['/users/' + post.creator.id])">
-                <h2 class="h6 fw-bold mb-1">@{{ post.creator.username }}</h2>
-                <p class="text-muted small creatorbio mb-3">
-                    {{ post.creator.bio.length > 80 ? post.creator.bio.substring(0,77) + '...' : post.creator.bio }}
-                </p>
-                <button class="btn btn-profile-sm w-100" (click)="router.navigate(['/users/' + post.creator.id])">
-                    <i class="bi bi-person-circle me-1"></i>View Profile
-                </button>
-            </div>
+          <div class="card-body p-4 text-center">
+            <p class="text-uppercase text-muted fw-semibold small mb-3 border-bottom pb-2" style="letter-spacing: 1px;">
+              About the Author</p>
+            <img [src]="post.creator.photo ? 'http://localhost:8080' + post.creator.photo : '/user_avatar.png'"
+              alt="{{ post.creator.username }}" class="author-avatar-sm rounded-circle mb-3 clickable"
+              (click)="router.navigate(['/users/' + post.creator.id])">
+            <h2 class="h6 fw-bold mb-1">@{{ post.creator.username }}</h2>
+            <p class="text-muted small creatorbio mb-3">
+              {{ post.creator.bio.length > 80 ? post.creator.bio.substring(0,77) + '...' : post.creator.bio }}
+            </p>
+            <button class="btn btn-profile-sm w-100" (click)="router.navigate(['/users/' + post.creator.id])">
+              <i class="bi bi-person-circle me-1"></i>View Profile
+            </button>
+          </div>
         </div>
 
         <div class="engagement-card card shadow-sm p-4 text-center">
-          <p class="text-uppercase text-muted fw-semibold small mb-3 border-bottom pb-2" style="letter-spacing: 1px;">Post Reactions</p>
-          
+          <p class="text-uppercase text-muted fw-semibold small mb-3 border-bottom pb-2" style="letter-spacing: 1px;">
+            Post Reactions</p>
+
           <div class="reaction-stats mb-3">
             <span class="fw-bold text-success me-3">
               <i class="bi bi-hand-thumbs-up-fill me-1"></i>{{ post.likes || 0 }}
@@ -142,7 +146,7 @@
               <i class="bi bi-hand-thumbs-down-fill me-1"></i>{{ post.dislikes || 0 }}
             </span>
           </div>
-          
+
           <div class="reaction-buttons d-flex justify-content-center gap-4 mt-3">
             <button class="engagement-btn like" (click)="addReaction(post.id, 'LIKE')" [disabled]="postService.waiting">
               <i class="bi bi-hand-thumbs-up-fill engagement-icon"></i>
@@ -157,22 +161,36 @@
     </aside>
   </div>
 
-  <div class="popup-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
-  <div class="popup-box" *ngIf="showPopup">
-    <h3>Report this post</h3>
-    <div class="reporterror" *ngIf="reporterror">
-      {{ reporterror }}
-    </div>
-    <label>Reason</label>
-    <textarea [(ngModel)]="reason" placeholder="Describe the issue..."></textarea>
 
-    <div class="actions">
-      <button class="cancel" (click)="closePopup()">Cancel</button>
-      <button class="submit" (click)="submitReport()">Submit</button>
+<div class="modal fade" [class.show]="showPopup" [class.d-block]="showPopup" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Report User: {{ post?.title }}</h5>
+          <button type="button" class="btn-close" (click)="closePopup()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger" *ngIf="reporterror">
+            {{ reporterror }}
+          </div>
+          <div class="mb-3">
+            <label for="report-reason" class="form-label">Reason</label>
+            <textarea id="report-reason" [(ngModel)]="reason" class="form-control" placeholder="Describe the issue..."
+              rows="4"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary cancel" (click)="closePopup()">Cancel</button>
+          <button type="button" class="btn btn-danger submit" (click)="submitReport()">Submit Report</button>
+        </div>
+      </div>
     </div>
   </div>
+  <div class="modal-backdrop fade" [class.show]="showPopup" *ngIf="showPopup"></div>
 
-  <app-create-post *ngIf="isEditing && post" [editing]="{id:post.id,title:post.title,description:post.description,media:post.media}"
+  
+  <app-create-post *ngIf="isEditing && post"
+    [editing]="{id:post.id,title:post.title,description:post.description,media:post.media}"
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">
   </app-create-post>
 </div>

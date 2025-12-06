@@ -43,15 +43,15 @@
     <div class="row g-4 users-grid">
       <div class="col-12 col-md-6 col-lg-4" *ngFor="let user of state.users">
         
-        <div class="card user-card border-0 shadow-sm h-100 p-3 rounded-4 hover-lift" (click)="router.navigate(['/users/' + user.id])">
+        <div class="card user-card border-0 shadow-sm h-100 p-3 rounded-4 hover-lift clickable" (click)="router.navigate(['/users/' + user.id])">
           <div class="d-flex align-items-center user-header">
             
             <img 
               [src]="user.photo ? 'http://localhost:8080' + user.photo : 'user_avatar.png'" alt="User photo"
-              class="avatar-sm rounded-circle me-3 flex-shrink-0" />
+              class="avatar-sm rounded-circle me-3 flex-shrink-0 clickable" />
 
             <div class="header-text overflow-hidden">
-              <h3 class="h6 fw-bold text-truncate mb-0">
+              <h3 class="h6 fw-bold text-truncate mb-0 clickable">
                 {{ user.username }}
               </h3>
               <small class="text-muted d-block">{{ user.role }}</small>
