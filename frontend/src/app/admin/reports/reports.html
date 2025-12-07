@@ -1,10 +1,8 @@
-<!-- Reports Section -->
+<!-- Users Reports Section -->
 <div class="content-header">
-  <h2 class="content-title">Reports Management</h2>
+  <h2 class="content-title">Users Reports</h2>
 </div>
-<div style="display: flex;">
-  <div class="users-reports">Users Reports</div>
-</div>
+
 <div class="table-container">
   <table class="data-table">
     <thead>
@@ -17,55 +15,51 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="tr-tr" *ngFor="let report of groupedUserReports">
-        <td>
-          <span class="reportlink" [routerLink]="[`/users/${report.reportedUserId}`]">{{ report.reportedUserUsername
-            }}</span>
+      <tr *ngFor="let report of groupedUserReports">
+        <td data-label="Reported User">
+          <span class="clickable" [routerLink]="[`/users/${report.reportedUserId}`]">
+            {{ report.reportedUserUsername }}
+          </span>
         </td>
-        <!-- Reporters -->
-        <td>
-          <div class="reporter-count">
-            {{ report.reporters.length }} reporter {{ report.reporters.length > 1 ? 's' : '' }}
-          </div>
+        <td data-label="Reporters">
+          {{ report.reporters.length }} reporter{{ report.reporters.length > 1 ? 's' : '' }}
         </td>
-        <!-- Reasons -->
-        <td>
-          <button class="btn-action btn-secondary-action" (click)="showURPopup = true; selectedUserReport = report">
-            show details</button>
+        <td data-label="Reasons">
+          <button class="btn-action btn-secondary-action"
+                  (click)="showURPopup = true; selectedUserReport = report">
+            Show Details
+          </button>
         </td>
-        <td>
-          <span class="status-badge" [class.status-pending]="report.status === 'pending'"
-            [class.status-resolved]="report.status === 'resolved'"
-            [class.status-dismissed]="report.status === 'dismissed'">
+        <td data-label="Status">
+          <span class="status-badge"
+                [class.status-pending]="report.status === 'pending'"
+                [class.status-resolved]="report.status === 'resolved'"
+                [class.status-dismissed]="report.status === 'dismissed'">
             {{ report.status | titlecase }}
           </span>
         </td>
-        <td>
-          @if (report.status === 'pending') {
-          <button class="btn-action btn-danger-action" (click)="resolveUserReportWithAction(report, 'ban_user')">Ban
-            User</button>
-          <button class="btn-action btn-secondary-action"
-            (click)="resolveUserReportWithAction(report, 'dismiss')">Dismiss</button>
-          } @else {
-          <button class="btn-action btn-primary-action" (click)="resolveUserReportWithAction(report, 'delete')">Delete
-            report</button>
-          }
+        <td data-label="Actions" class="actions-column">
+          <button *ngIf="report.status === 'pending'" class="btn-action btn-danger-action"
+                  (click)="resolveUserReportWithAction(report, 'ban_user')">Ban User</button>
+          <button *ngIf="report.status === 'pending'" class="btn-action btn-secondary-action"
+                  (click)="resolveUserReportWithAction(report, 'dismiss')">Dismiss</button>
         </td>
       </tr>
     </tbody>
   </table>
-  @if (groupedUserReports && groupedUserReports.length == 0) {
-  <div class="empty-state">
+
+  <div *ngIf="groupedUserReports.length === 0" class="empty-state">
     <div class="empty-icon">🚩</div>
     <div class="empty-text">No reports to show!</div>
   </div>
-  }
 </div>
 
-<div style="display: flex;">
-  <div class="posts-reports">Posts Reports</div>
+<!-- Posts Reports Section -->
+<div class="content-header">
+  <h2 class="content-title">Posts Reports</h2>
 </div>
-<div class="posts-table-container table-container">
+
+<div class="table-container">
   <table class="data-table">
     <thead>
       <tr>
@@ -76,156 +70,103 @@
         <th>Actions</th>
       </tr>
     </thead>
-
     <tbody>
-      <tr class="tr-tr" *ngFor="let report of groupedPostReports">
-
-        <!-- Post -->
-        <td>
-          <span class="clickable post-title" [routerLink]="['/posts', report.postId]">
-            {{
-            report.postTitle.length > 60
-            ? report.postTitle.substring(0, 57) + '...'
-            : report.postTitle
-            }}
+      <tr *ngFor="let report of groupedPostReports">
+        <td data-label="Post">
+          <span class="clickable" [routerLink]="['/posts', report.postId]">
+            {{ report.postTitle.length > 60 ? (report.postTitle.substring(0,57) + '…') : report.postTitle }}
           </span>
         </td>
-
-        <!-- Reporters -->
-        <td>
-          <div class="reporter-count">
-            {{ report.reporters.length }} reporter {{ report.reporters.length > 1 ? 's' : '' }}
-          </div>
-
-          <!-- <div class="reporter-list">
-            <span *ngFor="let r of report.reporters">
-              <a class="reportlink" [routerLink]="['/users', r.id]">
-                {{ r.username }}
-              </a>
-              <span *ngIf="!isLast(r, report.reporters)">, </span>
-            </span>
-          </div> -->
+        <td data-label="Reporters">
+          {{ report.reporters.length }} reporter{{ report.reporters.length > 1 ? 's' : '' }}
         </td>
-
-        <!-- Reasons -->
-        <td>
-          <!-- <ul class="reason-list">
-            <li *ngFor="let reason of report.reasons">
-              {{ reason }}
-            </li>
-          </ul> -->
-          <button class="btn-action btn-secondary-action" (click)="showPRPopup = true; selectedPostReport = report">show
-            details</button>
-
+        <td data-label="Reasons">
+          <button class="btn-action btn-secondary-action"
+                  (click)="showPRPopup = true; selectedPostReport = report">
+            Show Details
+          </button>
         </td>
-
-        <!-- Status -->
-        <td>
-          <span class="status-badge" [class.status-pending]="report.status === 'pending'"
-            [class.status-resolved]="report.status === 'resolved'"
-            [class.status-dismissed]="report.status === 'dismissed'">
+        <td data-label="Status">
+          <span class="status-badge"
+                [class.status-pending]="report.status === 'pending'"
+                [class.status-resolved]="report.status === 'resolved'"
+                [class.status-dismissed]="report.status === 'dismissed'">
             {{ report.status | titlecase }}
           </span>
         </td>
-
-        <!-- Actions -->
-        <td>
-          @if (report.status === 'pending') {
-          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report,'delete_post')">
-            Delete post
-          </button>
-
-          <button class="btn-action btn-danger-action" (click)="resolvePostReportWithAction(report,'hide_post')">
-            Hide post
-          </button>
-
-          <button class="btn-action btn-secondary-action" (click)="resolvePostReportWithAction(report,'dismiss')">
-            Dismiss
-          </button>
-          } @else {
-          <button class="btn-action btn-primary-action" (click)="resolvePostReportWithAction(report,'dismiss')">
-            Delete reports
-          </button>
-          }
+        <td data-label="Actions" class="actions-column">
+          <button *ngIf="report.status === 'pending'" class="btn-action btn-danger-action"
+                  (click)="resolvePostReportWithAction(report,'delete_post')">Delete Post</button>
+          <button *ngIf="report.status === 'pending'" class="btn-action btn-danger-action"
+                  (click)="resolvePostReportWithAction(report,'hide_post')">Hide Post</button>
+          <button *ngIf="report.status === 'pending'" class="btn-action btn-secondary-action"
+                  (click)="resolvePostReportWithAction(report,'dismiss')">Dismiss</button>
+          <button *ngIf="report.status !== 'pending'" class="btn-action btn-primary-action"
+                  (click)="resolvePostReportWithAction(report,'delete_report')">Delete Reports</button>
         </td>
-
       </tr>
     </tbody>
   </table>
-   @if (groupedPostReports && groupedPostReports.length == 0) {
-      <div class="empty-state">
-        <div class="empty-icon">🚩</div>
-        <div class="empty-text">No reports to show!</div>
-      </div>
-      }
-  <!-- details tables -->
-  <div class="postreport-popup-backdrop" *ngIf="showPRPopup" (click)="closePRPopup()"></div>
-  <div class="postreport-popup-box" *ngIf="showPRPopup && selectedPostReport">
-    <div style="display: flex;">
-      <div class="selectedpost-title"><span style="font-weight: bold; color: Black;"> Selected post : </span> <br> {{
-        selectedPostReport.postTitle }}</div>
-      <button type="button" (click)="closePRPopup()" class="close-btn" style="margin-left: auto;">
-        X
-      </button>
+
+  <div *ngIf="groupedPostReports.length === 0" class="empty-state">
+    <div class="empty-icon">🚩</div>
+    <div class="empty-text">No reports to show!</div>
+  </div>
+</div>
+
+<!-- User Report Popup -->
+<div class="popup-backdrop" *ngIf="showURPopup" (click)="closeURPopup()"></div>
+<div class="popup-box" *ngIf="showURPopup && selectedUserReport">
+  <div class="popup-header">
+    <div class="popup-title">
+      <strong>Selected User:</strong> {{ selectedUserReport.reportedUserUsername }}
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <!-- <th>Details for selected post: <br> <span style="color: var(--text);">"{{ selectedPostReport.postTitle }}"</span></th> -->
-          <th>Reporter</th>
-          <th>Reason</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="tr-tr" *ngFor="let r of selectedPostReport.reporters">
-          <td>
-            <a class="reportlink" [routerLink]="['/users', r.id]">
-              {{ r.username }}
-            </a>
-          </td>
-          <td>
-            <span class="reportreason">{{ r.reason }}</span>
-          </td>
-          <!-- <td>{{ report.reason }}</td> -->
-        </tr>
-      </tbody>
-    </table>
+    <button type="button" class="close-btn" (click)="closeURPopup()">X</button>
   </div>
 
-  <!-- --------------------------------- -->
-  <!-- -------------------------------- -->
-  <div class="userreport-popup-backdrop" *ngIf="showURPopup" (click)="closeURPopup()"></div>
-  <div class="userreport-popup-box" *ngIf="showURPopup && selectedUserReport">
-    <div style="display: flex;">
-      <div class="selectedpost-title"><span style="font-weight: bold; color: Black;"> Selected User : </span> <br> {{
-        selectedUserReport.reportedUserUsername }}</div>
-      <button type="button" (click)="closeURPopup()" class="close-btn" style="margin-left: auto;">
-        X
-      </button>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <!-- <th>Details for selected post: <br> <span style="color: var(--text);">"{{ selectedPostReport.postTitle }}"</span></th> -->
-          <th>Reporter</th>
-          <th>Reason</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="tr-tr" *ngFor="let r of selectedUserReport.reporters">
-          <td>
-            <a class="reportlink" [routerLink]="['/users', r.id]">
-              {{ r.username }}
-            </a>
-          </td>
-          <td>
-            <span class="reportreason">{{ r.reason }}</span>
-          </td>
-          <!-- <td>{{ report.reason }}</td> -->
-        </tr>
-      </tbody>
-    </table>
-    
-      <!-- details table -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reporter</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of selectedUserReport.reporters">
+        <td>
+          <a class="reportlink" [routerLink]="['/users', r.id]">{{ r.username }}</a>
+        </td>
+        <td>{{ r.reason }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
+
+<!-- Post Report Popup -->
+<div class="popup-backdrop" *ngIf="showPRPopup" (click)="closePRPopup()"></div>
+<div class="popup-box" *ngIf="showPRPopup && selectedPostReport">
+  <div class="popup-header">
+    <div class="popup-title">
+      <strong>Selected Post:</strong> {{ selectedPostReport.postTitle }}
+    </div>
+    <button type="button" class="close-btn" (click)="closePRPopup()">X</button>
   </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reporter</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of selectedPostReport.reporters">
+        <td>
+          <a class="reportlink" [routerLink]="['/users', r.id]">{{ r.username }}</a>
+        </td>
+        <td>{{ r.reason }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

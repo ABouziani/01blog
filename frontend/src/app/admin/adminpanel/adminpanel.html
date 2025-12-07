@@ -1,6 +1,11 @@
 <div class="admin-container">
   <!-- Sidebar -->
   <aside class="admin-sidebar">
+    <div class="toggler-wrap">
+      <button class="mobile-toggle" (click)="toggleBar()">
+        <i class="bi bi-x toggler toggler-mobile"></i>
+      </button>
+    </div>
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <i class="bi bi-shield-check"></i> Admin Panel
@@ -8,28 +13,28 @@
     </div>
     <nav class="nav-list">
       <div class="nav-item">
-        <a class="nav-link active" (click)="selectTab('summary')" routerLink="summary" routerLinkActive="active"
+        <a class="nav-link active" (click)="toggleBar(); selectTab('summary')" routerLink="summary" routerLinkActive="active"
           [class.active]="activeTab() === 'summary'">
           <i class="bi bi-people"></i>
           <span>Summary</span>
         </a>
       </div>
       <div class="nav-item">
-        <a class="nav-link active" (click)="selectTab('users')" routerLink="users" routerLinkActive="active"
+        <a class="nav-link active" (click)="toggleBar(); selectTab('users')" routerLink="users" routerLinkActive="active"
           [class.active]="activeTab() === 'users'">
           <i class="bi bi-people"></i>
           <span>Users</span>
         </a>
       </div>
       <div class="nav-item">
-        <a class="nav-link" (click)="selectTab('posts')" routerLink="posts" routerLinkActive="active"
+        <a class="nav-link" (click)="toggleBar(); selectTab('posts')" routerLink="posts" routerLinkActive="active"
           [class.active]="activeTab() === 'posts'">
           <i class="bi bi-file-text"></i>
           <span>Posts</span>
         </a>
       </div>
       <div class="nav-item">
-        <a class="nav-link" (click)="selectTab('reports')" routerLink="reports" routerLinkActive="active"
+        <a class="nav-link" (click)="toggleBar(); selectTab('reports')" routerLink="reports" routerLinkActive="active"
           [class.active]="activeTab() === 'reports'">
           <i class="bi bi-flag"></i>
           <span>Reports</span>
@@ -44,7 +49,7 @@
     <div class="admin-topbar">
       <div class="topbar-content">
         <div>
-          <button class="mobile-toggle">
+          <button class="mobile-toggle" (click)="toggleBar()">
             <i class="bi bi-list"></i>
           </button>
           <span class="topbar-welcome">Welcome, <span class="topbar-username">{{ adminUsername }}</span></span>

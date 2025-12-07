@@ -1,143 +1,197 @@
-.close-btn {
-    /* margin-top: 8px; */
-    /* padding: 4px 8px; */
-    width: fit-content;
-    height: fit-content;
-    background-color: #ff4d4d;
-    color: var(--text);
+/* ===== Table Container ===== */
+.table-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.table-container, .table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* ===== Table ===== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.data-table thead th {
+  text-align: left;
+  font-weight: 600;
+  background: #fafafa;
+  padding: 12px 10px;
+  border-bottom: 2px solid #e2e2e2;
+}
+
+.data-table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e7e7e7;
+  vertical-align: middle;
+}
+
+/* ===== Clickable ===== */
+.clickable {
+  cursor: pointer;
+  color: #007bff;
+  font-weight: 500;
+}
+.clickable:hover { text-decoration: underline; }
+
+/* ===== Status Badges ===== */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.status-active { background: #e7f7ec; color: #1d8d45; }
+.status-banned { background: #ffe7e7; color: #d9534f; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-resolved { background: #d4edda; color: #155724; }
+.status-dismissed { background: #f8d7da; color: #721c24; }
+
+/* ===== Buttons ===== */
+.actions-column button {
+  margin-right: 8px;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.btn-danger-action { background: #dc3545; color: #fff; }
+.btn-danger-action:hover { background: #c12e3c; }
+.btn-success-action { background: #28a745; color: #fff; }
+.btn-success-action:hover { background: #23923c; }
+.btn-primary-action { background: #007bff; color: #fff; }
+.btn-primary-action:hover { background: #0069d9; }
+.btn-secondary-action { background: #6c757d; color: #fff; }
+.btn-secondary-action:hover { background: #5a6268; }
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #777;
+}
+.empty-icon { font-size: 40px; margin-bottom: 10px; }
+.empty-text { font-size: 18px; font-weight: 500; }
+
+/* ===== Mobile Cards ===== */
+@media (max-width: 768px) {
+  .data-table thead { display: none; }
+
+  .data-table tr {
+    display: block;
+    margin-bottom: 14px;
+    border: 1px solid #eee;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  .data-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px;
     border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    /* margin-left: -50%; */
+  }
+
+  .data-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+    flex: 1;
+    padding-right: 10px;
+  }
+
+  .data-table tbody td span,
+  .data-table tbody td button {
+    flex: 1;
+    text-align: right;
+  }
+
+  .actions-column button {
+    width: 100%;
+    margin: 6px 0 !important;
+  }
+
+  .table-container { padding: 10px; }
+  .btn-action { padding: 5px 8px; font-size: 12px; }
+}
+
+
+/* Popup backdrop */
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+/* Popup box */
+.popup-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1001;
+}
+
+/* Popup header */
+.popup-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.popup-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.close-btn {
+  margin-left: auto;
+  border: none;
+  background: #dc3545;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 2px 8px;
+  transition: 0.2s;
 }
 
 .close-btn:hover {
-    background-color: #e60000;
+  background: #c12e3c;
 }
 
-
-/* Backdrop */
-.postreport-popup-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 101;
-}
-
-/* Popup box */
-.postreport-popup-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: fit-content;
-
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 8px;
-
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-    z-index: 102;
-
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Backdrop */
-.userreport-popup-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 101;
-}
-
-/* Popup box */
-.userreport-popup-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: fit-content;
-
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 8px;
-
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-    z-index: 102;
-
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Textarea */
-/* textarea {
+/* Table inside popup */
+.popup-box .data-table {
   width: 100%;
-  min-height: 120px;
-  padding: 10px;
-
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  resize: vertical;
   font-size: 14px;
-} */
-
-.selectedpost-title {
-    margin-bottom: 20px;
-    margin-top: -15px;
 }
 
-.posts-reports,
-.users-reports {
-    margin-top: 40px;
-    margin-bottom: 10px;
-    font-size: 1.0rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
-    margin-left: 100px;
-}
-
-.clickable {
-    cursor: pointer;
-}
-
-.post-title {
-    color: #667eea;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-@media (max-width: 768px) {
-
-    .content-title {
-        font-size: 1.25rem;
-    }
-}
-
-@media (max-width: 500px) {
-
-    .popup-backdrop {
-        display: none;
-    }
-
-    .popup-box {
-        width: 100px !important;
-        margin-left: 5px;
-    }
-}
-
-.reportreason {
-    display: block;
-    width: 500px;
-    white-space: normal;
-    overflow-wrap: break-word;
-    word-break: break-word;
+.popup-box .data-table th,
+.popup-box .data-table td {
+  padding: 8px;
 }

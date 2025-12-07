@@ -1,52 +1,64 @@
-<!-- Posts Section -->
-<div class="content-header">
-  <h2 class="content-title">Posts Management</h2>
-</div>
-<div class="table-container">
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Author</th>
-        <th>Post Id</th>
-        <th>Content Preview</th>
-        <th>creation date</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let post of posts">
-        <td><span class="clickable" (click)="router.navigate(['/users/' + post.authorId])">{{ post.authorName }}</span>
-        </td>
-        <td><span class="clickable" (click)="router.navigate(['/posts/' + post.id])">{{ post.id }}</span>
-        </td>
-        <td><span class="clickable" (click)="router.navigate(['/posts/' + post.id])">{{ post.title && post.title.length
-            > 50 ? (post.title.substring(0, 47) + '...') :
-            post.title }} </span></td>
-        <td><span class="clickable" >{{ post.createdAt | date : "medium" }}</span></td>
-        <td>
-          <span class="status-badge" [class.status-active]="!post.isHidden" [class.status-hidden]="post.isHidden">
-            {{ post.isHidden ? 'Hidden' : 'Visible' }}
-          </span>
-        </td>
-        <td>
-          @if (post.isHidden) {
-          <button class="btn-action btn-success-action"
-            (click)="openConfirmDialog('unhide', post.id, post.authorName)">Unhide</button>
-          } @else {
-          <button class="btn-action btn-danger-action"
-            (click)="openConfirmDialog('hide', post.id, post.authorName)">Hide</button>
-          }
-          <button class="btn-action btn-primary-action"
-            (click)="openConfirmDialog('delete', post.id, post.authorName)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  @if (posts && posts.length == 0) {
-  <div class="empty-state">
-    <div class="empty-icon">📝</div>
-    <div class="empty-text">No posts to show!</div>
+<div class="table-responsive-wrapper">
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Post ID</th>
+          <th>Preview</th>
+          <th>Created</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td data-label="Author">
+            <span class="clickable" (click)="router.navigate(['/users', post.authorId])">
+              {{ post.authorName }}
+            </span>
+          </td>
+          <td data-label="Post ID">
+            <span class="clickable" (click)="router.navigate(['/posts', post.id])">
+              {{ post.id }}
+            </span>
+          </td>
+          <td data-label="Preview">
+            <span class="clickable" (click)="router.navigate(['/posts', post.id])">
+              {{ post.title && post.title.length > 50
+                  ? (post.title.substring(0, 47) + '…')
+                  : post.title }}
+            </span>
+          </td>
+          <td data-label="Created">{{ post.createdAt | date:'medium' }}</td>
+          <td data-label="Status">
+            <span class="status-badge" [class.status-active]="!post.isHidden" [class.status-banned]="post.isHidden">
+              {{ post.isHidden ? 'Hidden' : 'Visible' }}
+            </span>
+          </td>
+          <td data-label="Actions" class="actions-column">
+            <button *ngIf="post.isHidden"
+                    class="btn-action btn-success-action"
+                    (click)="openConfirmDialog('unhide', post.id, post.authorName)">
+              Unhide
+            </button>
+            <button *ngIf="!post.isHidden"
+                    class="btn-action btn-danger-action"
+                    (click)="openConfirmDialog('hide', post.id, post.authorName)">
+              Hide
+            </button>
+            <button class="btn-action btn-primary-action"
+                    (click)="openConfirmDialog('delete', post.id, post.authorName)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="posts.length === 0" class="empty-state">
+      <div class="empty-icon">📝</div>
+      <div class="empty-text">No posts to show!</div>
+    </div>
   </div>
-  }
 </div>

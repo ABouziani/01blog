@@ -1,60 +1,81 @@
-<!-- Users Section -->
-<div class="content-header">
-  <h2 class="content-title">Users Management</h2>
-</div>
-<div class="table-container">
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Member Since</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>
-          <span class="table-username" target="_blank" [routerLink]="[`/users/${user.id}`]">{{ user.username }}</span>
-          @if (user.isAdmin) {
-          <span class="admin-badge">(Admin)</span>
-          }
-        </td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.createdAt | date:'short' }}</td>
-        <td>
-          <span class="status-badge" [class.status-active]="!user.isBanned" [class.status-banned]="user.isBanned">
-            {{ user.isBanned ? 'Banned' : 'Active' }}
-          </span>
-        </td>
-        <td>
-          @if (user.isBanned) {
-          <button class="btn-action btn-success-action"
-            (click)="openConfirmDialog('activate', user.id, user.username)">Activate</button>
-          } @else {
-          <button class="btn-action btn-danger-action"
-            (click)="openConfirmDialog('ban', user.id, user.username)">Ban</button>
-          }
-          <button class="btn-action btn-primary-action"
-            (click)="openConfirmDialog('delete', user.id, user.username)">Delete</button>
-          @if (!user.isBanned) {
-          <!-- @if (!user.isAdmin) {
-          <button class="btn-action btn-secondary-action"
-            (click)="openConfirmDialog('make-admin', user.id, user.username)">Make Admin</button>
-          } @else {
-          <button class="btn-action btn-secondary-action"
-            (click)="openConfirmDialog('remove-admin', user.id, user.username)">Remove Admin</button>
-          } -->
-          }
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  @if (users && users.length == 0) {
-  <div class="empty-state">
-    <div class="empty-icon">👥</div>
-    <div class="empty-text">No users to show!</div>
+<div class="users-section">
+  <div class="content-header">
+    <h2 class="content-title">Users Management</h2>
   </div>
-  }
+
+  <div class="table-responsive-wrapper">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Member Since</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of users">
+            <!-- USERNAME -->
+            <td>
+              <a class="table-username" [routerLink]="['/users', user.id]">
+                {{ user.username }}
+              </a>
+
+              @if (user.isAdmin) {
+                <span class="admin-badge">(Admin)</span>
+              }
+            </td>
+
+            <!-- EMAIL -->
+            <td>{{ user.email }}</td>
+
+            <!-- CREATED DATE -->
+            <td>{{ user.createdAt | date:'short' }}</td>
+
+            <!-- STATUS -->
+            <td>
+              <span class="status-badge"
+                    [class.status-active]="!user.isBanned"
+                    [class.status-banned]="user.isBanned">
+                {{ user.isBanned ? 'Banned' : 'Active' }}
+              </span>
+            </td>
+
+            <!-- ACTIONS -->
+            <td class="actions-column">
+
+              @if (user.isBanned) {
+                <button class="btn-action btn-success-action"
+                        (click)="openConfirmDialog('activate', user.id, user.username)">
+                  Activate
+                </button>
+              } @else {
+                <button class="btn-action btn-danger-action"
+                        (click)="openConfirmDialog('ban', user.id, user.username)">
+                  Ban
+                </button>
+              }
+
+              <button class="btn-action btn-primary-action"
+                      (click)="openConfirmDialog('delete', user.id, user.username)">
+                Delete
+              </button>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      @if (users && users.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">👥</div>
+          <div class="empty-text">No users to show!</div>
+        </div>
+      }
+
+    </div>
+  </div>
 </div>

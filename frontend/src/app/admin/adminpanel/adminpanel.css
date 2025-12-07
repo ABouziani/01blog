@@ -175,3 +175,14 @@
   z-index: 99;
 }
 */
+
+.toggler-mobile {
+  color: white;
+  display: block;
+  margin-left: auto;
+}
+
+.toggler-wrap {
+  text-align: right;
+  margin-right: 10px;
+}

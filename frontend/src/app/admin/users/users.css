@@ -1,23 +1,140 @@
-/* table {
-    width: 100%;
-    margin-top: 16px;
+/* Container */
+.users-section {
+  padding: 20px;
 }
 
-.banned {
-    color: red;
-    font-weight: bold;
+/* Table Wrapper */
+.table-responsive-wrapper {
+  overflow-x: auto;
 }
 
-td,
-th {
-    white-space: nowrap;
+.table-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.data-table thead th {
+  text-align: left;
+  font-weight: 600;
+  background: #fafafa;
+  padding: 12px 10px;
+  border-bottom: 2px solid #e2e2e2;
+}
+
+.data-table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e7e7e7;
+  vertical-align: middle;
+}
+
+/* Username link */
 .table-username {
-    cursor: pointer;
-    color: rgb(42, 42, 243);
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
 }
 
 .table-username:hover {
-    font-weight: bold;
-} */
+  color: #007bff;
+  text-decoration: underline;
+}
+
+/* Admin badge */
+.admin-badge {
+  background: #ffd700;
+  color: #333;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 5px;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-active {
+  background: #e7f7ec;
+  color: #1d8d45;
+}
+
+.status-banned {
+  background: #ffe7e7;
+  color: #d9534f;
+}
+
+/* Action Buttons */
+.actions-column button {
+  margin-right: 8px;
+}
+
+/* Base button */
+.btn-action {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+/* Colors */
+.btn-danger-action {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-danger-action:hover {
+  background: #c12e3c;
+}
+
+.btn-success-action {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success-action:hover {
+  background: #23923c;
+}
+
+.btn-primary-action {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary-action:hover {
+  background: #0069d9;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #777;
+}
+
+.empty-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 500;
+}
