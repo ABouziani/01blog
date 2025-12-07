@@ -33,12 +33,14 @@
                 <i class="bi bi-pencil-square" style="font-size: 20px;"></i>
               </button>
               <button class="btn action-btn btn-delete btn-sm" (click)="delete(post.id)" title="Delete">
-                <i class="bi bi-trash" style="font-size: 20px;"></i>
+                <!-- <i class="bi bi-trash" style="font-size: 20px;"></i> -->
+                Delete
               </button>
             </div>
-            <span *ngIf="post && !post.owner" (click)="showPopup = true" class="report-badge">
-              <i class="bi bi-flag-fill" style="font-size: 20px; cursor: pointer;"></i>
-            </span>
+            <button *ngIf="post && !post.owner" (click)="showPopup = true" class=" btn action-btn btn-sm report-badge">
+              <!-- <i class="bi bi-flag-fill" style="font-size: 20px; cursor: pointer;"></i> -->
+              Report
+            </button>
           </div>
         </div>
 
@@ -162,7 +164,7 @@
   </div>
 
 
-<div class="modal fade" [class.show]="showPopup" [class.d-block]="showPopup" tabindex="-1" role="dialog">
+  <div class="modal fade" [class.show]="showPopup" [class.d-block]="showPopup" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -188,7 +190,7 @@
   </div>
   <div class="modal-backdrop fade" [class.show]="showPopup" *ngIf="showPopup"></div>
 
-  
+
   <app-create-post *ngIf="isEditing && post"
     [editing]="{id:post.id,title:post.title,description:post.description,media:post.media}"
     (cancelEvent)="cancelEdit($event)" (updateEvent)="onUpdate($event)">

@@ -57,31 +57,35 @@ export class PostComponent {
   }
 
   ngOnInit(): void {
-    this.postId = this.route.snapshot.paramMap.get('id');
-    this.postService.getPost(this.postId).subscribe({
-      next: (data) => {
-        console.log("Post: ", data);
-        data.comments = []
-        this.post = data;
-        if (this.post) {
-          this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
-          this.post.dislikes = data.reactions.filter(r => r.type == "dislike").length.toString();
-          this.postForm.patchValue({
-            title: this.post.title,
-            description: this.post.description
-          });
-        }
-        this.loadComments();
-        this.loading = false;
-      },
-      error: (err) => {
-        console.log(err);
+    this.route.paramMap.subscribe(params => {
+      this.postId = params.get('id');
+      if (this.postId) {
+        this.postService.getPost(this.postId).subscribe({
+          next: (data) => {
+            console.log("Post: ", data);
+            data.comments = []
+            this.post = data;
+            if (this.post) {
+              this.post.likes = data.reactions.filter(r => r.type == "like").length.toString();
+              this.post.dislikes = data.reactions.filter(r => r.type == "dislike").length.toString();
+              this.postForm.patchValue({
+                title: this.post.title,
+                description: this.post.description
+              });
+            }
+            this.loadComments();
+            this.loading = false;
+          },
+          error: (err) => {
+            console.log(err);
 
-        this.errorMessage = err.error;
-        this.loading = false;
+            this.errorMessage = err.error;
+            this.loading = false;
+          }
+        });
       }
     });
-    // window.addEventListener('scroll', this.onScroll, { passive: true });
+
   }
 
 
@@ -275,8 +279,8 @@ export class PostComponent {
 
   onUpdate(data: Post) {
     this.lastCommentId = 0;
-    this.allLoaded=false;
-    this.loadingMore=false;
+    this.allLoaded = false;
+    this.loadingMore = false;
     data.comments = [];
     this.post = data;
     if (this.post) {
@@ -286,8 +290,8 @@ export class PostComponent {
     // this.post.comments.reverse();
     this.isSubmitting = false;
     this.loading = false;
-    this.isEditing = false;     
-      this.loadComments();
+    this.isEditing = false;
+    this.loadComments();
 
   }
 

@@ -17,6 +17,7 @@ import { NotfoundComponent } from './notfound/notfound';
 import { SearchResultsComponent } from './search-results/search-results';
 import { AdminSummaryComponent } from './admin/admin-summary-component/admin-summary-component';
 import { ServerUnreachableComponent } from './server-unreachable/server-unreachable';
+import { ForbiddenComponent } from './forbidden/forbidden';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent , canActivate: [unAuthGuard]},
@@ -39,6 +40,7 @@ export const routes: Routes = [
         ]
     },
     { path: 'unreachable', component: ServerUnreachableComponent},
+    { path: 'forbidden', component: ForbiddenComponent },
     { path: '**', component: NotfoundComponent },
 
 ];

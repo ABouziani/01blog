@@ -26,23 +26,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error) => {
       // 401 Unauthorized (token expired)
       if (error.status === 401) {
-        if (!refresh) {
-          authService.logout();
-          return EMPTY;
-        }
-
-        return authService.refreshToken(refresh).pipe(
-          switchMap((newAccessToken) => {
-            const newReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${newAccessToken}` },
-            });
-            return next(newReq);
-          }),
-          catchError(() => {
-            authService.logout();
-            return EMPTY;
-          })
-        );
+        authService.logout();
+        return EMPTY;
       }
 
       // 403 Forbidden (user not allowed)
@@ -50,9 +35,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 403 && !req.url.endsWith('/login')) {
         console.warn('Access denied:', req.url);
         // Option 1: redirect to a forbidden page
-        router.navigate(['/']);
-        // Option 2: or just log out
-        // authService.logout();
+        router.navigate(['/forbidden']);
         return EMPTY;
       }
 

@@ -9,12 +9,18 @@
   height: 120px;
   border: 5px solid rgb(151, 151, 151);
   /* Adds contrast to header */
-  margin-top: -60px;
+  margin-top: -55px;
   /* Pulls the avatar up to overlap the header */
 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+@media (max-width: 767px) {
+  .profile-avatar {
+    margin-top: 1px;
+  }
 }
 
 /* Also ensure your post images are visible */
@@ -30,11 +36,11 @@
 }
 
 .no-post {
-background-color: var(--card-bg);
+  background-color: var(--card-bg);
 }
 
 .no-post-text {
-color: var(--text);
+  color: var(--text);
 }
 
 .clickable {

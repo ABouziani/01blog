@@ -400,7 +400,7 @@
 
 .small-post-media {
     /* REQUIRED: Define a fixed size for the div */
-    width: 60px; /* Example size */
+    width: 80px; /* Example size */
     height: 60px; /* Example size */
 
     /* REQUIRED: Ensure the background image is displayed correctly */
@@ -410,6 +410,10 @@
 
     /* Optional: Smooth transition on hover/click */
     transition: transform 0.2s ease-in-out;
+
+    white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .user-avatar-sm {

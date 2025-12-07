@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.blog.model.User;
 import com.example.blog.repository.ReportUserRepository;
 import com.example.blog.repository.UserRepository;
 import com.example.blog.service.UserDetailsImpl;
@@ -41,8 +40,8 @@ public class UsersController {
     public ResponseEntity<?> registerUser(
             @RequestParam("username") @NotBlank @Size(min = 3, max = 10) String username,
             @RequestParam("email") @NotBlank @Size(min = 6, max = 40) String email,
-            @RequestParam("password") @NotBlank @Size(min = 6, max = 10) String password,
-            @RequestParam("passverif") @NotBlank @Size(min = 6, max = 10) String passverif,
+            @RequestParam("password") @NotBlank @Size(min = 6) String password,
+            @RequestParam("passverif") @NotBlank @Size(min = 6) String passverif,
             @RequestParam("bio") @Size(max = 500) String bio,
             @RequestParam(value = "photo", required = false) MultipartFile photo,
             Authentication authentication

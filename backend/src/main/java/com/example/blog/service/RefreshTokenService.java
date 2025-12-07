@@ -1,6 +1,5 @@
 package com.example.blog.service;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +22,6 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final long refreshTokenDurationMs;
 
-    // single constructor
     public RefreshTokenService(RefreshTokenRepository refreshTokenRepository,
             @Value("${jwt.refreshExpirationMs}") Long refreshTokenDurationMs) {
         this.refreshTokenRepository = refreshTokenRepository;

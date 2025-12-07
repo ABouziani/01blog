@@ -8,9 +8,6 @@
       <p class="form-subtitle">Join 01Blog community today</p>
     </div>
 
-    <!-- Success and Error Messages -->
-    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
     <!-- Registration Form -->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
@@ -70,8 +67,8 @@
         </div>
         <div class="error-message" *ngIf="password?.invalid && password?.touched">
           <div *ngIf="f['password']?.errors?.['required']">Password is required.</div>
-          <div *ngIf="f['password']?.errors?.['minlength'] || f['password']?.errors?.['maxlength']">
-            Password must be between 6 and 10 characters long.
+          <div *ngIf="f['password']?.errors?.['minlength']">
+            Password must be at least 6 characters long.
           </div>
         </div>
       </div>
@@ -91,7 +88,7 @@
         <div class="error-message" *ngIf="passverif?.invalid && passverif?.touched">
           <div *ngIf="f['passverif']?.errors?.['required']">Password confirmation is required.</div>
           <div *ngIf="f['passverif']?.errors?.['minlength'] || passverif != password">
-            Password confirmation must be between 6 and 10 characters long and equals to password.
+            Password confirmation must be at least 6 characters long and equals to password.
           </div>
         </div>
       </div>
@@ -124,6 +121,10 @@
           <img [src]="previewUrl" alt="Preview" class="preview-img" />
         </div>
       </div>
+
+      <!-- Success and Error Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
       <!-- Submit Button -->
       <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || registerForm.invalid">

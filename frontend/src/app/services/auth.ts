@@ -99,10 +99,11 @@ export class AuthService {
     localStorage.removeItem(this.REFRESH_KEY);
   }
 
-  // In auth.service.ts, add this method:
   refreshToken(refreshToken: string): Observable<string> {
     return this.http.post<{ accessToken: string }>('/api/auth/refresh-token', { refreshToken }).pipe(
       tap(response => {
+        console.log(response);
+        
         localStorage.setItem(this.TOKEN_KEY, response.accessToken);
         this.loggedIn.next(true);
       }),

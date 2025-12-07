@@ -1,19 +1,21 @@
-
 /* --- 1. Layout & Core Styles --- */
 
 /* Ensure sticky elements work */
 .sticky-top {
   position: sticky;
-  top: 2rem !important; 
+  top: 2rem !important;
   z-index: 90;
 }
+
 /* Crucial fix for multi-column stickiness stability in Bootstrap */
 .row {
-    align-items: flex-start;
+  align-items: flex-start;
 }
 
 /* Main Article Card (Article and Comments) */
-.article-card, .engagement-card, .author-card.card {
+.article-card,
+.engagement-card,
+.author-card.card {
   background: var(--card-bg);
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
@@ -46,11 +48,11 @@
 /* --- 2. Author Card (Right Sidebar) --- */
 
 .author-avatar-sm {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border: 3px solid white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .btn-profile-sm {
@@ -76,50 +78,62 @@
 /* --- 4. Engagement Colors (Like/Dislike) --- */
 
 .reaction-stats .fw-bold.text-success {
-    color: #10b981 !important; /* Brighter, modern green for LIKE */
+  color: #10b981 !important;
+  /* Brighter, modern green for LIKE */
 }
+
 .reaction-stats .fw-bold.text-danger {
-    color: #ef4444 !important; /* Clear, modern red for DISLIKE */
+  color: #ef4444 !important;
+  /* Clear, modern red for DISLIKE */
 }
 
 
 /* Reaction Buttons */
 .reaction-buttons .engagement-btn {
-    width: auto;
-    height: auto;
-    border-radius: 12px;
-    padding: 10px 20px;
-    border: 1px solid transparent; /* Ensure consistent size */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  /* Ensure consistent size */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 /* LIKE Button Styling */
-.reaction-buttons .engagement-btn.like { 
-    background: #d1fae5; /* Very light green background */
-    border-color: #34d399; 
-    color: #059669; /* Darker green text/icon color */
+.reaction-buttons .engagement-btn.like {
+  background: #d1fae5;
+  /* Very light green background */
+  border-color: #34d399;
+  color: #059669;
+  /* Darker green text/icon color */
 }
+
 .reaction-buttons .engagement-btn.like:hover {
-    background: #a7f3d0;
-    transform: translateY(-2px);
+  background: #a7f3d0;
+  transform: translateY(-2px);
 }
+
 .reaction-buttons .engagement-btn.like .engagement-icon {
-    color: #059669;
+  color: #059669;
 }
 
 /* DISLIKE Button Styling */
-.reaction-buttons .engagement-btn.dislike { 
-    background: #fee2e2; /* Very light red background */
-    border-color: #f87171; 
-    color: #dc2626; /* Darker red text/icon color */
+.reaction-buttons .engagement-btn.dislike {
+  background: #fee2e2;
+  /* Very light red background */
+  border-color: #f87171;
+  color: #dc2626;
+  /* Darker red text/icon color */
 }
+
 .reaction-buttons .engagement-btn.dislike:hover {
-    background: #fecaca;
-    transform: translateY(-2px);
+  background: #fecaca;
+  transform: translateY(-2px);
 }
+
 .reaction-buttons .engagement-btn.dislike .engagement-icon {
-    color: #dc2626;
+  color: #dc2626;
 }
 
 /* --- 4. Comments --- */
@@ -208,20 +222,42 @@
   margin-top: 5px;
 }
 
-.btn-edit, .btn-delete {
-width: 35px;
-height: 35px;
-padding: 0px !important;
+.action-btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
 }
 
+.action-btn i {
+  font-size: 16px;
+}
+
+/* Hover effects */
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Report button color */
 .btn-delete {
-  background-color: red;
+  border-color: #ff0000;
+  color: #ff0000;
 }
 
-.btn-edit {
-  /* background-color: blue; */
+.btn-delete:hover {
+  /* background-color: #f03838; */
+  /* color: #000; */
 }
 
+.report-badge {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.report-badge:hover {
+  background-color: var(--card-bg);
+  color: #000;
+}
 
 .popup-backdrop {
   position: fixed;
@@ -260,6 +296,7 @@ padding: 0px !important;
 /* --- 5. Responsiveness --- */
 
 @media (max-width: 991.98px) {
+
   /* Tablet/Mobile screens */
   .article-title {
     font-size: 2.2rem;
@@ -267,11 +304,12 @@ padding: 0px !important;
 }
 
 @media (max-width: 767.98px) {
-    .article-title {
-        font-size: 1.8rem;
-    }
-    .reaction-buttons .engagement-btn {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
+  .article-title {
+    font-size: 1.8rem;
+  }
+
+  .reaction-buttons .engagement-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
 }

@@ -146,8 +146,8 @@
               </div>
 
               <div class="card-body p-4 d-flex flex-column">
-                <h4 class="card-title post-title fw-bold h5 mb-2"><span class="clickable">{{ post.title }}</span></h4>
-                <p class="card-text text-muted post-description small mb-0 mt-auto">
+                <h4 class="card-title post-title fw-bold h5 mb-2"><span class="clickable">{{ post.title.length > 30 ? post.title.substring(0,27) + '...' : post.title }}</span></h4>
+                <p class="card-text text-muted post-description small mb-0">
                   {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
                 </p>
               </div>
