@@ -50,5 +50,8 @@ export class AdminPanel {
       const tab = urlSegments[0]?.path as 'summary' | 'users' | 'posts' | 'reports';
       if (tab) this.activeTab.set(tab);
     });
+    document.querySelector('.mobile-toggle')?.addEventListener('click', function() {
+  document.querySelector('.admin-sidebar')?.classList.toggle('sidebar-open');
+});
   }
 }
