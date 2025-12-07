@@ -35,7 +35,7 @@
           <h2 class="h3 fw-bold section-title mb-4 border-bottom pb-2">🚀 Latest Insights</h2>
           <div class="row g-4">
             <div class="col-12 col-md-6" *ngFor="let post of recentPosts">
-              <div class="small-post-card d-flex align-items-center p-3 rounded-3 hover-shadow">
+              <div (click)="router.navigate(['/posts/' + post.id])" class="small-post-card d-flex align-items-center p-3 rounded-3 hover-shadow">
                 <div class="small-post-media clickable flex-shrink-0 me-3 rounded-2"
                      (click)="router.navigate(['/posts/' + post.id])"
                      [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
@@ -72,7 +72,7 @@
           <h2 class="h3 fw-bold section-title mb-4 border-bottom pb-2">⭐ Trending Now (Most Reactions)</h2>
           <div class="row g-3">
             <div class="col-12 col-sm-6" *ngFor="let post of topPosts">
-              <div class="small-post-card d-flex align-items-center p-3 rounded-3 hover-shadow">
+              <div (click)="router.navigate(['/posts/' + post.id])" class="small-post-card d-flex align-items-center p-3 rounded-3 hover-shadow">
                 <div class="small-post-media clickable flex-shrink-0 me-3 rounded-2"
                      (click)="router.navigate(['/posts/' + post.id])"
                      [style.background-image]="post.media ? 'url(http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
@@ -117,11 +117,12 @@
             </aside>
 
             <aside class="sidebar-block card shadow-sm p-4 rounded-4">
-              <h3 class="h5 fw-bold sidebar-title mb-3 text-primary">🎯 Trending Topics</h3>
+              <h3 class="h5 fw-bold sidebar-title mb-3 text-primary">🎯 Random Topics</h3>
               <div class="d-flex flex-wrap gap-2">
                 <button *ngFor="let tag of trendingTags"
                         class="btn btn-sm btn-tag"
-                        [ngClass]="{'btn-primary': tag.primary, 'btn-outline-secondary': !tag.primary}">
+                        [ngClass]="{'btn-primary': tag.primary, 'btn-outline-secondary': !tag.primary}"
+                        (click)="router.navigate(['searchresults'], { queryParams: { type: 'posts', q: tag.label } })">
                   #{{ tag.label }}
                 </button>
               </div>

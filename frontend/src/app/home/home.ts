@@ -24,14 +24,14 @@ export class HomeComponent {
   topPosts: topPosts[] = [];
 
   trendingTags = [
-    { label: '#ComputerScience', primary: true },
-    { label: '#StudyAbroad', primary: false },
-    { label: '#Internships', primary: false },
-    { label: '#WebDevelopment', primary: true },
-    { label: '#FinalsWeek', primary: false },
-    { label: '#AI', primary: false },
-    { label: '#BioTech', primary: false },
-    { label: '#Hackathon', primary: true },
+    { label: 'Java', primary: false },
+    { label: 'Springboot', primary: false },
+    { label: 'Angular', primary: false },
+    { label: 'Golang', primary: false },
+    { label: 'Javascript', primary: false },
+    { label: 'AI', primary: false },
+    { label: 'Rust', primary: false },
+    { label: 'Hackathon', primary: false },
   ];
 
 

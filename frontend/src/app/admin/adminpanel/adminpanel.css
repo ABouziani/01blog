@@ -8,6 +8,7 @@
   min-height: 100vh; /* Full viewport height */
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scroll */
+  background-color: var(--bg);
 }
 
 /* 2. Sidebar Basic Styling */
@@ -67,7 +68,7 @@
 
 /* 4. Top Bar Styling */
 .admin-topbar {
-  background-color: white;
+  background-color: var(--bg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
   z-index: 10;
@@ -79,6 +80,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
 }
 
 .topbar-welcome {
@@ -104,6 +106,7 @@
 .admin-content {
   padding: 20px;
   flex-grow: 1;
+  background-color: var(--bg);
 }
 
 /*

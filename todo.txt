@@ -8,5 +8,9 @@ END $$;
 
 
 
-home feed css fix
+
 video thumbnail
+
+page audit
+
+console log errors

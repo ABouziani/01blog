@@ -1,7 +1,9 @@
 .media-preview-existing {
     /* Required for background image visibility */
-    height: 180px; 
-    width: 100%;
+    height: 300px; 
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
     
     /* Ensure the existing image fills the space */
     background-size: cover;
@@ -14,4 +16,9 @@
 
 #title,#description,#media {
   background-color: var(--comment-bg);
+}
+
+.media-preview {
+  width: 500px;
+  height: 500px;
 }

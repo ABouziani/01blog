@@ -26,7 +26,7 @@ export class AdminSummaryComponent implements OnInit {
     this.http.get<any>(this.apiUrl).subscribe((resp) => {
       this.postsCounts = resp.postsCounts;
       this.postsReportsCount = resp.postsReportsCount;
-      this.usersCounts = resp.usersCounts;
+      this.usersCounts = resp.usersCounts - 1;
       this.usersReportsCount = resp.usersReportsCount;
     });
 

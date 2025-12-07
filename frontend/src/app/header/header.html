@@ -39,7 +39,7 @@
           <!-- Notifications list -->
           <ng-container *ngIf="notifications?.length; else noNotif">
             <li *ngFor="let n of notifications">
-              <a class="notif-dropdown-item py-2 px-3 d-flex align-items-start" [class.notif-unread]="n.unread"
+              <a class="notif-dropdown-item py-2 px-3 d-flex align-items-start clickable" [class.notif-unread]="n.unread"
                 (click)="openNotification(n)">
                 <img [src]="n.authorPhoto ? 'http://localhost:8080' + n.authorPhoto : '/user_avatar.png'"
                   class="rounded-circle me-2" width="36" height="36" alt="{{ n.authorUsername }} avatar" />

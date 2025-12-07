@@ -5,10 +5,10 @@
 }
 
 .table-container {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #e3e3e3;
+  border: 1px solid grey;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
@@ -22,7 +22,7 @@
 .data-table thead th {
   text-align: left;
   font-weight: 600;
-  background: #fafafa;
+  /* background: #fafafa; */
   padding: 12px 10px;
   border-bottom: 2px solid #e2e2e2;
 }

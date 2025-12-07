@@ -56,7 +56,7 @@ public class UserService {
             if (contentType == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot determine file type");
             }
-            if (!contentType.startsWith("image/") ) {
+            if (!contentType.startsWith("image/")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Media type not supported");
             }
             mediaUrl = fileStorageService.storeFile(photo);
@@ -70,6 +70,9 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(password);
         user.setPassword(hashedPassword);
         user.setPhoto(mediaUrl);
+        if (userRepository.count() == 0) {
+            user.setRole("ADMIN");
+        }
         return ResponseEntity.ok(userRepository.save(user));
     }
 
@@ -146,7 +149,7 @@ public class UserService {
             if (contentType == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot determine file type");
             }
-            if (!contentType.startsWith("image/") ) {
+            if (!contentType.startsWith("image/")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Media type not supported");
             }
             addMedia = true;
