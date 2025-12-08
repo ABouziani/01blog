@@ -34,7 +34,6 @@ export class AdminPostsComponent {
 
   ngOnInit() {
     this.postAdminService.getPosts().subscribe(posts => {
-      console.log("//////////////////////",posts);
       
       this.posts = posts;
     });

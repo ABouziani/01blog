@@ -49,10 +49,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """)
     List<Post> findByCreatorIdWithReactions(@Param("userId") Long userId,@Param("lastId") Long lastId,Pageable pageable);
 
-    // // Fetch single post by ID with reactions
-    // @Query("SELECT p FROM Post p LEFT JOIN FETCH p.reactions WHERE p.id = :id")
-    // Optional<Post> findByIdWithReactions(@Param("id") Long id);
-    // Your existing methods (keep these)
+
     Optional<List<Post>> findByCreatorIdAndIsHiddenFalse(Long userId);
 
     Optional<Post> findByIdAndIsHiddenFalse(Long id);

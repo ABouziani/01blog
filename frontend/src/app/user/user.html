@@ -17,7 +17,7 @@
 
       <div class="card profile-card shadow-lg rounded-4 overflow-hidden mb-5">
 
-        <div class="profile-header bg-light-subtle" ></div>
+        <div class="profile-header bg-light-subtle"></div>
 
         <div class="card-body profile-content p-4 p-md-5 pt-0">
 
@@ -135,24 +135,35 @@
 
         <div class="row g-4 posts-grid">
           <div class="col-12 col-sm-6 col-lg-4" *ngFor="let post of user?.posts">
-            <div class="card post-card-dynamic shadow-hover h-100 border-0 rounded-4 overflow-hidden"
-              (click)="router.navigate(['/posts/' + post.id])">
+            <div class="card post-card-dynamic shadow-hover h-100 border-0 rounded-4 overflow-hidden "
+              [routerLink]="['/posts', post.id]">
 
               <div class="post-media-header">
-                <div class="post-image-dynamic clickable"
-                  [style.background-image]="post.media ? 'url(' + 'http://localhost:8080' + post.media + ')' : 
-                  'url(/post_image.png)'">
+                <div class="post-image-dynamic clickable" [style.background-image]=" 
+               post.media ? isVideo(post.media.toString()) ? 'url(' + post.thumbnail + ')' :
+                'url(' + 'http://localhost:8080' + post.media + ')' : 
+                'url(/post_image.png)'">
                 </div>
               </div>
 
               <div class="card-body p-4 d-flex flex-column">
-                <h4 class="card-title post-title fw-bold h5 mb-2"><span class="clickable">{{ post.title.length > 30 ? post.title.substring(0,27) + '...' : post.title }}</span></h4>
-                <p class="card-text text-muted post-description small mb-0">
+                <h3 class="card-title post-title fw-bold h5 mb-2 text-truncate-2"><span class="clickable">{{ post.title
+                    }}</span></h3>
+                <p class="card-text text-muted post-description small mb-3">
                   {{ post.description.length > 80 ? post.description.substring(0,77) + '...' : post.description }}
                 </p>
+
+                <div class="d-flex align-items-center mb-3 mt-auto">
+                  <time class="text-muted post-date small ms-3" [attr.datetime]="post.createdAt">
+                    {{ post.createdAt | date:'mediumDate' }}
+                  </time>
+                </div>
               </div>
+
             </div>
           </div>
+
+
 
           <div class="col-12" *ngIf="(!user.posts || user.posts.length === 0) && allLoaded">
             <div class="no-post alert alert-light text-center py-4 empty-posts">

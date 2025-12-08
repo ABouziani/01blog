@@ -84,9 +84,6 @@ public class UserService {
         return userRepository.findByEmailAndIsBannedFalse(email);
     }
 
-    // public Optional<User> findByUsernameAndIsBannedFalse(String username) {
-    //     return userRepository.findByUsernameAndIsBannedFalse(username);
-    // }
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -207,10 +204,6 @@ public class UserService {
             user.setOwner(true);
         }
 
-        // Hibernate.initialize(user.getPosts());
-        //Mark notifs from this user as read
-        // loggedUser.markAuthorNotificationsAsRead(user.getId());
-        // userRepository.save(loggedUser);
         return ResponseEntity.ok(EntityDtoMapper.toUserDto(user));
     }
 }

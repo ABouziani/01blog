@@ -40,8 +40,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       if (error.status === 0) {
-        console.log("Server unreachable");
-        // myAlert.showAlert("Error", "Server unreachable!");
         router.navigate(['/unreachable']);
         return EMPTY;
       }

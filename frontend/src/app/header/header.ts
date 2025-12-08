@@ -44,22 +44,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     private notificationService: NotificationService,
     private router: Router,
-    private myAlert : AlertService
+    private myAlert: AlertService
   ) { }
 
   ngOnInit(): void {
-    // Start polling only if user is logged in
-    // if (this.authService.isLoggedIn()) {
-    this.loadNotifs()
-    // }
-    console.log("*********************", this.authService.isAdmin());
 
-    // If your AuthService provides an auth state Observable, subscribe to it to start/stop polling on login/logout.
-    // Example (uncomment if available):
-    // this.authService.authState$.pipe(takeUntil(this.destroy$)).subscribe(isLoggedIn => {
-    //   if (isLoggedIn) this.startPolling();
-    //   else this.stopPolling();
-    // });
+    this.loadNotifs()
+
+
     const saved = localStorage.getItem('darkMode') === 'true';
     this.darkMode = saved;
     document.body.classList.toggle('dark-theme', this.darkMode);
@@ -89,7 +81,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }));
       })
     ).subscribe(notifs => {
-      console.log(notifs.map(n => n.id));
 
       if (notifs.length > 0) {
         const oldestNotif = notifs.reduce((min, p) => p.id < min.id ? p : min, notifs[0]);
@@ -117,7 +108,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
-    if (this.dropdownOpen) {      
+    if (this.dropdownOpen) {
       this.notificationService.markAllAsReadFromDropDown().subscribe(res => {
         if (!res || !res.success) {
           this.myAlert.showAlert("Error", "Cannot mark all notifications as read, try again later!");
@@ -128,34 +119,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
     }
 
-    // if (this.dropdownOpen) {
-    //   // user opened dropdown -> mark unread as read automatically
-    //   this.autoMarkOpenItemsRead();
-    // }
+
   }
 
   closeDropdown(): void {
     this.dropdownOpen = false;
   }
 
-  // autoMarkOpenItemsRead(): void {
-  //   const unreadIds = this.notifications.filter(n => n.unread).map(n => n.id);
-  //   if (unreadIds.length === 0) return;
 
-  //   // Optimistic update: mark local items as read immediately
-  //   this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
-  //   this.unreadCount = 0;
-
-  //   this.notificationService.markAsRead(unreadIds).subscribe(result => {
-  //     if (!result || !result.success) {
-  //       // Re-fetch to sync server state (or revert)
-  //       this.notificationService.getNotifications().subscribe(n => this.applyNotifications(n));
-  //     }
-  //   });
-  // }
-
-  // markAllRead(event?: Event): void {
-  //   if (event) event.stopPropagation();
   markAllRead(): void {
     this.notificationService.markAllAsRead().subscribe(res => {
       if (!res || !res.success) {
@@ -166,18 +137,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.unreadCount = 0;
     });
 
-    // const unreadIds = this.notifications.filter(n => n.unread).map(n => n.id);
-    // if (unreadIds.length === 0) return;
-
-    // // Optimistic update
-    // this.notifications = this.notifications.map(n => ({ ...n, unread: false }));
-    // this.unreadCount = 0;
-
-    // this.notificationService.markAsRead(unreadIds).subscribe(res => {
-    //   if (!res || !res.success) {
-    //     this.notificationService.getNotifications().subscribe(n => this.applyNotifications(n));
-    //   }
-    // });
   }
 
   openNotification(n: NotificationItem): void {
@@ -237,38 +196,40 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   loadNotifs() {
-    console.log("last ID", this.lastNotifId)
     if (this.loadingMore || this.allLoaded) return;
     this.loadingMore = true;
 
-    setTimeout(() => {
+    if (this.authService.isLoggedIn()) {
 
-      this.notificationService.getNotifications(this.lastNotifId, this.pageSize)
-        .pipe(catchError(err => {
-          console.error('Polling error', err);
-          return of([] as NotificationItem[]);
-        })).subscribe({
-          next: (data) => {
-            if (data.length == 0) {
-              this.allLoaded = true;
+      setTimeout(() => {
+
+        this.notificationService.getNotifications(this.lastNotifId, this.pageSize)
+          .pipe(catchError(err => {
+            console.error('Polling error', err);
+            return of([] as NotificationItem[]);
+          })).subscribe({
+            next: (data) => {
+              if (data.length == 0) {
+                this.allLoaded = true;
+                this.loadingMore = false;
+                return;
+              }
+              this.notifications = [...this.notifications, ...data];
+              const oldestNotif = this.notifications.reduce((min, p) => p.id < min.id ? p : min, this.notifications[0]);
+              this.lastNotifId = oldestNotif.id;
+              this.unreadCount = this.notifications.filter(n => n.unread).length;
+
+            },
+            error: (err) => {
+              console.error('Error fetching notifications:', err);
+              // this.loading = false;
+            },
+            complete: () => {
               this.loadingMore = false;
-              return;
             }
-            this.notifications = [...this.notifications, ...data];
-            const oldestNotif = this.notifications.reduce((min, p) => p.id < min.id ? p : min, this.notifications[0]);
-            this.lastNotifId = oldestNotif.id;
-            this.unreadCount = this.notifications.filter(n => n.unread).length;
-
-          },
-          error: (err) => {
-            console.error('Error fetching notifications:', err);
-            // this.loading = false;
-          },
-          complete: () => {
-            this.loadingMore = false;
-          }
-        });
-    }, 500);
+          });
+      }, 500);
+    }
   }
 
   onScroll(event: Event) {

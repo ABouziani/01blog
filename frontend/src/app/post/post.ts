@@ -62,7 +62,6 @@ export class PostComponent {
       if (this.postId) {
         this.postService.getPost(this.postId).subscribe({
           next: (data) => {
-            console.log("Post: ", data);
             data.comments = []
             this.post = data;
             if (this.post) {
@@ -77,7 +76,6 @@ export class PostComponent {
             this.loading = false;
           },
           error: (err) => {
-            console.log(err);
 
             this.errorMessage = err.error;
             this.loading = false;
@@ -146,13 +144,11 @@ export class PostComponent {
       if (confirmed) {
         this.postService.deletePost(this.postId).subscribe({
           next: (data) => {
-            console.log(data);
             this.myAlert.showAlert("Success", "Post deleted successfully!");
             this.router.navigate(['/']);
           },
           error: (err) => {
             this.myAlert.showAlert("Error", "Error deleting this posts!");
-            console.log(err);
           }
         });
       }
@@ -346,7 +342,6 @@ export class PostComponent {
 
 
   loadComments() {
-    console.log("last ID", this.lastCommentId)
     if (this.loadingMore || this.allLoaded) return;
     this.loadingMore = true;
 
@@ -443,7 +438,6 @@ export class PostComponent {
     return this.http.post('http://localhost:8080/api/reports/addpostreport', body)
       .subscribe({
         next: (data) => {
-          console.log(data)
           this.closePopup();
           this.myAlert.showAlert("Success", "Post reported to admins successfully!");
           // if (this.user) this.user.alreadyReported = true;

@@ -41,18 +41,7 @@ export class PostsComponent implements OnInit {
       return;
     }
     this.loadMore();
-    // this.postsService.getPosts(this.lastPostId, this.pageSize).subscribe({
-    //   next: (data) => {
-    //     console.log(data)
-    //     this.generateThumbnails(data);
-    //     this.internalPosts = data;
-    //     this.loading = false;
-    //   },
-    //   error: (err) => {
-    //     console.error('Error fetching posts:', err);
-    //     this.loading = false;
-    //   }
-    // });
+
     window.addEventListener('scroll', this.onScroll, { passive: true });
   }
 
@@ -93,7 +82,6 @@ export class PostsComponent implements OnInit {
     return preview + '...';
   }
 
-  // 📸 Capture a thumbnail from a video URL
   private getVideoThumbnail(videoUrl: string, seekTime: number = 1): Promise<string> {
     return new Promise((resolve, reject) => {
       const video = document.createElement('video');
@@ -168,10 +156,7 @@ export class PostsComponent implements OnInit {
     window.removeEventListener('scroll', this.onScroll);
   }
 
-
-
   loadMore() {
-    console.log("last ID", this.lastPostId)
     if (this.loadingMore || this.allLoaded) return;
     this.loadingMore = true;
 
@@ -184,11 +169,11 @@ export class PostsComponent implements OnInit {
             this.loadingMore = false;
             return;
           }
-          this.generateThumbnails(data);
           this.internalPosts = [...this.internalPosts, ...data];
           const oldestPost = this.internalPosts.reduce((min, p) => p.id < min.id ? p : min, this.internalPosts[0]);
           this.lastPostId = oldestPost.id;
           this.loading = false;
+          this.generateThumbnails(this.internalPosts);
         },
         error: (err) => {
           console.error('Error fetching posts:', err);

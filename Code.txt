@@ -6,11 +6,3 @@ BEGIN
     END LOOP;
 END $$;
 
-
-
-
-video thumbnail
-
-page audit
-
-console log errors

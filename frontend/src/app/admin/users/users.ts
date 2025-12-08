@@ -27,7 +27,6 @@ export class AdminUsersComponent {
 
   ngOnInit() {
     this.userAdminService.getUsers().subscribe(users => {
-      console.log(users)
       this.users = users;
     });
   }

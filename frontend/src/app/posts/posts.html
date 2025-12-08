@@ -19,7 +19,10 @@
 
         <div class="post-media-header">
           <div class="post-image-dynamic clickable"
-               [style.background-image]=" post.media ? 'url(' + 'http://localhost:8080' + post.media + ')' : 'url(/post_image.png)'">
+               [style.background-image]=" 
+               post.media ? isVideo(post.media.toString()) ? 'url(' + post.thumbnail + ')' :
+                'url(' + 'http://localhost:8080' + post.media + ')' : 
+                'url(/post_image.png)'">
           </div>
         </div>
 

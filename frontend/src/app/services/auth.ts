@@ -32,7 +32,6 @@ export class AuthService {
   const token = localStorage.getItem(this.TOKEN_KEY);
   if (!token) {
     // No token, but do NOT modify loggedIn here
-    console.log('No token found. Skipping backend validation.');
     return;
   }
 
@@ -43,15 +42,12 @@ export class AuthService {
     { headers }
   ).pipe(
     map(response => {
-      console.log(response);
       
       // Update user info safely
       this.isadmin.set(response.role === 'ADMIN');
       this.loggedId.set(response.id);
-      console.log('Backend validation success:', response);
     }),
     catchError(err => {
-      console.log(err);
       
       console.warn('Backend validation failed, keeping local login state:', err);
       // DO NOT call clearTokens() or set loggedIn=false
@@ -63,7 +59,6 @@ export class AuthService {
   login(identifier: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('http://localhost:8080/api/auth/login', { identifier, password }).pipe(
       tap(response => {
-        console.log(response.accessToken);
         localStorage.setItem(this.TOKEN_KEY, response.accessToken);
         localStorage.setItem(this.REFRESH_KEY, response.refreshToken);
         this.loggedIn.next(true);
@@ -102,7 +97,6 @@ export class AuthService {
   refreshToken(refreshToken: string): Observable<string> {
     return this.http.post<{ accessToken: string }>('/api/auth/refresh-token', { refreshToken }).pipe(
       tap(response => {
-        console.log(response);
         
         localStorage.setItem(this.TOKEN_KEY, response.accessToken);
         this.loggedIn.next(true);

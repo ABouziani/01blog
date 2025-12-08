@@ -95,7 +95,6 @@ export class SearchService {
     this.searchParams$$.next(null);
   }
 
-  // ——— HTTP Methods (as before) ———
   private searchUsers(query: string): Observable<UserDto[]> {
     const params = new HttpParams().set('query', query.trim());
     return this.http.get<UserDto[]>(this.apiUrl + '/users', { params });

@@ -1,23 +1,20 @@
-/*
-  Base Styles for Admin Dashboard Layout
-*/
 
-/* 1. Main Container Setup */
+
 .admin-container {
-  display: flex; /* Use flexbox for sidebar and main content */
-  min-height: 100vh; /* Full viewport height */
+  display: flex; 
+  min-height: 100vh; 
   width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden; 
   background-color: var(--bg);
 }
 
 /* 2. Sidebar Basic Styling */
 .admin-sidebar {
-  width: 250px; /* Default desktop width */
-  flex-shrink: 0; /* Prevent it from shrinking */
-  background-color: #2c3e50; /* Dark background */
+  width: 250px; 
+  flex-shrink: 0; 
+  background-color: #2c3e50; 
   color: white;
-  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; /* For smooth transitions */
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; 
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -60,10 +57,10 @@
 
 /* 3. Main Content Area */
 .admin-main {
-  flex-grow: 1; /* Take up the remaining space */
+  flex-grow: 1; 
   display: flex;
   flex-direction: column;
-  background-color: #ecf0f1; /* Light background for content */
+  background-color: #ecf0f1; 
 }
 
 /* 4. Top Bar Styling */
@@ -84,7 +81,7 @@
 }
 
 .topbar-welcome {
-  margin-left: 15px; /* Space between toggle and welcome message */
+  margin-left: 15px; 
 }
 
 .topbar-username {
@@ -93,7 +90,7 @@
 }
 
 .mobile-toggle {
-  display: none; /* Hidden by default on desktop */
+  display: none; 
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -109,75 +106,43 @@
   background-color: var(--bg);
 }
 
-/*
-  Media Queries for Responsiveness (Tablet and Mobile)
-*/
+
 
 @media (max-width: 992px) {
   /* Tablet styles */
   .admin-sidebar {
-    width: 200px; /* Slightly narrower sidebar */
+    width: 200px; 
   }
 }
 
 @media (max-width: 768px) {
-  /* Mobile styles */
   
-  /* Show the toggle button */
   .mobile-toggle {
     display: inline-block;
   }
   
-  /* Sidebar off-screen by default */
   .admin-sidebar {
-    position: fixed; /* Fix the sidebar position */
+    position: fixed; 
     height: 100%;
-    z-index: 100; /* Ensure it's above other content */
-    transform: translateX(-100%); /* Move it off-screen to the left */
-    /* Add a class, say '.sidebar-open', via JavaScript to bring it in */
+    z-index: 100; 
+    transform: translateX(-100%); 
   }
 
-  /* Main content covers full width */
   .admin-main {
     width: 100%;
   }
 
-  /* Content area adjustments */
   .admin-content {
     padding: 15px;
   }
-  
-  /* Optional: Adjust welcome message visibility */
-  .topbar-welcome {
-    /* Hide the welcome message on very small screens if necessary */
-    /* display: none; */
-  }
+
 }
 
-/*
-  Utility Class for Toggling Sidebar (Requires minimal JavaScript)
-*/
 
-/* This class would be added to the '.admin-sidebar' element 
-   when the '.mobile-toggle' button is clicked.
-*/
 .sidebar-open {
   transform: translateX(0) !important;
 }
 
-/* Optional: Overlay/Backdrop when sidebar is open on mobile */
-/* You would need to add a backdrop div in your HTML or create one dynamically */
-/*
-.backdrop-open {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-}
-*/
 
 .toggler-mobile {
   color: white;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -48,11 +48,11 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private searchService: SearchService
+    private searchService: SearchService, private cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {}
 
   ngOnInit(): void {
-    // ✅ React to paramMap changes (e.g., back/forward, new search)
     this.subscription = this.route.queryParamMap
       .pipe(
         switchMap(params => {
@@ -63,26 +63,20 @@ export class SearchResultsComponent implements OnInit {
           this.currentType = type;
 
           if (!q) {
-            // No query → clear results
             return [{ loading: false, error: null, users: [], posts: [] }];
           }
 
           this.state = { ...this.state, loading: true, error: null };
 
           return this.searchService.searchRaw(type, q).pipe(
-            // searchRaw returns { users, posts } depending on type
-            // We'll define it below
+            
           );
         })
       )
       .subscribe({
         next: (result: any) => {
-          console.log("-+-+-+-+-+-",result);
-          
-          if (Array.isArray(result)) {
-            // Legacy fallback (shouldn’t happen)
-            result = { users: [], posts: result };
-          }
+
+          this.generateThumbnails(result.posts);
           this.state = {
             loading: false,
             error: null,
@@ -106,6 +100,50 @@ export class SearchResultsComponent implements OnInit {
     this.subscription?.unsubscribe();
   }
 
+  isVideo(url: string): boolean {
+    return /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url);
+  }
+
+  private getVideoThumbnail(videoUrl: string, seekTime: number = 1): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement('video');
+      video.crossOrigin = 'anonymous';
+      video.src = videoUrl;
+      video.preload = 'metadata';
+
+      video.addEventListener('loadedmetadata', () => {
+        if (seekTime > video.duration) seekTime = 0;
+        video.currentTime = seekTime;
+      });
+
+      video.addEventListener('seeked', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject('Canvas context error');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg'));
+      });
+
+      video.addEventListener('error', (err) => reject(err));
+    });
+  }
+
+  private generateThumbnails(posts: any[]): void {
+    posts.forEach(post => {
+      if (post.media && this.isVideo(post.media.toString())) {
+        this.getVideoThumbnail('http://localhost:8080' + post.media)
+          .then(thumb => {
+            this.zone.run(() => {
+              post.thumbnail = thumb;
+              this.cdr.detectChanges();
+            });
+          })
+          .catch(err => console.error('Thumbnail error:', err));
+      }
+    });
+  }
 
   goBack(): void {
     this.router.navigate(['/']);

@@ -38,7 +38,6 @@ export class AddCommentComponent {
       })
       .subscribe({
         next: (response) => {
-          console.log('Comment added successfully:', response);
           this.commentForm.reset();
           this.isLoading = false;
           this.commentPosted.emit(response);

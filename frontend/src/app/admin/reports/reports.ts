@@ -69,7 +69,6 @@ export class AdminReportsComponent {
 
   ngOnInit() {
     this.reportAdminService.getReports().subscribe(data => {
-      // console.log(data);
       this.groupedUserReports = this.groupReportsByUser(data.userReports);
       this.groupedPostReports = this.groupReportsByPost(data.postReports);
     });

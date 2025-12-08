@@ -33,7 +33,6 @@ export class SigninComponent {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          console.log(err)
           if (err.status == 403) {
             this.error = 'You are banned!';
           } else {

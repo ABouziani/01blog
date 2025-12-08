@@ -74,15 +74,13 @@ body {
   min-height: 100vh; /* full viewport height */
 }
 
-/* Root/content grows to fill space */
-.root, router-outlet {
-  flex: 1; /* takes remaining space */
-}
+
 
 /* Footer styles */
 .footer {
   /* background-color: #222; */
   /* color: white; */
+  margin-top: auto;
   text-align: center;
   padding: 15px 0;
 }
